@@ -4,8 +4,11 @@ class CreateDomains < ActiveRecord::Migration
       t.string :name
       t.text :description
       t.string :url
-
+      t.integer :sortorder
+      
       t.timestamps
     end
+    add_index :domains, :name
+    add_index :domains, :sortorder
   end
 end

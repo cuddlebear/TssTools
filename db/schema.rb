@@ -11,29 +11,49 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120918190055) do
+ActiveRecord::Schema.define(:version => 20120919115648) do
 
   create_table "domains", :force => true do |t|
     t.string   "name"
     t.text     "description"
     t.string   "url"
+    t.integer  "sortorder"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end
+
+  add_index "domains", ["name"], :name => "index_domains_on_name"
+  add_index "domains", ["sortorder"], :name => "index_domains_on_sortorder"
 
   create_table "properties", :force => true do |t|
     t.string   "value"
     t.integer  "property_group_id"
+    t.integer  "sortorder"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
   end
 
+  add_index "properties", ["sortorder"], :name => "index_properties_on_sortorder"
+
   create_table "property_groups", :force => true do |t|
     t.string   "name"
     t.text     "description"
+    t.integer  "sortorder"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end
+
+  add_index "property_groups", ["sortorder"], :name => "index_property_groups_on_sortorder"
+
+  create_table "url_properties", :force => true do |t|
+    t.integer  "url_id"
+    t.integer  "property_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "url_properties", ["property_id"], :name => "index_url_properties_on_property_id"
+  add_index "url_properties", ["url_id"], :name => "index_url_properties_on_url_id"
 
   create_table "urls", :force => true do |t|
     t.string   "path"
@@ -41,5 +61,8 @@ ActiveRecord::Schema.define(:version => 20120918190055) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  add_index "urls", ["domain_id"], :name => "index_urls_on_domain_id"
+  add_index "urls", ["path"], :name => "index_urls_on_path"
 
 end

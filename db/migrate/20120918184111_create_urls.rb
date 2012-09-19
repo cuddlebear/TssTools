@@ -3,8 +3,10 @@ class CreateUrls < ActiveRecord::Migration
     create_table :urls do |t|
       t.string :path
       t.references :domain
-
       t.timestamps
     end
-  end
+    add_index :urls, :path
+    add_index :urls, :domain_id
+  end  
+    
 end
