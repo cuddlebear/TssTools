@@ -1,4 +1,14 @@
 Railstest::Application.routes.draw do
+  get "domain/view"
+
+  get "domain/new"
+
+  get "domain/edit"
+
+  get "domain/index"
+
+  get "home/index"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -48,7 +58,7 @@ Railstest::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  # root :to => 'welcome#index'
+  root :to => 'home#index'
 
   # See how all your routes lay out with "rake routes"
 
