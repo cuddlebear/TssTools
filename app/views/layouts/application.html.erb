@@ -10,13 +10,13 @@
   <![endif]-->
 </head>
 <body>
-<header class="navbar navbar-fixed-top">
+<header class="navbar navbar-inverse navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
-      <%= link_to "sample app", '#', id: "logo" %>
+      <%= link_to "TSS-Tools", root_path, class: "brand" %>
       <nav>
         <ul class="nav pull-right">
-          <li><%= link_to "Home",    '#' %></li>
+          <li><%= link_to "Home",    root_path %></li>
           <li><%= link_to "Help",    '#' %></li>
           <li><%= link_to "Sign in", '#' %></li>
         </ul>
@@ -26,6 +26,7 @@
 </header>
 <div class="container">
   <%= yield %>
+  <%= debug(params) if Rails.env.development? %>
 </div>
 
 </body>

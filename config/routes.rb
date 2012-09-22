@@ -1,13 +1,13 @@
 Railstest::Application.routes.draw do
-  get "domain/view"
 
-  get "domain/new"
+  resources :checks
 
-  get "domain/edit"
-
-  get "domain/index"
-
-  get "home/index"
+  #get "domains/view"
+  #get "domains/new"
+  #get "domains/edit"
+  #get "domains/show"
+  #get "domains/index"
+  #get "home/index"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
@@ -22,6 +22,10 @@ Railstest::Application.routes.draw do
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
+
+  resources :domains
+  resources :urls
+  resources :properties
 
   # Sample resource route with options:
   #   resources :products do
@@ -65,4 +69,5 @@ Railstest::Application.routes.draw do
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.
   # match ':controller(/:action(/:id))(.:format)'
+
 end

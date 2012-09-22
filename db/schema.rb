@@ -11,7 +11,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120919115648) do
+ActiveRecord::Schema.define(:version => 20120922130444) do
+
+  create_table "checks", :force => true do |t|
+    t.integer  "url_id"
+    t.integer  "priority"
+    t.integer  "type"
+    t.integer  "resultCode"
+    t.string   "resultText"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "checks", ["url_id"], :name => "index_checks_on_url_id"
 
   create_table "domains", :force => true do |t|
     t.string   "name"

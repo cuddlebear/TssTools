@@ -1,0 +1,29 @@
+<%= form_for(@domain, html: {class: "form-horizontal"}) do |f| %>
+    <% if @domain.errors.any? %>
+        <div id="errorExplanation"  class="alert alert-error">
+          <button type="button" class="close" data-dismiss="alert">×</button>
+          <h3><%= pluralize(@domain.errors.count, "error") %> prohibited
+            this domain from being saved:</h3>
+          <ul>
+            <% @domain.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+    <% end %>
+
+    <div class="control-group<% if @domain.errors["name"].any? %> error<% end %>">
+      <label class="control-label" for="inputName">Name</label>
+      <div class="controls"> <%= f.text_field :name , placeholder: "Name" %></div>
+    </div>
+    <div class="control-group<% if @domain.errors["url"].any? %> error<% end %>">
+      <label class="control-label" for="inputUrl">Url</label>
+      <div class="controls"><%= f.text_field :url , placeholder: "Url" %></div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Description</label>
+      <div class="controls"><%= f.text_area :description , placeholder: "Description", rows: 4 %></div>
+    </div>
+
+    <%= f.submit class: "btn btn-primary btn-small" %>
+<% end %>
