@@ -68,8 +68,21 @@ class DomainsController < ApplicationController
     @domain.destroy
 
     respond_to do |format|
-      format.html { redirect_to @domain }
+      format.html { redirect_to @domain,
+                                :notice => 'Domain was successfully deleted.'}
       format.json { head :no_content }
     end
+  end
+
+  def init
+    @domain = Domain.where(name: "Trelleborg Sealing Sollutions").first_or_initialize
+    if @domain.new_record?
+      @domain.name = "Trelleborg Sealing Sollutions"
+      @domain.path = "www.tss.trelleborg.com"
+      @domain.save
+
+    end
+
+
   end
 end

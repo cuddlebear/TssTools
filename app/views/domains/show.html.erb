@@ -1,20 +1,14 @@
-<h1>Domain</h1>
+<div class="navbar navbar-inverse">
+  <div class="navbar-inner">
+    <span class="brand">Domain <%=  @domain.name %></span>
+  </div>
+</div>
 
 <%= render ("shared/show_notice_or_warning") %>
-<%= link_to "List Domains", domains_path%>
+<p>
+Name <%= @domain.name %><br />
+Url <%= @domain.path %><br />
+Description <%= @domain.description %>
+</p>
 
-
-<form class="form-horizontal">
-  <div class="control-group">
-    <label class="control-label">Name</label>
-    <div class="controls"><span class="input-xlarge uneditable-input"><%= @domain.name %></span></div>
-  </div>
-  <div class="control-group">
-    <label class="control-label">Url</label>
-    <div class="controls"><span class="input-xlarge uneditable-input"><%= @domain.url %></span></div>
-  </div>
-  <div class="control-group">
-    <label class="control-label">Description</label>
-    <div class="controls"><span class="input-xlarge uneditable-input" style="height: 4em;"><%= @domain.description %></span></div>
-  </div>
-</form>
+<%=  render("urls/index") %>

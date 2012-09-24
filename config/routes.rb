@@ -1,8 +1,6 @@
 Railstest::Application.routes.draw do
 
-  resources :checks
-
-  #get "domains/view"
+  get "domains/init"
   #get "domains/new"
   #get "domains/edit"
   #get "domains/show"
@@ -26,6 +24,7 @@ Railstest::Application.routes.draw do
   resources :domains
   resources :urls
   resources :properties
+  resources :checks
 
   # Sample resource route with options:
   #   resources :products do

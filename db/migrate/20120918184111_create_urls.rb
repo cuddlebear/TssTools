@@ -1,12 +1,19 @@
 class CreateUrls < ActiveRecord::Migration
-  def change
+  def up
     create_table :urls do |t|
       t.string :path
-      t.references :domains
+      t.references :domain
       t.timestamps
     end
+
     add_index :urls, :path
     add_index :urls, :domain_id
-  end  
-    
+
+    add_foreign_key(:urls, :domains)
+  end
+
+  def down
+    drop_table :urls
+  end
+
 end
