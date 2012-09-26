@@ -1,4 +1,4 @@
 class Check < ActiveRecord::Base
-  attr_accessible :priority, :resultCode, :resultText, :type, :url
-  belongs_to :url
+  attr_accessible :priority, :type, :resultCode, :resultText, :scheduledStart, :checkStart, :duration
+  belongs_to :page
 end

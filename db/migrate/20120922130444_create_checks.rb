@@ -1,7 +1,7 @@
 class CreateChecks < ActiveRecord::Migration
   def up
     create_table :checks do |t|
-      t.references :url
+      t.references :page
       t.integer :priority
       t.integer :type
       t.integer :resultCode
@@ -12,9 +12,8 @@ class CreateChecks < ActiveRecord::Migration
 
       t.timestamps
     end
-    add_index :checks, :url_id
 
-    add_foreign_key(:checks, :urls)
+    add_foreign_key(:checks, :pages)
   end
 
   def down

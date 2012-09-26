@@ -16,9 +16,9 @@
       <label class="control-label" for="inputName">Name</label>
       <div class="controls"> <%= f.text_field :name , placeholder: "Name" %></div>
     </div>
-    <div class="control-group<% if @domain.errors["path"].any? %> error<% end %>">
+    <div class="control-group<% if @domain.errors["domain"].any? %> error<% end %>">
       <label class="control-label" for="inputPath">Url</label>
-      <div class="controls"><%= f.text_field :path , placeholder: "Url" %></div>
+      <div class="controls"><%= f.text_field :domain , placeholder: "Page" %></div>
     </div>
     <div class="control-group">
       <label class="control-label">Description</label>

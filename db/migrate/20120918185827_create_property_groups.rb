@@ -3,6 +3,7 @@ class CreatePropertyGroups < ActiveRecord::Migration
     create_table :property_groups do |t|
       t.string :name
       t.text :description
+      t.boolean :active
       t.integer :sortorder
 
       t.timestamps

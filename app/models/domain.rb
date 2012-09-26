@@ -1,18 +1,28 @@
 class Domain < ActiveRecord::Base
-  attr_accessible :description, :name, :path, :urls
-  has_many :urls
-  validates :name, :presence => true
-  validates :path, :presence => true
-  validates_associated :urls
+  attr_accessible :account_id, :name, :description, :scheme, :domain, :port,
+                  :checkPageRank, :checkPageSpeed, :checkYSlow,:checkContentForChanges,
+                  :mainContainer, :navigationContainer, :subnavigationContainer, :ignoreContainer,
+                  :checkPublishTime, :regxPublishTime,
+                  :active, :sortorder, :pages
+  has_many :pages
+  belongs_to :accounts
 
-  before_destroy do |domain| #delete all related objects
-    domain.urls.destroy_all
+  validates :name, :presence => true
+  validates :domain, :presence => true
+  validates_associated :pages
+
+  after_initialize do |record|
+    record.active = true
+    #record.status = 0
   end
-  before_save do |domain|
-    domain.path = domain.path.downcase
+  before_destroy do |record| #delete all related objects
+    record.pages.destroy_all
   end
-  after_create do |domain| # create default url
-    domain.urls.create(path: "http://" + path)
+  before_save do |record|
+    record.domain = record.path.domain
+  end
+  after_create do |record| # create default page
+    record.pages.create(path: "/")
   end
 
 end

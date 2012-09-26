@@ -7,8 +7,9 @@
 <%= render ("shared/show_notice_or_warning") %>
 <p>
 Name <%= @domain.name %><br />
-Url <%= @domain.path %><br />
+Domain <%= @domain.domain %><br />
 Description <%= @domain.description %>
+  RANK::GooglePR.new("http://www.facebook.com").page_rank
 </p>
 
-<%=  render("urls/index") %>
+<%=  render("pages/index") %>

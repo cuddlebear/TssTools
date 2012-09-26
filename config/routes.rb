@@ -21,8 +21,10 @@ Railstest::Application.routes.draw do
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
 
+  resources :accounts
+  resources :users
   resources :domains
-  resources :urls
+  resources :pages
   resources :properties
   resources :checks
 
