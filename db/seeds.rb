@@ -7,6 +7,13 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 # Stati
+
+@a = Account.create(name: "Sabines first account", active: true)
+@a.users.create(username: "Sabine", email: "sabine.mustermann@evil.orgs", firstName: "Sabine", lastName:"Mustermann", active: true, accountAdmin: true, superAdmin: false)
+
+@a = Account.create(name: "Maxs first account", active: true)
+@a.users.create(username: "Max", email: "max.mustermann@evil.orgs", firstName: "Max", lastName:"Mustermann", active: true, accountAdmin: true, superAdmin: true)
+
 if !PropertyGroup.exists?(name: "Status")
   pg = PropertyGroup.create(name: "Status", description: "Describes the status of a domain or page.", active: true)
   pg.properties.create(name: "New",           value: 0,  sortorder: 1)
@@ -41,14 +48,27 @@ end
 
 @domain = Domain.where(name: "Trelleborg Sealing Sollutions").first_or_initialize
 if @domain.new_record?
-  @domain.name = "Trelleborg Sealing Sollutions"
-  @domain.path = "www.tss.trelleborg.com"
+  @domain.account_id              = @a.id
+  @domain.name                    = "Trelleborg Sealing Sollutions"
+  @domain.domain                  = "www.tss.trelleborg.com"
+  @domain.mainContainer           = "content"
+  @domain.navigationContainer     = "navigation-area"
+  @domain.subnavigationContainer  = "leftnavi"
   @domain.save
+
+  @domain.pages.create(path: "/global/en/homepage/homepage.html", title: "Hydraulic Seals, Rotary Shaft Seals, O-Rings by Trelleborg", active: true)
+  @domain.pages.create(path: "/global/en/industries/industries.html", title: "Industry Specific Solutions: Aerospace, Automotive, Marine, Food", active: true)
+  @domain.pages.create(path: "/global/en/industries/automotive/automotive.html", title: "Automotive Sealing Products, Seals & Gaskets: Automotive Industry", active: true)
+  @domain.pages.create(path: "/global/en/company/facts_1/tss-facts.html", title: "TSS Company Facts Company Profile  - Trelleborg", active: true)
+  @domain.pages.create(path: "/global/en/products_2/productrange.html", title: "", active: true)
+  @domain.pages.create(path: "/global/en/industries/industries.html", title: "", active: true)
+  @domain.pages.create(path: "/global/en/news_1/newsoverview/newsoverview.html", title: "", active: true)
 end
 
 @domain = Domain.where(name: "Trelleborg group").first_or_initialize
 if @domain.new_record?
+  @domain.account_id = @a.id
   @domain.name = "Trelleborg group"
-  @domain.path = "www.trelleborg.com"
+  @domain.domain = "www.trelleborg.com"
   @domain.save
 end

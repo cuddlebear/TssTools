@@ -7,7 +7,14 @@ class Page < ActiveRecord::Base
   has_many :properties, :through => :url_properties
 
   validates :path, :presence => true
+  validates :path, :format => { :with => /^[^ ]*$/,
+                                       :message => "No spaces in URLs allowed" }
   validates :domain_id, :presence => true
+
+  before_save do |record|
+
+  end
+
 
   before_create do |record|
     record.active = true

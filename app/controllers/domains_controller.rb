@@ -74,4 +74,5 @@ class DomainsController < ApplicationController
     end
   end
 
+
 end

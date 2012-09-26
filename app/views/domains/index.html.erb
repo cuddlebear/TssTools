@@ -1,5 +1,10 @@
-<h1>Domains</h1>
 <%= render ("shared/show_notice_or_warning") %>
+<div class="navbar navbar-inverse">
+  <div class="navbar-inner">
+    <span class="brand">Domains</span>
+  </div>
+</div>
+
 <p>
 <%= link_to "Create domain", new_domain_path, class: "btn btn-primary" %>
 </p>
@@ -13,7 +18,7 @@
 <% @domains.each do |domain|%>
   <tr>
     <td><%= domain.name%></td>
-    <td><%= link_to domain.path, domain.sheme + "://" + domain.domain, target: "_blank"  %></td>
+    <td><%= link_to domain.domain, domain.scheme + "://" + domain.domain, target: "_blank"  %></td>
     <td>
       <%=  link_to "Show", domain, class: "btn btn-primary btn-small" %>
       <%=  link_to "Edit", edit_domain_path(domain), class: "btn btn-small" %>
@@ -22,5 +27,5 @@
   </tr>
 <%end%>
 </table>
-
 <%= paginate @domains %>
+

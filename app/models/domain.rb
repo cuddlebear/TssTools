@@ -9,7 +9,17 @@ class Domain < ActiveRecord::Base
 
   validates :name, :presence => true
   validates :domain, :presence => true
-  validates_associated :pages
+  validates :scheme, :inclusion => { :in => %w(http https),
+                                      :message => "%{value} is not a valid. Allowed are http or https" }, :allow_blank => true
+  validates :port, :numericality => { :only_integer => true,
+                                         :greater_than_or_equal_to => 1,
+                                         :less_than_or_equal_to => 65536 } ,:allow_blank => true
+  validates :mainContainer, :presence => { :if => :checkContentForChanges?,
+                                           :message => "When you want to check content changes you must define the id of the content container."}
+  validates :regxPublishTime, :presence => { :if => :checkPublishTime?,
+                                             :message => "When you want to check publish times you must define a selector for the publishing time." }
+
+  #validates_associated :pages
 
   after_initialize do |record|
     record.active = true
@@ -19,7 +29,11 @@ class Domain < ActiveRecord::Base
     record.pages.destroy_all
   end
   before_save do |record|
-    record.domain = record.path.domain
+    if record.scheme.nil? or record.scheme.empty?
+      record.scheme="http"
+    end
+
+    record.domain = record.domain.downcase
   end
   after_create do |record| # create default page
     record.pages.create(path: "/")

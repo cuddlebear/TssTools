@@ -1,6 +1,6 @@
 class PagesController < ApplicationController
   def index
-    @pages = Page.all
+    @pages = Page.order("path").page(params[:page]).per(5)
 
     respond_to do |format|
       format.html # index.html.erb

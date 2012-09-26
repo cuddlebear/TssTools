@@ -12,18 +12,94 @@
         </div>
     <% end %>
 
-    <div class="control-group<% if @domain.errors["name"].any? %> error<% end %>">
-      <label class="control-label" for="inputName">Name</label>
-      <div class="controls"> <%= f.text_field :name , placeholder: "Name" %></div>
+
+    <ul class="nav nav-tabs" id="myTab">
+      <li class="active"><a href="#home">Default Parameters</a></li>
+      <li><a href="#profile">Check Parameters</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane active" id="home">
+
+        <div class="row">
+          <div class="span6">
+            <div class="control-group">
+              <%=  f.label :active, "Active", class: "control-label" %>
+              <div class="controls"><%= f.check_box :active %></div>
+            </div>
+            <div class="control-group<% if @domain.errors["name"].any? %> error<% end %>">
+              <%=  f.label :name, "Name", class: "control-label" %>
+              <div class="controls"> <%= f.text_field :name , placeholder: "Name" %></div>
+            </div>
+            <div class="control-group">
+              <%=  f.label :description, "Description", class: "control-label" %>
+              <div class="controls"><%= f.text_area :description , placeholder: "Description", rows: 4 %></div>
+            </div>
+          </div>
+          <div class="span6">
+            <div class="control-group<% if @domain.errors["scheme"].any? %> error<% end %>">
+              <%=  f.label :scheme, "Scheme", class: "control-label" %>
+              <div class="controls"><%= f.text_field :scheme , placeholder: "Scheme", class: "input-mini" %></div>
+            </div>
+            <div class="control-group<% if @domain.errors["port"].any? %> error<% end %>">
+              <%=  f.label :domain, "Port", class: "control-label" %>
+              <div class="controls"><%= f.text_field :port , placeholder: "Port", class: "input-mini"  %></div>
+            </div>
+            <div class="control-group<% if @domain.errors["domain"].any? %> error<% end %>">
+              <%=  f.label :domain, "Domain", class: "control-label" %>
+              <div class="controls"><%= f.text_field :domain , placeholder: "Page" %></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane" id="profile">
+        <div class="row">
+          <div class="span6">
+            <div class="control-group">
+              <%=  f.label :active, "Check content for changes", class: "control-label" %>
+              <div class="controls"><%= f.check_box :checkContentForChanges %></div>
+            </div>
+
+            <div class="control-group<% if @domain.errors["mainContainer"].any? %> error<% end %>">
+              <%=  f.label :mainContainer, "ID Content", class: "control-label" %>
+              <div class="controls"><%= f.text_field :mainContainer , placeholder: "ID Content" %></div>
+            </div>
+            <div class="control-group<% if @domain.errors["navigationContainer"].any? %> error<% end %>">
+              <%=  f.label :navigationContainer, "ID Navigation", class: "control-label" %>
+              <div class="controls"><%= f.text_field :navigationContainer , placeholder: "ID Navigation" %></div>
+            </div>
+            <div class="control-group<% if @domain.errors["subnavigationContainer"].any? %> error<% end %>">
+              <%=  f.label :subnavigationContainer, "ID Subnavigation", class: "control-label" %>
+              <div class="controls"><%= f.text_field :subnavigationContainer , placeholder: "ID Subnavigation" %></div>
+            </div>
+          </div>
+          <div class="span6">
+            <div class="control-group">
+              <%=  f.label :checkPublishTime, "Check publish times", class: "control-label" %>
+              <div class="controls"><%= f.check_box :checkPublishTime %></div>
+            </div>
+
+            <div class="control-group<% if @domain.errors["regxPublishTime"].any? %> error<% end %>">
+              <%=  f.label :regxPublishTime, "Selector for publish times", class: "control-label" %>
+              <div class="controls"><%= f.text_field :regxPublishTime, placeholder: "Regular expression" %></div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
     </div>
-    <div class="control-group<% if @domain.errors["domain"].any? %> error<% end %>">
-      <label class="control-label" for="inputPath">Url</label>
-      <div class="controls"><%= f.text_field :domain , placeholder: "Page" %></div>
-    </div>
-    <div class="control-group">
-      <label class="control-label">Description</label>
-      <div class="controls"><%= f.text_area :description , placeholder: "Description", rows: 4 %></div>
-    </div>
+
+    <script>
+        $(function () {
+            $('#myTab a').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            })
+            $('#myTab a:first').tab('show');
+        })
+    </script>
+
 
     <%= f.submit class: "btn btn-primary btn-small" %>
 <% end %>
