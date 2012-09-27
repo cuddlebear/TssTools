@@ -4,8 +4,10 @@ class Domain < ActiveRecord::Base
                   :mainContainer, :navigationContainer, :subnavigationContainer, :ignoreContainer,
                   :checkPublishTime, :regxPublishTime,
                   :active, :sortorder, :pages
-  has_many :pages
-  belongs_to :accounts
+
+  has_many    :pages
+  has_many    :areas
+  belongs_to  :accounts
 
   validates :name, :presence => true
   validates :domain, :presence => true

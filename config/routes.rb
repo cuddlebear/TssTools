@@ -24,6 +24,7 @@ Railstest::Application.routes.draw do
   resources :accounts
   resources :users
   resources :domains
+  resources :areas
   resources :pages
   resources :properties
   resources :checks

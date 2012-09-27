@@ -63,10 +63,11 @@ class PagesController < ApplicationController
 
   def destroy
     @page = Page.find(params[:id])
+    domain_id = @page.domain_id
     @page.destroy
 
     respond_to do |format|
-      format.html { redirect_to pages_url }
+      format.html { redirect_to domain_url(domain_id), notice: 'Page was successfully deleted.' }
       format.json { head :no_content }
     end
   end

@@ -18,7 +18,12 @@
   <% @pages.each do |page|%>
       <tr>
         <td><% if !page.active %><i class="icon-ban-circle" title="Inactive"></i><% end %></td>
-        <td><%= link_to page.path, page.domain.scheme + "://" + page.domain.domain + page.path, target: "_blank"  %></td>
+        <td><%= link_to truncate(page.path, length:40),
+                        page.domain.scheme + "://" +
+                        page.domain.domain +
+                        (page.domain.port? ? ":" + page.domain.port : "") +
+                        page.path,
+                        target: "_blank", title: page.path  %></td>
         <td><%= page.title %></td>
         <td>
           <%=  link_to "Show", page, class: "btn btn-primary btn-small" %>

@@ -1,0 +1,37 @@
+<%= form_for(@area) do |f| %>
+  <% if @area.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@area.errors.count, "error") %> prohibited this domain_area from being saved:</h2>
+
+      <ul>
+      <% @area.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :domain %><br />
+    <%= f.text_field :domain %>
+  </div>
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :filter %><br />
+    <%= f.text_field :filter %>
+  </div>
+  <div class="field">
+    <%= f.label :filterType %><br />
+    <%= f.text_field :filterType %>
+  </div>
+  <div class="field">
+    <%= f.label :sortOrder %><br />
+    <%= f.number_field :sortOrder %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

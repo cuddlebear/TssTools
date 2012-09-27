@@ -27,6 +27,7 @@ end
 # Time intervals
 if !PropertyGroup.exists?(name: "Interval")
   pg = PropertyGroup.create(name: "Interval", description: "Time period between checks", active: true)
+  pg.properties.create(name: "don't",   value: 0,       sortorder: 0)
   pg.properties.create(name: "5 sec",   value: 5,          sortorder: 1)
   pg.properties.create(name: "10 sec",  value: 10,         sortorder: 2)
   pg.properties.create(name: "20 sec",  value: 20,         sortorder: 3)
@@ -63,6 +64,16 @@ if @domain.new_record?
   @domain.pages.create(path: "/global/en/products_2/productrange.html", title: "", active: true)
   @domain.pages.create(path: "/global/en/industries/industries.html", title: "", active: true)
   @domain.pages.create(path: "/global/en/news_1/newsoverview/newsoverview.html", title: "", active: true)
+  @domain.pages.create(path: "/global/en/service/service.html", title: "", active: true)
+  @domain.pages.create(path: "/global/en/contact_1/contactform/contact-form.html", title: "", active: true)
+  @domain.pages.create(path: "/global/en/company/manufacturingcapabilities/index.html", title: "", active: true)
+  @domain.pages.create(path: "/global/en/company/manufacturingcapabilities/engineeredplastics/oringenergizedptfeseals/tsshelsingrdenmark/tss-helsingoer-denmark.html", title: "", active: true)
+  @domain.pages.create(path: "/global/en/company/manufacturingcapabilities/engineeredplastics/bushingsandbearings/tssstreamwoodusa/tss-streamwood-usa.html", title: "", active: true)
+  @domain.pages.create(path: "/global/en/news_1/newsarchive/archive2010/archiveoverview-2010.html", title: "", active: true)
+  @domain.pages.create(path: "/global/en/products_2/orings_2/o-ring.html", title: "", active: true)
+  @domain.pages.create(path: "/global/en/products_2/siliconetubingandhose/silicone-tubing-and-hose.html", title: "", active: true)
+
+  #@domain.Areas.cre
 end
 
 @domain = Domain.where(name: "Trelleborg group").first_or_initialize
@@ -70,5 +81,21 @@ if @domain.new_record?
   @domain.account_id = @a.id
   @domain.name = "Trelleborg group"
   @domain.domain = "www.trelleborg.com"
+  @domain.save
+end
+
+@domain = Domain.where(name: "Schittenhelm private homepage").first_or_initialize
+if @domain.new_record?
+  @domain.account_id = @a.id
+  @domain.name = "Schittenhelm private homepage"
+  @domain.domain = "www.schittenhelm.de"
+  @domain.save
+end
+
+@domain = Domain.where(name: "VHS Herrenberg").first_or_initialize
+if @domain.new_record?
+  @domain.account_id = @a.id
+  @domain.name = "VHS Herrenberg"
+  @domain.domain = "www.vhs.herrenberg.de"
   @domain.save
 end

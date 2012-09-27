@@ -18,30 +18,43 @@
 <div class="tab-content">
   <div class="tab-pane active" id="default_parameters">
     <dl class="dl-horizontal">
-      <dt>Active</dt>
-      <dd><%= @domain.active %>&nbsp;</dd>
-      <dt>Name</dt>
-      <dd><%= @domain.name %>&nbsp;</dd>
-      <dt>Domain</dt>
-      <dd><%= @domain.domain %>&nbsp;</dd>
-      <dt>Description</dt>
-      <dd><%= @domain.description %>&nbsp;</dd>
+      <div class="row">
+        <div class="span6">
+          <dt>Active</dt>
+          <dd><%= @domain.active %>&nbsp;</dd>
+          <dt>Name</dt>
+          <dd><%= @domain.name %>&nbsp;</dd>
+          <dt>Domain</dt>
+          <dd>
+            <%= link_to @domain.scheme + "://" + @domain.domain + (@domain.port? ? ":"+@domain.port : "") , @domain.scheme + "://" + @domain.domain + (@domain.port? ? ":"+@domain.port : ""), target: "_blank"  %>
+        </div>
+        <div class="span6">
+          <dt>Description</dt>
+          <dd><%= @domain.description %>&nbsp;</dd>
+        </div>
+      </div>
     </dl>
   </div>
   <div class="tab-pane" id="check_parameters">
     <dl class="dl-horizontal">
-      <dt>Check changes</dt>
-      <dd><%= @domain.checkContentForChanges %>&nbsp;</dd>
-      <dt>ID Content</dt>
-      <dd><%= @domain.mainContainer %>&nbsp;</dd>
-      <dt>ID Navigation</dt>
-      <dd><%= @domain.navigationContainer %>&nbsp;</dd>
-      <dt>ID Subnavigation</dt>
-      <dd><%= @domain.subnavigationContainer %>&nbsp;</dd>
-      <dt>Check pub. time</dt>
-      <dd><%= @domain.checkPublishTime %>&nbsp;</dd>
-      <dt>Match</dt>
-      <dd><%= @domain.regxPublishTime %>&nbsp;</dd>
+      <div class="row">
+        <div class="span6">
+          <dt>Check changes</dt>
+          <dd><%= @domain.checkContentForChanges %>&nbsp;</dd>
+          <dt>ID Content</dt>
+          <dd><%= @domain.mainContainer %>&nbsp;</dd>
+          <dt>ID Navigation</dt>
+          <dd><%= @domain.navigationContainer %>&nbsp;</dd>
+          <dt>ID Subnavigation</dt>
+          <dd><%= @domain.subnavigationContainer %>&nbsp;</dd>
+        </div>
+        <div class="span6">
+          <dt>Check pub. time</dt>
+          <dd><%= @domain.checkPublishTime %>&nbsp;</dd>
+          <dt>Match</dt>
+          <dd><%= @domain.regxPublishTime %>&nbsp;</dd>
+        </div>
+      </div>
     </dl>
   </div>
   <div class="tab-pane" id="statistics">

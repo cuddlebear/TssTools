@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Domain:</b>
+  <%= @area.domain %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @area.name %>
+</p>
+
+<p>
+  <b>Filter:</b>
+  <%= @area.filter %>
+</p>
+
+<p>
+  <b>Filtertype:</b>
+  <%= @area.filterType %>
+</p>
+
+<p>
+  <b>Sortorder:</b>
+  <%= @area.sortOrder %>
+</p>
+
+
+<%= link_to 'Edit', edit_domain_area_path(@area) %> |
+<%= link_to 'Back', areas_path %>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120922130444) do
+ActiveRecord::Schema.define(:version => 20120927104048) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -23,6 +23,21 @@ ActiveRecord::Schema.define(:version => 20120922130444) do
   end
 
   add_index "accounts", ["name"], :name => "index_accounts_on_name"
+
+  create_table "areas", :force => true do |t|
+    t.integer  "domain_id"
+    t.string   "name"
+    t.string   "filter"
+    t.integer  "filterType"
+    t.integer  "property_id"
+    t.integer  "sortOrder"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "areas", ["domain_id"], :name => "index_areas_on_domain_id"
+  add_index "areas", ["property_id"], :name => "index_areas_on_property_id"
+  add_index "areas", ["sortOrder"], :name => "index_areas_on_sortOrder"
 
   create_table "checks", :force => true do |t|
     t.integer  "page_id"
@@ -152,6 +167,9 @@ ActiveRecord::Schema.define(:version => 20120922130444) do
   add_index "users", ["account_id"], :name => "index_users_on_account_id"
   add_index "users", ["email"], :name => "index_users_on_email"
   add_index "users", ["username"], :name => "index_users_on_username"
+
+  add_foreign_key "areas", "domains", :name => "areas_domain_id_fk"
+  add_foreign_key "areas", "properties", :name => "areas_property_id_fk"
 
   add_foreign_key "checks", "pages", :name => "checks_page_id_fk"
 
