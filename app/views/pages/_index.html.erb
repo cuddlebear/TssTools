@@ -14,10 +14,14 @@
     <th>Title</th>
     <th colspan="3">Actions</th>
   </tr>
-  <% @pages = @domain.pages.order("path").page(params[:page]).per(5) %>
+  <% @pages = @domain.pages.order("path").page(params[:page]).per(10) %>
   <% @pages.each do |page|%>
+  <% url = page.domain.scheme + "://" + page.domain.domain + (page.domain.port ? ":" + page.domain.port : "") + page.path
+     #date = WebPageAnalyser.get_publish_date("http://www.heise.de")
+             #get_publish_date( "http://www.heise.de","kk")
+  %>
       <tr>
-        <td><% if !page.active %><i class="icon-ban-circle" title="Inactive"></i><% end %></td>
+        <td><% unless page.active %><i class="icon-ban-circle" title="Inactive"></i><% end %></td>
         <td><%= link_to truncate(page.path, length:40),
                         page.domain.scheme + "://" +
                         page.domain.domain +

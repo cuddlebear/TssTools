@@ -1,4 +1,6 @@
 class DomainsController < ApplicationController
+  require "web_page_analyser"
+
   def index
     @domains = Domain.order("name").page(params[:page]).per(5)
     
@@ -10,6 +12,7 @@ class DomainsController < ApplicationController
   
   def new
     @domain = Domain.new
+    @domain.active = true
     respond_to do |format|
       format.html
     end

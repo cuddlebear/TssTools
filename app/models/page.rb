@@ -1,10 +1,11 @@
 class Page < ActiveRecord::Base
   attr_accessible :domain_id, :path, :title, :active, :status,
-                  :pageRank, :pageSpeed, :ySlow,
-                  :checkCounter, :lastCheck, :actContent
+                  :page_rank, :page_speed, :y_slow,
+                  :check_counter, :last_check, :actual_content
 
-  belongs_to :domain
-  has_many :properties, :through => :url_properties
+  belongs_to  :domain
+  belongs_to  :area
+  has_many    :properties, :through => :page_properties
 
   validates :path, :presence => true
   validates :path, :format => { :with => /^[^ ]*$/,

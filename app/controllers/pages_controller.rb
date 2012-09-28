@@ -20,6 +20,7 @@ class PagesController < ApplicationController
   def new
     @page = Page.new
     @page.domain_id = params[:domain_id]
+    @page.active = true;
 
     respond_to do |format|
       format.html # new.html.erb

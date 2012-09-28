@@ -1,6 +1,6 @@
 class AreasController < ApplicationController
-  # GET /Areas
-  # GET /Areas.json
+  # GET /areas
+  # GET /areas.json
   def index
     @areas = Area.all
 
@@ -10,8 +10,8 @@ class AreasController < ApplicationController
     end
   end
 
-  # GET /Areas/1
-  # GET /Areas/1.json
+  # GET /areas/1
+  # GET /areas/1.json
   def show
     @area = Area.find(params[:id])
 
@@ -21,8 +21,8 @@ class AreasController < ApplicationController
     end
   end
 
-  # GET /Areas/new
-  # GET /Areas/new.json
+  # GET /areas/new
+  # GET /areas/new.json
   def new
     @area = Area.new
 
@@ -32,13 +32,13 @@ class AreasController < ApplicationController
     end
   end
 
-  # GET /Areas/1/edit
+  # GET /areas/1/edit
   def edit
     @area = Area.find(params[:id])
   end
 
-  # POST /Areas
-  # POST /Areas.json
+  # POST /areas
+  # POST /areas.json
   def create
     @area = Area.new(params[:area])
 
@@ -53,8 +53,8 @@ class AreasController < ApplicationController
     end
   end
 
-  # PUT /Areas/1
-  # PUT /Areas/1.json
+  # PUT /areas/1
+  # PUT /areas/1.json
   def update
     @area = Area.find(params[:id])
 
@@ -69,8 +69,8 @@ class AreasController < ApplicationController
     end
   end
 
-  # DELETE /Areas/1
-  # DELETE /Areas/1.json
+  # DELETE /areas/1
+  # DELETE /areas/1.json
   def destroy
     @area = Area.find(params[:id])
     @area.destroy

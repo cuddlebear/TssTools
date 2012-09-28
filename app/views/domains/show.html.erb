@@ -12,49 +12,58 @@
 <ul class="nav nav-tabs" id="myTab" style="margin-bottom: 1px;">
   <li class="active"><a href="#default_parameters">Default Parameters</a></li>
   <li><a href="#check_parameters">Check Parameters</a></li>
+  <li><a href="#areas">Areas</a></li>
   <li><a href="#statistics">Statistics</a></li>
 </ul>
 
 <div class="tab-content">
   <div class="tab-pane active" id="default_parameters">
-    <dl class="dl-horizontal">
       <div class="row">
         <div class="span6">
-          <dt>Active</dt>
-          <dd><%= @domain.active %>&nbsp;</dd>
-          <dt>Name</dt>
-          <dd><%= @domain.name %>&nbsp;</dd>
-          <dt>Domain</dt>
-          <dd>
-            <%= link_to @domain.scheme + "://" + @domain.domain + (@domain.port? ? ":"+@domain.port : "") , @domain.scheme + "://" + @domain.domain + (@domain.port? ? ":"+@domain.port : ""), target: "_blank"  %>
+          <dl class="dl-horizontal">
+            <dt>Active</dt>
+            <dd><%= @domain.active %>&nbsp;</dd>
+            <dt>Name</dt>
+            <dd><%= @domain.name %>&nbsp;</dd>
+            <dt>Domain</dt>
+            <dd><%= link_to @domain.scheme + "://" + @domain.domain + (@domain.port ? ":"+@domain.port : "") , @domain.scheme + "://" + @domain.domain + (@domain.port ? ":"+@domain.port : ""), target: "_blank"  %></dd>
+          </dl>
         </div>
         <div class="span6">
-          <dt>Description</dt>
-          <dd><%= @domain.description %>&nbsp;</dd>
+          <dl class="dl-horizontal">
+            <dt>Description</dt>
+            <dd><%= @domain.description %>&nbsp;</dd>
+          </dl>
         </div>
       </div>
-    </dl>
   </div>
   <div class="tab-pane" id="check_parameters">
-    <dl class="dl-horizontal">
       <div class="row">
         <div class="span6">
-          <dt>Check changes</dt>
-          <dd><%= @domain.checkContentForChanges %>&nbsp;</dd>
-          <dt>ID Content</dt>
-          <dd><%= @domain.mainContainer %>&nbsp;</dd>
-          <dt>ID Navigation</dt>
-          <dd><%= @domain.navigationContainer %>&nbsp;</dd>
-          <dt>ID Subnavigation</dt>
-          <dd><%= @domain.subnavigationContainer %>&nbsp;</dd>
+          <dl class="dl-horizontal">
+            <dt>Check changes</dt>
+            <dd><%= @domain.checkContentForChanges %>&nbsp;</dd>
+            <dt>ID Content</dt>
+            <dd><%= @domain.mainContainer %>&nbsp;</dd>
+            <dt>ID Navigation</dt>
+            <dd><%= @domain.navigationContainer %>&nbsp;</dd>
+            <dt>ID Subnavigation</dt>
+            <dd><%= @domain.subnavigationContainer %>&nbsp;</dd>
+          </dl>
         </div>
         <div class="span6">
-          <dt>Check pub. time</dt>
-          <dd><%= @domain.checkPublishTime %>&nbsp;</dd>
-          <dt>Match</dt>
-          <dd><%= @domain.regxPublishTime %>&nbsp;</dd>
+          <dl class="dl-horizontal">
+            <dt>Check pub. time</dt>
+            <dd><%= @domain.checkPublishTime %>&nbsp;</dd>
+            <dt>Match</dt>
+            <dd><%= @domain.regxPublishTime %>&nbsp;</dd>
+          </dl>
         </div>
       </div>
+  </div>
+  <div class="tab-pane" id="areas">
+    <dl class="dl-horizontal">
+
     </dl>
   </div>
   <div class="tab-pane" id="statistics">
@@ -71,7 +80,7 @@
         $('#myTab a').click(function (e) {
             e.preventDefault();
             $(this).tab('show');
-        })
+        });
         $('#myTab a:first').tab('show');
     })
 </script>
