@@ -10,6 +10,7 @@
 <table class="table table-striped table-hover">
   <tr>
     <th>&nbsp;</th>
+    <th>&nbsp;</th>
     <th>Url</th>
     <th>Title</th>
     <th colspan="3">Actions</th>
@@ -22,6 +23,7 @@
   %>
       <tr>
         <td><% unless page.active %><i class="icon-ban-circle" title="Inactive"></i><% end %></td>
+        <td><%= status_badge(page.status) %></td>
         <td><%= link_to truncate(page.path, length:40),
                         page.domain.scheme + "://" +
                         page.domain.domain +

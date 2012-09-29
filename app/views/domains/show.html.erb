@@ -22,7 +22,7 @@
         <div class="span6">
           <dl class="dl-horizontal">
             <dt>Active</dt>
-            <dd><%= @domain.active %>&nbsp;</dd>
+            <dd><%= icon_boolean(@domain.active) %>&nbsp;</dd>
             <dt>Name</dt>
             <dd><%= @domain.name %>&nbsp;</dd>
             <dt>Domain</dt>
@@ -42,29 +42,27 @@
         <div class="span6">
           <dl class="dl-horizontal">
             <dt>Check changes</dt>
-            <dd><%= @domain.checkContentForChanges %>&nbsp;</dd>
+            <dd><%= @domain.check_content_for_changes%>&nbsp;</dd>
             <dt>ID Content</dt>
-            <dd><%= @domain.mainContainer %>&nbsp;</dd>
+            <dd><%= @domain.main_container%>&nbsp;</dd>
             <dt>ID Navigation</dt>
-            <dd><%= @domain.navigationContainer %>&nbsp;</dd>
+            <dd><%= @domain.navigation_container %>&nbsp;</dd>
             <dt>ID Subnavigation</dt>
-            <dd><%= @domain.subnavigationContainer %>&nbsp;</dd>
+            <dd><%= @domain.subnavigation_container %>&nbsp;</dd>
           </dl>
         </div>
         <div class="span6">
           <dl class="dl-horizontal">
             <dt>Check pub. time</dt>
-            <dd><%= @domain.checkPublishTime %>&nbsp;</dd>
+            <dd><%= @domain.check_publish_time %>&nbsp;</dd>
             <dt>Match</dt>
-            <dd><%= @domain.regxPublishTime %>&nbsp;</dd>
+            <dd><%= @domain.regx_publish_time %>&nbsp;</dd>
           </dl>
         </div>
       </div>
   </div>
   <div class="tab-pane" id="areas">
-    <dl class="dl-horizontal">
-
-    </dl>
+    <%=  render("areas/index") %>
   </div>
   <div class="tab-pane" id="statistics">
     <dl class="dl-horizontal">

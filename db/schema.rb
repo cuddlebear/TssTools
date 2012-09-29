@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(:version => 20120922130444) do
     t.string   "scheme"
     t.string   "domain"
     t.string   "port"
+    t.integer  "status"
     t.boolean  "check_page_rank"
     t.boolean  "check_page_speed"
     t.boolean  "check_y_slow"
@@ -144,11 +145,11 @@ ActiveRecord::Schema.define(:version => 20120922130444) do
 
   create_table "users", :force => true do |t|
     t.integer  "account_id"
-    t.string   "username"
+    t.string   "user_name"
     t.string   "email"
     t.string   "phone"
-    t.string   "firstName"
-    t.string   "lastName"
+    t.string   "first_name"
+    t.string   "last_name"
     t.string   "company"
     t.string   "address1"
     t.string   "address2"
@@ -170,7 +171,8 @@ ActiveRecord::Schema.define(:version => 20120922130444) do
 
   add_index "users", ["account_id"], :name => "index_users_on_account_id"
   add_index "users", ["email"], :name => "index_users_on_email"
-  add_index "users", ["username"], :name => "index_users_on_username"
+  add_index "users", ["last_name"], :name => "index_users_on_last_name"
+  add_index "users", ["user_name"], :name => "index_users_on_user_name"
 
   add_foreign_key "checks", "pages", :name => "checks_page_id_fk"
 

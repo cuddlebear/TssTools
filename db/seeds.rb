@@ -9,16 +9,16 @@
 # Stati
 
 a = Account.create(name: "Sabines first account", active: true)
-a.users.create(username: "Sabine", email: "sabine.mustermann@evil.orgs", first_name: "Sabine", last_name:"Mustermann", active: true, account_admin: true, super_admin: false)
+a.users.create(user_name: "Sabine", email: "sabine.mustermann@evil.orgs", first_name: "Sabine", last_name:"Mustermann", active: true, account_admin: true, super_admin: false)
 
 a = Account.create(name: "Maxs first account", active: true)
-a.users.create(username: "Max", email: "max.mustermann@evil.orgs", first_name: "Max", last_Name:"Mustermann", active: true, account_admin: true, super_admin: true)
+a.users.create(user_name: "Max", email: "max.mustermann@evil.orgs", first_name: "Max", last_name:"Mustermann", active: true, account_admin: true, super_admin: true)
 
 unless PropertyGroup.exists?(name: "Status")
   pg = PropertyGroup.create(name: "Status", description: "Describes the status of a domain or page.", active: true)
   pg.properties.create(name: "New",           value: 0,  sort_order: 1)
   pg.properties.create(name: "Unknown",       value: 1,  sort_order: 2)
-  pg.properties.create(name: "Maintainance",  value: 2,  sort_order: 3)
+  pg.properties.create(name: "Maintenance",   value: 2,  sort_order: 3)
   pg.properties.create(name: "Warning",       value: 3,  sort_order: 4)
   pg.properties.create(name: "Critical",      value: 4,  sort_order: 5)
   pg.properties.create(name: "OK",            value: 5,  sort_order: 6)
@@ -132,4 +132,7 @@ if @domain.new_record?
   @domain.name = "VHS Herrenberg"
   @domain.domain = "www.vhs.herrenberg.de"
   @domain.save
+  @domain.pages.create(path: "/kursliste/147", title: "", active: true)
+  @domain.pages.create(path: "/kursliste/143", title: "", active: true)
+  @domain.pages.create(path: "/kultur-kunst-gestalten-musik/informationen", title: "", active: true)
 end

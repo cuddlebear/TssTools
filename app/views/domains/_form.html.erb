@@ -42,7 +42,7 @@
               <div class="controls"><%= f.text_field :scheme , placeholder: "Scheme", class: "input-mini" %></div>
             </div>
             <div class="control-group<% if @domain.errors["port"].any? %> error<% end %>">
-              <%=  f.label :domain, "Port", class: "control-label" %>
+              <%=  f.label :port, "Port", class: "control-label" %>
               <div class="controls"><%= f.text_field :port , placeholder: "Port", class: "input-mini"  %></div>
             </div>
             <div class="control-group<% if @domain.errors["domain"].any? %> error<% end %>">
@@ -57,31 +57,31 @@
           <div class="span6">
             <div class="control-group">
               <%=  f.label :active, "Check content for changes", class: "control-label" %>
-              <div class="controls"><%= f.check_box :checkContentForChanges %></div>
+              <div class="controls"><%= f.check_box :check_content_for_changes %></div>
             </div>
 
-            <div class="control-group<% if @domain.errors["mainContainer"].any? %> error<% end %>">
-              <%=  f.label :mainContainer, "ID Content", class: "control-label" %>
-              <div class="controls"><%= f.text_field :mainContainer , placeholder: "ID Content" %></div>
+            <div class="control-group<% if @domain.errors["main_container"].any? %> error<% end %>">
+              <%=  f.label :main_container, "ID Content", class: "control-label" %>
+              <div class="controls"><%= f.text_field :main_container , placeholder: "ID Content" %></div>
             </div>
-            <div class="control-group<% if @domain.errors["navigationContainer"].any? %> error<% end %>">
-              <%=  f.label :navigationContainer, "ID Navigation", class: "control-label" %>
-              <div class="controls"><%= f.text_field :navigationContainer , placeholder: "ID Navigation" %></div>
+            <div class="control-group<% if @domain.errors["navigation_container"].any? %> error<% end %>">
+              <%=  f.label :navigation_container, "ID Navigation", class: "control-label" %>
+              <div class="controls"><%= f.text_field :navigation_container , placeholder: "ID Navigation" %></div>
             </div>
-            <div class="control-group<% if @domain.errors["subnavigationContainer"].any? %> error<% end %>">
-              <%=  f.label :subnavigationContainer, "ID Subnavigation", class: "control-label" %>
-              <div class="controls"><%= f.text_field :subnavigationContainer , placeholder: "ID Subnavigation" %></div>
+            <div class="control-group<% if @domain.errors["subnavigation_container"].any? %> error<% end %>">
+              <%=  f.label :subnavigation_container, "ID Subnavigation", class: "control-label" %>
+              <div class="controls"><%= f.text_field :subnavigation_container , placeholder: "ID Subnavigation" %></div>
             </div>
           </div>
           <div class="span6">
             <div class="control-group">
-              <%=  f.label :checkPublishTime, "Check publish times", class: "control-label" %>
-              <div class="controls"><%= f.check_box :checkPublishTime %></div>
+              <%=  f.label :check_publish_time, "Check publish times", class: "control-label" %>
+              <div class="controls"><%= f.check_box :check_publish_time %></div>
             </div>
 
-            <div class="control-group<% if @domain.errors["regxPublishTime"].any? %> error<% end %>">
-              <%=  f.label :regxPublishTime, "Selector for publish times", class: "control-label" %>
-              <div class="controls"><%= f.text_field :regxPublishTime, placeholder: "Regular expression" %></div>
+            <div class="control-group<% if @domain.errors["regx_publish_time"].any? %> error<% end %>">
+              <%=  f.label :regx_publish_time, "Selector for publish times", class: "control-label" %>
+              <div class="controls"><%= f.text_field :regx_publish_time, placeholder: "Regular expression" %></div>
             </div>
           </div>
         </div>

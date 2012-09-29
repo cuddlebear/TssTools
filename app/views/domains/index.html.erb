@@ -11,12 +11,16 @@
 
 <table class="table table-striped table-hover">
   <tr>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
     <th>Name</th>
     <th>Url</th>
     <th>Actions</th>
   </tr>
 <% @domains.each do |domain|%>
   <tr>
+    <td><% unless domain.active %><i class="icon-ban-circle" title="Inactive"></i><% end %></td>
+    <td><%= status_badge(domain.status) %></td>
     <td><%= domain.name%></td>
     <td><%= link_to domain.domain, domain.scheme + "://" + domain.domain, target: "_blank"  %></td>
     <td>

@@ -1,4 +1,11 @@
-<h1>Listing area</h1>
+<div class="navbar navbar-inverse">
+  <div class="navbar-inner">
+    <span class="brand">Areas list</span>
+    <ul class="nav pull-right">
+      <li><%= link_to "Add Page", new_area_path(domain_id: @domain.id) %></li>
+    </ul>
+  </div>
+</div>
 
 <table>
   <tr>
@@ -12,13 +19,12 @@
     <th></th>
   </tr>
 
+<% @areas = @domain.areas.order("sort_order").page(params[:areas]).per(10) %>
 <% @areas.each do |area| %>
   <tr>
-    <td><%= area.domain %></td>
     <td><%= area.name %></td>
-    <td><%= area.filter %></td>
-    <td><%= area.filterType %></td>
-    <td><%= area.sortOrder %></td>
+    <td><%= area.filter_type_property.name %></td>
+    <td><%= ""%></td>
     <td><%= link_to 'Show', area %></td>
     <td><%= link_to 'Edit', edit_area_path(area) %></td>
     <td><%= link_to 'Destroy', area, method: :delete, data: { confirm: 'Are you sure?' } %></td>
@@ -26,6 +32,5 @@
 <% end %>
 </table>
 
-<br />
 
-<%= link_to 'New Domain area', new_area_path %>
+<%= paginate @areas %>

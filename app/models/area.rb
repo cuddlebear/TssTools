@@ -7,7 +7,7 @@ class Area < ActiveRecord::Base
   belongs_to  :interval_property, class_name: Property, :foreign_key => "interval_property_id"
 
   validates :filter, :presence => true
-  validates :filterType, :presence => true
+  validates :filter_type_property_id, :presence => true
 
 
   # filterType

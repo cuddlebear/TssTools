@@ -1,5 +1,5 @@
 class Domain < ActiveRecord::Base
-  attr_accessible :account_id, :name, :description, :scheme, :domain, :port,
+  attr_accessible :account_id, :name, :description, :scheme, :domain, :port, :status,
                   :check_page_rank, :check_page_speed, :check_y_slow, :check_content_for_changes,
                   :main_container, :navigation_container, :subnavigation_container, :ignore_container,
                   :check_publish_time, :regx_publish_time,
@@ -38,6 +38,8 @@ class Domain < ActiveRecord::Base
   end
 
   after_create do |record| # create default page
+    record.status = 0
+    record.save
     record.pages.create(path: "/", title: "Homepage")
     record.areas.create(name: "root only",
                         filter: "^/*$",
