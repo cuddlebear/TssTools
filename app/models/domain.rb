@@ -7,6 +7,7 @@ class Domain < ActiveRecord::Base
 
   has_many    :pages
   has_many    :areas
+  has_many    :containers
   belongs_to  :account
 
   validates :name,    :presence => true

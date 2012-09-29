@@ -1,5 +1,11 @@
 Railstest::Application.routes.draw do
 
+  resources :page_contents
+
+  resources :contents
+
+  resources :containers
+
   get "domains/init"
   #get "domains/new"
   #get "domains/edit"

@@ -1,0 +1,33 @@
+<%= form_for(@container) do |f| %>
+  <% if @container.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@container.errors.count, "error") %> prohibited this container from being saved:</h2>
+
+      <ul>
+      <% @container.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :domain %><br />
+    <%= f.text_field :domain %>
+  </div>
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :x_path %><br />
+    <%= f.text_field :x_path %>
+  </div>
+  <div class="field">
+    <%= f.label :ignore %><br />
+    <%= f.check_box :ignore %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

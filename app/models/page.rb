@@ -6,6 +6,7 @@ class Page < ActiveRecord::Base
   belongs_to  :domain
   belongs_to  :area
   has_many    :properties, :through => :page_properties
+  has_many    :page_contents
 
   validates :path, :presence => true
   validates :path, :format => { :with => /^[^ ]*$/,

@@ -61,16 +61,16 @@
             </div>
 
             <div class="control-group<% if @domain.errors["main_container"].any? %> error<% end %>">
-              <%=  f.label :main_container, "ID Content", class: "control-label" %>
-              <div class="controls"><%= f.text_field :main_container , placeholder: "ID Content" %></div>
+              <%=  f.label :main_container, "Content", class: "control-label" %>
+              <div class="controls"><%= f.text_area :main_container , placeholder: "xpath Content", rows: 4 %></div>
             </div>
             <div class="control-group<% if @domain.errors["navigation_container"].any? %> error<% end %>">
-              <%=  f.label :navigation_container, "ID Navigation", class: "control-label" %>
-              <div class="controls"><%= f.text_field :navigation_container , placeholder: "ID Navigation" %></div>
+              <%=  f.label :navigation_container, "Navigation", class: "control-label" %>
+              <div class="controls"><%= f.text_area :navigation_container , placeholder: "xpath Navigation", rows: 4 %></div>
             </div>
             <div class="control-group<% if @domain.errors["subnavigation_container"].any? %> error<% end %>">
-              <%=  f.label :subnavigation_container, "ID Subnavigation", class: "control-label" %>
-              <div class="controls"><%= f.text_field :subnavigation_container , placeholder: "ID Subnavigation" %></div>
+              <%=  f.label :subnavigation_container, "Subnavigation", class: "control-label" %>
+              <div class="controls"><%= f.text_area :subnavigation_container , placeholder: "xpath Subnavigation", rows: 4 %></div>
             </div>
           </div>
           <div class="span6">

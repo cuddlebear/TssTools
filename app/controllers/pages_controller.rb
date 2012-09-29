@@ -1,3 +1,5 @@
+require "web_page_analyser"
+
 class PagesController < ApplicationController
   def index
     @pages = Page.order("path").page(params[:page]).per(5)
@@ -10,7 +12,6 @@ class PagesController < ApplicationController
 
   def show
     @page = Page.find(params[:id])
-
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @page }
@@ -38,6 +39,7 @@ class PagesController < ApplicationController
     respond_to do |format|
       if @page.save
         #format.html { redirect_to @page, notice: 'Page was successfully created.' }
+        WebPageAnalyser.initialize_page(@page)
         format.html { redirect_to domain_path(@page.domain_id), notice: 'Page was successfully created.' }
         format.json { render json: @page, status: :created, location: @page }
       else
@@ -52,6 +54,7 @@ class PagesController < ApplicationController
 
     respond_to do |format|
       if @page.update_attributes(params[:page])
+        WebPageAnalyser.initialize_page(@page)
         #format.html { redirect_to @page, notice: 'Page was successfully updated.' }
         format.html { redirect_to domain_url(@page.domain_id), notice: 'Page was successfully updated.' }
         format.json { head :no_content }

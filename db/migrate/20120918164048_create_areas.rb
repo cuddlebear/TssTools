@@ -15,7 +15,7 @@ class CreateAreas < ActiveRecord::Migration
     add_index :areas, :interval_property_id
     add_index :areas, :sort_order
 
-    #add_foreign_key(:areas, :domains)
+    add_foreign_key(:areas, :domains)
     #add_foreign_key(:areas, :properties)
   end
 

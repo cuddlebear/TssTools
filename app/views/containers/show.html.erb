@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Domain:</b>
+  <%= @container.domain %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @container.name %>
+</p>
+
+<p>
+  <b>X path:</b>
+  <%= @container.x_path %>
+</p>
+
+<p>
+  <b>Ignore:</b>
+  <%= @container.ignore %>
+</p>
+
+
+<%= link_to 'Edit', edit_container_path(@container) %> |
+<%= link_to 'Back', containers_path %>
