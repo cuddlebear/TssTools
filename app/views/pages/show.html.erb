@@ -1,0 +1,59 @@
+<div class="navbar navbar-inverse">
+  <div class="navbar-inner">
+    <span class="brand">Show page</span>
+  </div>
+</div>
+
+<%
+   doc = nil
+   begin
+     url = @page.domain.scheme + "://" + @page.domain.domain + (@page.domain.port? ? ":" + @page.domain.port : "") + @page.path
+     doc = Nokogiri::HTML(open(url))
+   rescue => e
+     title = "Error retrieving page"
+   end
+   unless doc.nil?
+     title =  doc.at_css("/html/head/title").text
+     main_content = WebPageAnalyser.analyze_content(@page.domain.main_container,doc, @page.domain_id)
+     navigation_content  = WebPageAnalyser.analyze_content(@page.domain.navigation_container,doc, @page.domain_id)
+     subnavigation_content  = WebPageAnalyser.analyze_content(@page.domain.subnavigation_container,doc, @page.domain_id)
+   end
+%>
+
+<table class="table table-bordered">
+  <tr>
+    <td>Url</td>
+    <td><%= url %></td>
+  </tr>
+  <tr>
+    <td>Title </td>
+    <td><%= title %></td>
+  </tr>
+  <tr>
+    <td>
+      Content<br />
+    </td>
+    <td> <%= raw main_content %>
+  </tr>
+  <tr>
+    <td>
+      Navigation<br />
+    </td>
+    <td> <%= raw navigation_content %>
+  </tr>
+  <tr>
+    <td>
+      Subavigation<br />
+    </td>
+    <td> <%= raw subnavigation_content %>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+

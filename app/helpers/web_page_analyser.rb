@@ -30,4 +30,27 @@ class WebPageAnalyser
 
   end
 
+  def self.analyze_content(filter, dom, domain_id)
+    content = ""
+    if filter.nil? == false and filter
+
+      filter.split(/\r\n/).each do |match|
+        tmp = dom.at_css(match)
+        unless tmp.nil?
+          tmp.css('a[@href]').each do |link|
+            if link['href'].start_with?("/") && link['href'].index("?") == nil
+              unless Page.where(domain_id: domain_id, path: link['href']).exists?
+                Page.create(domain_id: domain_id, path:link['href'])
+                content += link['href'] +"<br />"
+              end
+            end
+
+          end
+          content += tmp.inner_html
+        end
+      end
+    end
+    return content
+  end
+
 end

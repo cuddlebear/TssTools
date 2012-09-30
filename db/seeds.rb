@@ -83,12 +83,13 @@ starts_with = Property.joins(:property_group).where(property_groups: {name: "Fil
 
 @domain = Domain.where(name: "Trelleborg Sealing Sollutions").first_or_initialize
 if @domain.new_record?
-  @domain.account_id              = a.id
-  @domain.name                    = "Trelleborg Sealing Sollutions"
-  @domain.domain                  = "www.tss.trelleborg.com"
-  @domain.main_container          = "content"
-  @domain.navigation_container    = "navigation-area"
-  @domain.subnavigation_container = "leftnavi"
+  @domain.account_id                = a.id
+  @domain.name                      = "Trelleborg Sealing Sollutions"
+  @domain.domain                    = "www.tss.trelleborg.com"
+  @domain.check_content_for_changes = true
+  @domain.main_container            = "//*[@id=\"content\"]"
+  @domain.navigation_container      = "//*[@id=\"navigation-area\"]"
+  @domain.subnavigation_container   = "//*[@id=\"leftnavi\"]"
   @domain.save
 
   @domain.pages.create(path: "/global/en/homepage/homepage.html", title: "Hydraulic Seals, Rotary Shaft Seals, O-Rings by Trelleborg", active: true)
@@ -112,25 +113,62 @@ end
 
 @domain = Domain.where(name: "Trelleborg group").first_or_initialize
 if @domain.new_record?
-  @domain.account_id = a.id
-  @domain.name = "Trelleborg group"
-  @domain.domain = "www.trelleborg.com"
+  @domain.account_id                = a.id
+  @domain.name                      = "Trelleborg group"
+  @domain.domain                    = "www.trelleborg.com"
+  @domain.check_content_for_changes = true
+  @domain.main_container            = "//*[@id=\"subpage\"]"
+  @domain.navigation_container      = "//*[@id=\"topmenu\"]"
+  @domain.subnavigation_container   = "//*[@id=\"leftmenu\"]"
   @domain.save
 end
 
 @domain = Domain.where(name: "Schittenhelm private homepage").first_or_initialize
 if @domain.new_record?
-  @domain.account_id = a.id
-  @domain.name = "Schittenhelm private homepage"
-  @domain.domain = "www.schittenhelm.de"
+  @domain.account_id                = a.id
+  @domain.name                      = "Schittenhelm private homepage"
+  @domain.domain                    = "www.schittenhelm.de"
+  @domain.check_content_for_changes = true
+  @domain.main_container            = "//*[@id=\"main\"]"
+  @domain.navigation_container      = "//*[@id=\"navigation\"]"
   @domain.save
 end
 
+@domain = Domain.where(name: "Stihl").first_or_initialize
+if @domain.new_record?
+  @domain.account_id                = a.id
+  @domain.name                      = "Stihl"
+  @domain.domain                    = "www.stihl.de"
+  @domain.check_content_for_changes = true
+  @domain.main_container            = "//*[@id=\"main_content\"]/div[2]"
+  @domain.navigation_container      = "//*[@id=\"navigation\"]"
+  @domain.subnavigation_container   = "//*[@id=\"left_navigation\"]"
+  @domain.save
+end
+
+@domain = Domain.where(name: "SFE").first_or_initialize
+if @domain.new_record?
+  @domain.account_id                = a.id
+  @domain.name                      = "SFE"
+  @domain.domain                    = "www.sfe.de"
+  @domain.check_content_for_changes = true
+  @domain.main_container            = "//*[@id=\"ctl4\"]"
+  @domain.navigation_container      = "//*[@id=\"main-nav\"]"
+  @domain.subnavigation_container   = "//*[@id=\"ctl12\"]"
+  @domain.save
+end
+
+
 @domain = Domain.where(name: "VHS Herrenberg").first_or_initialize
 if @domain.new_record?
-  @domain.account_id = a.id
-  @domain.name = "VHS Herrenberg"
-  @domain.domain = "www.vhs.herrenberg.de"
+  @domain.account_id                = a.id
+  @domain.name                      = "VHS Herrenberg"
+  @domain.domain                    = "www.vhs.herrenberg.de"
+  @domain.check_content_for_changes = true
+  @domain.main_container            = "//*[@id=\"main\"]"
+  @domain.navigation_container      = "//*[@id=\"primary\"]"
+  @domain.subnavigation_container   = "//*[@id=\"block-menu-menu-departments\"]"
+  @domain.save
   @domain.save
   @domain.pages.create(path: "/kursliste/147", title: "", active: true)
   @domain.pages.create(path: "/kursliste/143", title: "", active: true)
