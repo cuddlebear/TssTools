@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120922130444) do
+ActiveRecord::Schema.define(:version => 20120929155156) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -55,6 +55,27 @@ ActiveRecord::Schema.define(:version => 20120922130444) do
 
   add_index "checks", ["page_id"], :name => "index_checks_on_page_id"
 
+  create_table "containers", :force => true do |t|
+    t.integer  "domain_id"
+    t.string   "name"
+    t.string   "x_path"
+    t.boolean  "ignore"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "containers", ["domain_id"], :name => "index_containers_on_domain_id"
+
+  create_table "contents", :force => true do |t|
+    t.integer  "container_id"
+    t.string   "hash"
+    t.text     "text"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  add_index "contents", ["container_id"], :name => "index_contents_on_container_id"
+
   create_table "domains", :force => true do |t|
     t.integer  "account_id"
     t.boolean  "active"
@@ -83,6 +104,17 @@ ActiveRecord::Schema.define(:version => 20120922130444) do
   add_index "domains", ["domain"], :name => "index_domains_on_domain"
   add_index "domains", ["name"], :name => "index_domains_on_name"
   add_index "domains", ["sort_order"], :name => "index_domains_on_sort_order"
+
+  create_table "page_contents", :force => true do |t|
+    t.integer  "page_id"
+    t.integer  "content_id"
+    t.datetime "from"
+    t.datetime "until"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "page_contents", ["page_id"], :name => "index_page_contents_on_page_id"
 
   create_table "page_properties", :force => true do |t|
     t.integer  "page_id"
@@ -175,6 +207,8 @@ ActiveRecord::Schema.define(:version => 20120922130444) do
   add_index "users", ["user_name"], :name => "index_users_on_user_name"
 
   add_foreign_key "checks", "pages", :name => "checks_page_id_fk"
+
+  add_foreign_key "containers", "domains", :name => "containers_domain_id_fk"
 
   add_foreign_key "domains", "accounts", :name => "domains_account_id_fk"
 

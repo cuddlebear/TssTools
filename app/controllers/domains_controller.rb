@@ -2,7 +2,7 @@ class DomainsController < ApplicationController
   require "web_page_analyser"
 
   def index
-    @domains = Domain.order("name").page(params[:page]).per(5)
+    @domains = Domain.order("name").page(params[:page]).per(10)
     
     respond_to do |format|
       format.html

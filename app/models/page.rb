@@ -7,6 +7,7 @@ class Page < ActiveRecord::Base
   belongs_to  :area
   has_many    :properties, :through => :page_properties
   has_many    :page_contents
+  has_many    :checks
 
   validates :path, :presence => true
   validates :path, :format => { :with => /^[^ ]*$/,
@@ -22,5 +23,12 @@ class Page < ActiveRecord::Base
     record.active = true
     record.status = 0    # new
   end
+
+  after_create do |record| # create default page
+    record.status = 0    # new
+    record.save
+    record.checks.create(priority: 1, type:100, scheduled_start: DateTime.now)
+  end
+
 
 end

@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  domain: 
+  name: MyString
+  filter: MyString
+  filterType: MyString
+  sortOrder: 1
+
+two:
+  domain: 
+  name: MyString
+  filter: MyString
+  filterType: MyString
+  sortOrder: 1

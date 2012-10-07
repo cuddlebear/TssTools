@@ -2,9 +2,9 @@
 
 <table>
   <tr>
+    <th>Prio</th>
+    <th>Domain</th>
     <th>Url</th>
-    <th>Priority</th>
-    <th>Type</th>
     <th>Resultcode</th>
     <th>Resulttext</th>
     <th></th>
@@ -12,19 +12,22 @@
     <th></th>
   </tr>
 
-<% @checks.each do |check| %>
+<% @checks.each do |check|
+  WebPageAnalyser.check_page(check.id)
+%>
   <tr>
-    <td><%= check.page %></td>
     <td><%= check.priority %></td>
-    <td><%= check.type %></td>
-    <td><%= check.resultCode %></td>
-    <td><%= check.resultText %></td>
+    <td><%= check.page.domain.domain %></td>
+    <td><%= check.page.path %></td>
+    <td><%= check.result_code %></td>
     <td><%= link_to 'Show', check %></td>
     <td><%= link_to 'Edit', edit_check_path(check) %></td>
     <td><%= link_to 'Destroy', check, method: :delete, data: { confirm: 'Are you sure?' } %></td>
   </tr>
 <% end %>
 </table>
+
+<%= paginate @checks %>
 
 <br />
 

@@ -1,8 +1,9 @@
 class ChecksController < ApplicationController
+  require "web_page_analyser"
   # GET /checks
   # GET /checks.json
   def index
-    @checks = Check.all
+    @checks = Check.where("result_code is null").page(params[:page]).per(50)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -13,6 +14,7 @@ class ChecksController < ApplicationController
   # GET /checks/1
   # GET /checks/1.json
   def show
+    WebPageAnalyser.check_page(params[:id])
     @check = Check.find(params[:id])
 
     respond_to do |format|

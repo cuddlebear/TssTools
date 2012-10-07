@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  page: 
+  content: 
+  from: 2012-09-29 17:51:56
+  until: 2012-09-29 17:51:56
+
+two:
+  page: 
+  content: 
+  from: 2012-09-29 17:51:56
+  until: 2012-09-29 17:51:56

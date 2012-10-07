@@ -72,9 +72,11 @@ unless PropertyGroup.exists?(name: "Action type")
   pg.properties.create(name: "Inactivate page",       value: 42,      sort_order: 12)
   pg.properties.create(name: "Activate page",         value: 43,      sort_order: 13)
   pg.properties.create(name: "Delete page",           value: 14,      sort_order: 14)
-  pg.properties.create(name: "Page Head only",        value: 101,     sort_order: 15)
-  pg.properties.create(name: "Page exists",           value: 102,     sort_order: 16)
-  pg.properties.create(name: "Publish time",          value: 103,     sort_order: 17)
+  pg.properties.create(name: "Do all possible checks",value: 100,     sort_order: 15)
+  pg.properties.create(name: "Check Page Head only",  value: 101,     sort_order: 16)
+  pg.properties.create(name: "Check Page exists",     value: 102,     sort_order: 17)
+  pg.properties.create(name: "Check content changes", value: 103,     sort_order: 18)
+  pg.properties.create(name: "Check Publish time",    value: 104,     sort_order: 19)
 end
 
 one_day = Property.joins(:property_group).where(property_groups: {name: "Interval"}).where(properties: {name: "1 day"}).first
@@ -152,9 +154,9 @@ if @domain.new_record?
   @domain.name                      = "SFE"
   @domain.domain                    = "www.sfe.de"
   @domain.check_content_for_changes = true
-  @domain.main_container            = "//*[@id=\"ctl4\"]"
-  @domain.navigation_container      = "//*[@id=\"main-nav\"]"
-  @domain.subnavigation_container   = "//*[@id=\"ctl12\"]"
+  @domain.main_container            = "//*[@id='ctl4']"
+  @domain.navigation_container      = "//*[@id='main-nav']"
+  @domain.subnavigation_container   = "//*[@id='ctl12']"
   @domain.save
 end
 
@@ -173,4 +175,16 @@ if @domain.new_record?
   @domain.pages.create(path: "/kursliste/147", title: "", active: true)
   @domain.pages.create(path: "/kursliste/143", title: "", active: true)
   @domain.pages.create(path: "/kultur-kunst-gestalten-musik/informationen", title: "", active: true)
+end
+
+@domain = Domain.where(name: "Heise").first_or_initialize
+if @domain.new_record?
+  @domain.account_id                = a.id
+  @domain.name                      = "Heise"
+  @domain.domain                    = "www.heise.de"
+  @domain.check_content_for_changes = false
+  @domain.main_container            = "//div[@class='meldung_wrapper']\r//*[@id='artikel_shortnews']\r//*[@id='bildergalerie']\r//*[@id='mitte_artikel']"
+  @domain.navigation_container      = "//*[@id='heisetopnavi_sub_container']"
+  @domain.subnavigation_container   = "//*[@id='mitte_rechts']"
+  @domain.save
 end
