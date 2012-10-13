@@ -2,8 +2,8 @@ class PageContent < ActiveRecord::Base
   attr_accessible :page, :content, :from, :until
 
   belongs_to :page
-  has_many :content
+  has_one    :content
 
-  #validates :content,    :presence => true
+  validates :page_id,    :presence => true
 
 end

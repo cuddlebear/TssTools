@@ -1,7 +1,9 @@
 class Page < ActiveRecord::Base
-  attr_accessible :domain_id, :path, :title, :active, :status,
+  attr_accessible :domain_id, :area_id, :active, :path, :title, :status,
                   :page_rank, :page_speed, :y_slow,
-                  :check_counter, :last_check, :actual_content
+                  :check_counter,
+                  :last_change, :last_check, :last_publish,
+                  :area_is_dirty, :actual_content
 
   belongs_to  :domain
   belongs_to  :area
@@ -9,15 +11,10 @@ class Page < ActiveRecord::Base
   has_many    :page_contents
   has_many    :checks
 
+  validates :domain_id, :presence => true
   validates :path, :presence => true
   validates :path, :format => { :with => /^[^ ]*$/,
                                        :message => "No spaces in URLs allowed" }
-  validates :domain_id, :presence => true
-
-  before_save do |record|
-
-  end
-
 
   before_create do |record|
     record.active = true

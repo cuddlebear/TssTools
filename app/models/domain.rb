@@ -1,7 +1,6 @@
 class Domain < ActiveRecord::Base
   attr_accessible :account_id, :name, :description, :scheme, :domain, :port, :status,
                   :check_page_rank, :check_page_speed, :check_y_slow, :check_content_for_changes,
-                  :main_container, :navigation_container, :subnavigation_container, :ignore_container,
                   :check_publish_time, :regx_publish_time,
                   :active, :sort_order, :pages
 
@@ -42,12 +41,12 @@ class Domain < ActiveRecord::Base
     record.pages.create(path: "/", title: "Homepage")
     record.areas.create(name: "root only",
                         filter: "^/*$",
-                        interval_property_id: Property.joins(:property_group).where(property_groups: {name: "Interval"}).where(properties: {name: "1 h"}).first,
-                        filter_type_property_id: Property.joins(:property_group).where(property_groups: {name: "Filter type"}).where(properties: {name: "Regular expression"}).first)
+                        interval_property_id: Property.joins(:property_group).where(property_groups: {code: "interval"}).where(properties: {code: "1_h"}).first,
+                        filter_type_property_id: Property.joins(:property_group).where(property_groups: {code: "filter_type"}).where(properties: {code: "regular_expression"}).first)
     record.areas.create(name: "match all",
                         filter: "/",
-                        interval_property_id: Property.joins(:property_group).where(property_groups: {name: "Interval"}).where(properties: {name: "1 day"}).first,
-                        filter_type_property_id: Property.joins(:property_group).where(property_groups: {name: "Filter type"}).where(properties: {name: "Starts with"}).first)
+                        interval_property_id: Property.joins(:property_group).where(property_groups: {code: "interval"}).where(properties: {code: "1_day"}).first,
+                        filter_type_property_id: Property.joins(:property_group).where(property_groups: {code: "filter_type"}).where(properties: {code: "starts_with"}).first)
   end
 
 end

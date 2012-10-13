@@ -1,7 +1,11 @@
 class Content < ActiveRecord::Base
-  attr_accessible :md5_hash, :text
+  attr_accessible :container_id, :md5_hash, :text, :language_property_id,
+                  :links_internal, :links_internal_broken, :links_external, :links_external_broken,
+                  :links_file, :links_file_broken
 
   belongs_to  :container
   belongs_to  :page_content
+
+  validates :container_id, :presence => true
 
 end
