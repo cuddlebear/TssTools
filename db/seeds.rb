@@ -190,8 +190,9 @@ unless PropertyGroup.exists?(name: "Multimedia files")
 end
 
 
-one_day = Property.joins(:property_group).where(property_groups: {name: "Interval"}).where(properties: {name: "1 day"}).first
-starts_with = Property.joins(:property_group).where(property_groups: {name: "Filter type"}).where(properties: {name: "Starts with"}).first
+one_day = Property.joins(:property_group).where(property_groups: {name: "Interval"}).where(properties: {code: "1_day"}).first
+fourteen_days = Property.joins(:property_group).where(property_groups: {name: "Interval"}).where(properties: {code: "14_days"}).first
+starts_with = Property.joins(:property_group).where(property_groups: {name: "Filter type"}).where(properties: {code: "starts_with"}).first
 
 print "creating domains ==============================================\n"
 print "Trelleborg Sealing Solutions\n"
@@ -200,11 +201,16 @@ if @domain.new_record?
   @domain.account_id                = a.id
   @domain.name                      = "Trelleborg Sealing Solutions"
   @domain.domain                    = "www.tss.trelleborg.com"
+  @domain.active                    = true
   @domain.check_content_for_changes = true
   @domain.save
 
   print "areas\n"
-  @domain.areas.create(name: "complete site", filter: "/", filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
+  @domain.areas.create(name: "Global Site - News archive",       filter: "/global/en/news_1/newsarchive/", filter_type_property_id: starts_with.id, interval_property_id: fourteen_days.id)
+  @domain.areas.create(name: "Global Site",                      filter: "/global/en", filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
+  @domain.areas.create(name: "German Site - News archive",       filter: "/de/de/news_1/newsarchive/", filter_type_property_id: starts_with.id, interval_property_id: fourteen_days.id)
+  @domain.areas.create(name: "German Site",                      filter: "/de/de", filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
+  @domain.areas.create(name: "complete site",                    filter: "/", filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
 
   print "containers\n"
   @domain.containers.create(name: "Main content", x_path:'//*[@id="content-home"]\r\n//*[@id="content"]')
@@ -233,6 +239,7 @@ print "Trelleborg group\n"
 @domain = Domain.where(name: "Trelleborg group").first_or_initialize
 if @domain.new_record?
   @domain.account_id                = a.id
+  @domain.active                    = true
   @domain.name                      = "Trelleborg group"
   @domain.domain                    = "www.trelleborg.com"
   @domain.check_content_for_changes = true

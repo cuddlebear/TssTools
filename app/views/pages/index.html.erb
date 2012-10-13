@@ -31,7 +31,7 @@
         <td><% unless page.active %><i class="icon-ban-circle" title="Inactive"></i><% end %></td>
         <td><%= status_badge(page.status) %></td>
         <td><%= page.area ? page.area.name : ""  %></td>
-        <td><%= link_to truncate(page.title, length:60),
+        <td><%= link_to page.title.empty? ? truncate(page.path, length:60) : truncate(page.title, length:60) ,
                         page.domain.scheme + "://" +
                                 page.domain.domain +
                                 (page.domain.port? ? ":" + page.domain.port : "") +
