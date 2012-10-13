@@ -5,7 +5,8 @@ class CreateAreas < ActiveRecord::Migration
       t.string      :name
       t.string      :filter
       t.references  :filter_type_property
-      t.references  :interval_property
+      t.references  :interval_property        # time interval for checking pages in this area
+      t.string      :language_code            # the language which is expected in this area
       t.integer     :sort_order
 
       t.timestamps

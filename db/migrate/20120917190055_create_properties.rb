@@ -2,15 +2,18 @@ class CreateProperties < ActiveRecord::Migration
   def up
     create_table :properties do |t|
       t.references  :property_group
+      t.string      :code
       t.string      :name
-      t.integer     :value
+      t.integer     :int_value
+      t.string      :text_value
+      t.datetime    :date_value
       t.integer     :sort_order
       
       t.timestamps
     end
 
-    add_index :properties, :property_group_id
-    add_index :properties, :sort_order
+    add_index :properties, [:property_group_id, :code]
+    add_index :properties, [:property_group_id, :sort_order]
 
     add_foreign_key(:properties, :property_groups)
   end

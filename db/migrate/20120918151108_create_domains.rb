@@ -13,10 +13,6 @@ class CreateDomains < ActiveRecord::Migration
       t.boolean     :check_page_speed
       t.boolean     :check_y_slow
       t.boolean     :check_content_for_changes
-      t.string      :main_container
-      t.string      :navigation_container
-      t.string      :subnavigation_container
-      t.string      :ignore_container
       t.boolean     :check_publish_time
       t.string      :regx_publish_time
       t.integer     :sort_order

@@ -13,6 +13,7 @@ class CreatePages < ActiveRecord::Migration
       t.integer     :check_counter
       t.datetime    :last_change
       t.datetime    :last_check
+      t.datetime    :last_publish
       t.boolean     :area_is_dirty
       t.string      :actual_content
       t.timestamps
@@ -23,6 +24,7 @@ class CreatePages < ActiveRecord::Migration
     add_index :pages, :status
     add_index :pages, :last_change
     add_index :pages, :last_check
+    add_index :pages, :last_publish
 
     add_foreign_key(:pages, :domains)
     add_foreign_key(:pages, :areas)

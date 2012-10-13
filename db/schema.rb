@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121013065546) do
+ActiveRecord::Schema.define(:version => 20120929155156) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(:version => 20121013065546) do
     t.string   "filter"
     t.integer  "filter_type_property_id"
     t.integer  "interval_property_id"
+    t.string   "language_code"
     t.integer  "sort_order"
     t.datetime "created_at",              :null => false
     t.datetime "updated_at",              :null => false
@@ -56,25 +57,35 @@ ActiveRecord::Schema.define(:version => 20121013065546) do
   add_index "checks", ["page_id"], :name => "index_checks_on_page_id"
 
   create_table "containers", :force => true do |t|
+    t.integer  "container_id"
     t.integer  "domain_id"
     t.string   "name"
     t.string   "x_path"
     t.boolean  "ignore"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
+  add_index "containers", ["container_id"], :name => "index_containers_on_container_id"
   add_index "containers", ["domain_id"], :name => "index_containers_on_domain_id"
 
   create_table "contents", :force => true do |t|
     t.integer  "container_id"
     t.string   "md5_hash"
     t.text     "text"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.integer  "language_property_id"
+    t.integer  "links_internal"
+    t.integer  "links_internal_broken"
+    t.integer  "links_external"
+    t.integer  "links_external_broken"
+    t.integer  "links_file"
+    t.integer  "links_file_broken"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
   end
 
   add_index "contents", ["container_id"], :name => "index_contents_on_container_id"
+  add_index "contents", ["language_property_id"], :name => "index_contents_on_language_property_id"
   add_index "contents", ["md5_hash"], :name => "index_contents_on_md5_hash"
 
   create_table "domains", :force => true do |t|
@@ -90,10 +101,6 @@ ActiveRecord::Schema.define(:version => 20121013065546) do
     t.boolean  "check_page_speed"
     t.boolean  "check_y_slow"
     t.boolean  "check_content_for_changes"
-    t.string   "main_container"
-    t.string   "navigation_container"
-    t.string   "subnavigation_container"
-    t.string   "ignore_container"
     t.boolean  "check_publish_time"
     t.string   "regx_publish_time"
     t.integer  "sort_order"
@@ -142,6 +149,7 @@ ActiveRecord::Schema.define(:version => 20121013065546) do
     t.integer  "check_counter"
     t.datetime "last_change"
     t.datetime "last_check"
+    t.datetime "last_publish"
     t.boolean  "area_is_dirty"
     t.string   "actual_content"
     t.datetime "created_at",     :null => false
@@ -152,30 +160,37 @@ ActiveRecord::Schema.define(:version => 20121013065546) do
   add_index "pages", ["domain_id", "path"], :name => "index_pages_on_domain_id_and_path"
   add_index "pages", ["last_change"], :name => "index_pages_on_last_change"
   add_index "pages", ["last_check"], :name => "index_pages_on_last_check"
+  add_index "pages", ["last_publish"], :name => "index_pages_on_last_publish"
   add_index "pages", ["status"], :name => "index_pages_on_status"
 
   create_table "properties", :force => true do |t|
     t.integer  "property_group_id"
+    t.string   "code"
     t.string   "name"
-    t.integer  "value"
+    t.integer  "int_value"
+    t.string   "text_value"
+    t.datetime "date_value"
     t.integer  "sort_order"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
   end
 
-  add_index "properties", ["property_group_id"], :name => "index_properties_on_property_group_id"
-  add_index "properties", ["sort_order"], :name => "index_properties_on_sort_order"
+  add_index "properties", ["property_group_id", "code"], :name => "index_properties_on_property_group_id_and_code"
+  add_index "properties", ["property_group_id", "sort_order"], :name => "index_properties_on_property_group_id_and_sort_order"
 
   create_table "property_groups", :force => true do |t|
+    t.integer  "property_group_id"
+    t.string   "code"
     t.string   "name"
     t.text     "description"
     t.boolean  "active"
+    t.string   "type"
     t.integer  "sort_order"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
-    t.integer  "property_group_id"
   end
 
+  add_index "property_groups", ["code"], :name => "index_property_groups_on_code"
   add_index "property_groups", ["property_group_id"], :name => "index_property_groups_on_property_group_id"
   add_index "property_groups", ["sort_order"], :name => "index_property_groups_on_sort_order"
 
@@ -214,6 +229,7 @@ ActiveRecord::Schema.define(:version => 20121013065546) do
 
   add_foreign_key "checks", "pages", :name => "checks_page_id_fk"
 
+  add_foreign_key "containers", "containers", :name => "containers_container_id_fk"
   add_foreign_key "containers", "domains", :name => "containers_domain_id_fk"
 
   add_foreign_key "domains", "accounts", :name => "domains_account_id_fk"

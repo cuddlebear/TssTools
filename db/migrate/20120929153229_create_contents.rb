@@ -4,11 +4,19 @@ class CreateContents < ActiveRecord::Migration
       t.references  :container
       t.string      :md5_hash
       t.text        :text
+      t.references  :language_property   # detected language
+      t.integer     :links_internal
+      t.integer     :links_internal_broken
+      t.integer     :links_external
+      t.integer     :links_external_broken
+      t.integer     :links_file
+      t.integer     :links_file_broken
 
       t.timestamps
     end
 
     add_index :contents, :container_id
+    add_index :contents, :language_property_id
     add_index :contents, :md5_hash
   end
 
