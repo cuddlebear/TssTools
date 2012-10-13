@@ -18,8 +18,7 @@ class CreatePages < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :pages, :path
-    add_index :pages, :domain_id
+    add_index :pages, [:domain_id, :path]
     add_index :pages, :area_id
     add_index :pages, :status
     add_index :pages, :last_change

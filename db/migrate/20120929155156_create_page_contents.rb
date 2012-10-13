@@ -9,6 +9,8 @@ class CreatePageContents < ActiveRecord::Migration
       t.timestamps
     end
     add_index :page_contents, :page_id
+    add_index :page_contents, :content_id
+    add_index :page_contents, [:page_id, :content_id]
   end
 
   def down

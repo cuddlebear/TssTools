@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120929155156) do
+ActiveRecord::Schema.define(:version => 20121013065546) do
 
   create_table "accounts", :force => true do |t|
     t.string   "name"
@@ -68,13 +68,14 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
 
   create_table "contents", :force => true do |t|
     t.integer  "container_id"
-    t.string   "hash"
+    t.string   "md5_hash"
     t.text     "text"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
   end
 
   add_index "contents", ["container_id"], :name => "index_contents_on_container_id"
+  add_index "contents", ["md5_hash"], :name => "index_contents_on_md5_hash"
 
   create_table "domains", :force => true do |t|
     t.integer  "account_id"
@@ -114,6 +115,8 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
     t.datetime "updated_at", :null => false
   end
 
+  add_index "page_contents", ["content_id"], :name => "index_page_contents_on_content_id"
+  add_index "page_contents", ["page_id", "content_id"], :name => "index_page_contents_on_page_id_and_content_id"
   add_index "page_contents", ["page_id"], :name => "index_page_contents_on_page_id"
 
   create_table "page_properties", :force => true do |t|
@@ -146,10 +149,9 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   end
 
   add_index "pages", ["area_id"], :name => "index_pages_on_area_id"
-  add_index "pages", ["domain_id"], :name => "index_pages_on_domain_id"
+  add_index "pages", ["domain_id", "path"], :name => "index_pages_on_domain_id_and_path"
   add_index "pages", ["last_change"], :name => "index_pages_on_last_change"
   add_index "pages", ["last_check"], :name => "index_pages_on_last_check"
-  add_index "pages", ["path"], :name => "index_pages_on_path"
   add_index "pages", ["status"], :name => "index_pages_on_status"
 
   create_table "properties", :force => true do |t|
@@ -169,10 +171,12 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
     t.text     "description"
     t.boolean  "active"
     t.integer  "sort_order"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.integer  "property_group_id"
   end
 
+  add_index "property_groups", ["property_group_id"], :name => "index_property_groups_on_property_group_id"
   add_index "property_groups", ["sort_order"], :name => "index_property_groups_on_sort_order"
 
   create_table "users", :force => true do |t|
@@ -206,6 +210,8 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   add_index "users", ["last_name"], :name => "index_users_on_last_name"
   add_index "users", ["user_name"], :name => "index_users_on_user_name"
 
+  add_foreign_key "areas", "domains", :name => "areas_domain_id_fk"
+
   add_foreign_key "checks", "pages", :name => "checks_page_id_fk"
 
   add_foreign_key "containers", "domains", :name => "containers_domain_id_fk"
@@ -219,6 +225,8 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   add_foreign_key "pages", "domains", :name => "pages_domain_id_fk"
 
   add_foreign_key "properties", "property_groups", :name => "properties_property_group_id_fk"
+
+  add_foreign_key "property_groups", "property_groups", :name => "property_groups_property_group_id_fk"
 
   add_foreign_key "users", "accounts", :name => "users_account_id_fk"
 
