@@ -3,4 +3,7 @@ class PageContent < ActiveRecord::Base
 
   belongs_to :page
   has_many :content
+
+  #validates :content,    :presence => true
+
 end

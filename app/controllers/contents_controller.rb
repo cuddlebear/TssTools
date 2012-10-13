@@ -3,6 +3,7 @@ class ContentsController < ApplicationController
   # GET /contents.json
   def index
     @contents = Content.all
+    @domain = Domain.find(params[:domain_id])
 
     respond_to do |format|
       format.html # index.html.erb

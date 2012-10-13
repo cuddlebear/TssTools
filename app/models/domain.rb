@@ -17,8 +17,6 @@ class Domain < ActiveRecord::Base
   validates :port, :numericality => { :only_integer => true,
                                       :greater_than_or_equal_to => 1,
                                       :less_than_or_equal_to => 65536 } ,:allow_blank => true
-  validates :main_container, :presence => { :if => :check_content_for_changes?,
-                                            :message => "When you want to check content changes you must define the id of the content container."}
   validates :regx_publish_time, :presence => { :if => :check_publish_time?,
                                                :message => "When you want to check publish times you must define a selector for the publishing time." }
 

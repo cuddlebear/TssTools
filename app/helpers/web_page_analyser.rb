@@ -1,6 +1,7 @@
 
 require 'nokogiri'
 require 'open-uri'
+require 'digest/md5'
 
 class WebPageAnalyser
   unloadable
@@ -34,16 +35,18 @@ class WebPageAnalyser
     content = ""
     if filter.nil? == false and filter
       filter.split(/\r\n/).each do |match|
+        match = match.strip
         tmp = dom.at_css(match)
         unless tmp.nil?
           tmp.css('a[@href]').each do |link|
             if link['href'].start_with?("/") && link['href'].index("?") == nil
-              unless Page.where(domain_id: domain_id, path: link['href']).exists?
-                Page.create(domain_id: domain_id, path:link['href'])
-                content += link['href'] +"<br />"
+              unless link['href'].index(/\.(jpg|jpeg|gif|png|ico|xls|xlsx|doc|docx|ppt|pptx|pdf|img|zip|rar|tar|gz|flv|mp3|ogg|mkv|mp4|avi|wav|ape|aac|ac3|mpg|mpeg|eps)/)
+                unless Page.where(domain_id: domain_id, path: link['href']).exists?
+                  Page.create(domain_id: domain_id, path:link['href'])
+                  #content += link['href'] +"<br />"
+                end
               end
             end
-
           end
           content += tmp.inner_html
           break
@@ -97,29 +100,53 @@ class WebPageAnalyser
   end
 
   def self.check_page(id)
-    check = Check.find(id)
-    doc = nil
-    begin
-      url = check.page.domain.scheme + "://" + check.page.domain.domain + (check.page.domain.port? ? ":" + check.page.domain.port : "") +check.page.path
-      doc = Nokogiri::HTML(open(url))
-    rescue => e
-      check.page.title = "Error retrieving page"
-      check.page.status = 1
-    end
-    unless doc.nil?
-      if doc.at_css("/html/head/title")
-        check.page.title =  doc.at_css("/html/head/title").text
-      else
-        check.page.title =  "no title tag"
+    to_check = Check.includes(:page).includes(:page => :domain).find(id)
+    if to_check.page.domain.active                      # Only check on active domains
+      doc = nil
+      begin                                             # don't check pictures, docs...
+        unless to_check.page.path.index(/\.(jpg|jpeg|gif|png|ico|xls|xlsx|doc|docx|ppt|pptx|pdf|img|zip|rar|tar|gz|flv|mp3|ogg|mkv|mp4|avi|wav|ape|aac|ac3|mpg|mpeg|eps)/)
+          url = to_check.page.domain.scheme + "://" + to_check.page.domain.domain + (to_check.page.domain.port? ? ":" + to_check.page.domain.port : "") +to_check.page.path
+          doc = Nokogiri::HTML(open(url))               # retrieve url
+        end
+      rescue => e
+        to_check.page.title = "Error retrieving page"
+        to_check.page.status = 1
       end
-      check.page.status = 5
-      #main_content = WebPageAnalyser.analyze_content(check.page.domain.main_container,doc, check.page.domain_id)
-      #navigation_content  = WebPageAnalyser.analyze_content(check.page.domain.navigation_container,doc, check.page.domain_id)
-      #subnavigation_content  = WebPageAnalyser.analyze_content(check.page.domain.subnavigation_container,doc, check.page.domain_id)
+      unless doc.nil?
+        if doc.at_css("/html/head/title")               # retrieve title
+          to_check.page.title =  doc.at_css("/html/head/title").text
+        else
+          to_check.page.title =  "no title tag"
+        end
+        to_check.page.status = 5
+        if to_check.page.domain.check_content_for_changes
+          @containers = Container.where(domain_id: to_check.page.domain_id)
+          @containers.each do |container|
+            container_content = WebPageAnalyser.analyze_content(container.x_path, doc, to_check.page.domain_id)
+            unless container.ignore                      # store content and hash
+              container_content = WebPageAnalyser.normalize_html(container_content)
+              md5_hash = Digest::MD5.hexdigest(container_content)
+              content = Content.where(md5_hash: md5_hash ).first_or_initialize
+              if content.new_record?
+                content.md5_hash = md5_hash
+                content.text = container_content
+                content.save
+              end                                         # make connection to content
+              page_content = to_check.page.page_contents.where(content_id: content.id).first_or_initialize
+              if page_content.new_record?
+                page_content.content_id = content.id
+                page_content.from = DateTime.now
+              end
+              page_content.until = DateTime.now
+              page_content.save
+            end
+          end
+        end
+      end
+      to_check.page.save
+      to_check.result_code= 0
+      to_check.save
     end
-    check.page.save
-    check.result_code= 0
-    check.save
   end
 
 end

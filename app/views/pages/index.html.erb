@@ -1,3 +1,6 @@
+<%= render("shared/show_notice_or_warning") %>
+<%= render("domains/header", :type => 'pages')%>
+
 <div class="navbar navbar-inverse">
   <div class="navbar-inner">
     <span class="brand">Page list</span>
@@ -11,41 +14,34 @@
   <tr>
     <th>&nbsp;</th>
     <th>Status</th>
-    <th>Url</th>
+    <th>Area</th>
     <th>Title</th>
     <th colspan="3">Actions</th>
   </tr>
   <tr>
     <th>&nbsp;</th>
     <th><%= collection_select(:page, :status, Property.where("property_group_id = 1"), :id, :name, {:prompt => true}, class:"input-small")%></th>
-    <th>Url</th>
-    <th>Title</th>
-    <th colspan="3">Actions</th>
+    <th><%= collection_select(:page, :status, Property.where("property_group_id = 1"), :id, :name, {:prompt => true}, class:"input-small")%></th>
+    <th></th>
+    <th></th>
   </tr>
-  <% @pages = @domain.pages.order("path").page(params[:page]).per(25) %>
+
   <% @pages.each do |page|%>
-  <% url = page.domain.scheme + "://" + page.domain.domain + (page.domain.port ? ":" + page.domain.port : "") + page.path
-     #date = WebPageAnalyser.get_publish_date("http://www.heise.de")
-             #get_publish_date( "http://www.heise.de","kk")
-  %>
       <tr>
         <td><% unless page.active %><i class="icon-ban-circle" title="Inactive"></i><% end %></td>
         <td><%= status_badge(page.status) %></td>
-        <td><%= link_to truncate(page.path, length:40),
+        <td><%= page.area ? page.area.name : ""  %></td>
+        <td><%= link_to truncate(page.title, length:60),
                         page.domain.scheme + "://" +
-                        page.domain.domain +
-                        (page.domain.port? ? ":" + page.domain.port : "") +
-                        page.path,
+                                page.domain.domain +
+                                (page.domain.port? ? ":" + page.domain.port : "") +
+                                page.path,
                         target: "_blank", title: page.path  %></td>
-        <td><%= page.title %></td>
-        <td>
-          <%=  link_to "Show", page, class: "btn btn-primary btn-small" %>
-        </td>
-        <td>
-          <%=  link_to "Edit", edit_page_path(page), class: "btn btn-small" %>
-        </td>
-        <td>
+        <td><div class="btn-group">
+          <%=  link_to "Show", page, class: "btn btn-small" %>
+          <%=  link_to "Edit", edit_page_path(page,page: params[:page]), class: "btn btn-small" %>
           <%=  link_to "Delete", page_path(page), method: :delete,  data: { confirm: 'Are you sure?' },  class: "btn btn-danger btn-small"%>
+        </div>
         </td>
       </tr>
   <%end%>

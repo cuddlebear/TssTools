@@ -3,6 +3,7 @@ class ContainersController < ApplicationController
   # GET /containers.json
   def index
     @containers = Container.all
+    @domain = Domain.find(params[:domain_id])
 
     respond_to do |format|
       format.html # index.html.erb
@@ -25,6 +26,7 @@ class ContainersController < ApplicationController
   # GET /containers/new.json
   def new
     @container = Container.new
+    @container.domain_id = params[:domain_id]
 
     respond_to do |format|
       format.html # new.html.erb
@@ -44,7 +46,7 @@ class ContainersController < ApplicationController
 
     respond_to do |format|
       if @container.save
-        format.html { redirect_to @container, notice: 'Container was successfully created.' }
+        format.html { redirect_to containers_path(domain_id: @container.domain_id), notice: 'Container was successfully created.' }
         format.json { render json: @container, status: :created, location: @container }
       else
         format.html { render action: "new" }
@@ -60,7 +62,7 @@ class ContainersController < ApplicationController
 
     respond_to do |format|
       if @container.update_attributes(params[:container])
-        format.html { redirect_to @container, notice: 'Container was successfully updated.' }
+        format.html { redirect_to containers_path(domain_id: @container.domain_id), notice: 'Container was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -73,10 +75,11 @@ class ContainersController < ApplicationController
   # DELETE /containers/1.json
   def destroy
     @container = Container.find(params[:id])
+    domain_id = @container.domain_id
     @container.destroy
 
     respond_to do |format|
-      format.html { redirect_to containers_url }
+      format.html { redirect_to containers_path(domain_id: domain_id) }
       format.json { head :no_content }
     end
   end

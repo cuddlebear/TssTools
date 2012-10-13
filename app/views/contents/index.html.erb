@@ -13,7 +13,7 @@
 <% @contents.each do |content| %>
   <tr>
     <td><%= content.container %></td>
-    <td><%= content.hash %></td>
+    <td><%= content.md5_hash %></td>
     <td><%= content.text %></td>
     <td><%= link_to 'Show', content %></td>
     <td><%= link_to 'Edit', edit_content_path(content) %></td>

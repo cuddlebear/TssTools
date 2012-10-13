@@ -1,9 +1,12 @@
 class ChecksController < ApplicationController
   require "web_page_analyser"
+  @@page_size = 50
+
   # GET /checks
   # GET /checks.json
   def index
-    @checks = Check.where("result_code is null").page(params[:page]).per(50)
+    @domain = Domain.find(params[:domain_id])
+    @checks = Check.joins(:page).where(pages: {domain_id: @domain.id}).where("result_code is null").page(params[:page]).per(@@page_size)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -81,5 +84,9 @@ class ChecksController < ApplicationController
       format.html { redirect_to checks_url }
       format.json { head :no_content }
     end
+  end
+
+  def get_paging_position(check)
+    position = 1 + Page.where(domain_id: check.domain_id ).order("path").count(conditions: ["path < ?", check.path]) / @@page_size
   end
 end

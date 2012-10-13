@@ -30,5 +30,10 @@ class Page < ActiveRecord::Base
     record.checks.create(priority: 1, type:100, scheduled_start: DateTime.now)
   end
 
+  before_destroy do |record| #delete all related objects
+    record.checks.destroy_all
+    #record.page_properties.properties.destroy_all
+    #record.page_properties.destroy_all
+  end
 
 end

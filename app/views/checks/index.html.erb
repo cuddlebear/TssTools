@@ -1,9 +1,18 @@
-<h1>Listing checks</h1>
+<%= render("domains/header", :type => 'checks')%>
 
-<table>
+<div class="navbar navbar-inverse">
+  <div class="navbar-inner">
+    <span class="brand">Checks list</span>
+    <ul class="nav pull-right">
+      <li><%= link_to "Add Container", new_container_path(domain_id: @domain.id) %></li>
+    </ul>
+  </div>
+</div>
+
+<table class="table table-striped table-hover">
   <tr>
     <th>Prio</th>
-    <th>Domain</th>
+    <!-- <th>Domain</th> -->
     <th>Url</th>
     <th>Resultcode</th>
     <th>Resulttext</th>
@@ -14,15 +23,18 @@
 
 <% @checks.each do |check|
   WebPageAnalyser.check_page(check.id)
+   a=check.id
 %>
   <tr>
     <td><%= check.priority %></td>
-    <td><%= check.page.domain.domain %></td>
     <td><%= check.page.path %></td>
     <td><%= check.result_code %></td>
-    <td><%= link_to 'Show', check %></td>
-    <td><%= link_to 'Edit', edit_check_path(check) %></td>
-    <td><%= link_to 'Destroy', check, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <td><div class="btn-group">
+      <%=  link_to "Show", check, class: "btn btn-small" %>
+      <%=  link_to "Edit", edit_check_path(check), class: "btn btn-small" %>
+      <%=  link_to "Delete", check_path(check), method: :delete,  data: { confirm: 'Are you sure?' },  class: "btn btn-danger btn-small"%>
+    </div>
+    </td>
   </tr>
 <% end %>
 </table>

@@ -1,8 +1,11 @@
 class AreasController < ApplicationController
+  @@page_size = 25
+
   # GET /areas
   # GET /areas.json
   def index
-    @areas = Area.all
+    @domain = Domain.find(params[:domain_id])
+    @pages = Area.includes(:domain).where(domain_id: @domain.id).order("sortorder").page(params[:page]).per(@@page_size)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -79,5 +82,9 @@ class AreasController < ApplicationController
       format.html { redirect_to areas_url }
       format.json { head :no_content }
     end
+  end
+
+  def get_paging_position(area)
+    position = 1 + Page.where(domain_id: area.domain_id ).order("sort_order").count(conditions: ["sort_order < ?", area.sort_order]) / @@page_size
   end
 end
