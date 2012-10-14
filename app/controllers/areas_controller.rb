@@ -90,7 +90,7 @@ class AreasController < ApplicationController
   def sort
     @area = Area.find(params[:id])
     offset = Area.rank(:row_order).where("domain_id < ?",@area.domain_id).count()
-    @area.update_attribute :row_order_position,  offset + params[:row_order_position].to_i + 1
+    @area.update_attribute :row_order_position,  offset + params[:row_order_position].to_i
     # this action will be called via ajax
     render nothing: true
   end
