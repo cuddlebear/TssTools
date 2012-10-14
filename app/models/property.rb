@@ -11,7 +11,7 @@ class Property < ActiveRecord::Base
     if record.code.nil? or record.code.empty?
       record.code = record.name.downcase.gsub(/[[^a-z0-9]]/,"_").gsub(/__+/,"_")
     end
-    if record.sort_order.nil? or record.sort_order.empty?
+    if record.sort_order.nil? or record.sort_order == 0
       record.sort_order = Property.where(:property_group_id => record.property_group_id).count + 1
     end
   end

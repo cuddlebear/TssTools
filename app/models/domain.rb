@@ -41,12 +41,11 @@ class Domain < ActiveRecord::Base
     record.pages.create(path: "/", title: "Homepage")
     record.areas.create(name: "root only",
                         filter: "^/*$",
-                        interval_property_id: Property.joins(:property_group).where(property_groups: {code: "interval"}).where(properties: {code: "1_h"}).first,
-                        filter_type_property_id: Property.joins(:property_group).where(property_groups: {code: "filter_type"}).where(properties: {code: "regular_expression"}).first)
+                        interval_property_id: Property.joins(:property_group).where(property_groups: {code: "interval"}).where(properties: {code: "1_h"}).first.id,
+                        filter_type_property_id: Property.joins(:property_group).where(property_groups: {code: "filter_type"}).where(properties: {code: "regular_expression"}).first.id)
     record.areas.create(name: "match all",
                         filter: "/",
-                        interval_property_id: Property.joins(:property_group).where(property_groups: {code: "interval"}).where(properties: {code: "1_day"}).first,
-                        filter_type_property_id: Property.joins(:property_group).where(property_groups: {code: "filter_type"}).where(properties: {code: "starts_with"}).first)
+                        interval_property_id: Property.joins(:property_group).where(property_groups: {code: "interval"}).where(properties: {code: "1_day"}).first.id,
+                        filter_type_property_id: Property.joins(:property_group).where(property_groups: {code: "filter_type"}).where(properties: {code: "starts_with"}).first.id)
   end
-
 end

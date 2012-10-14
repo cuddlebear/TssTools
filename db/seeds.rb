@@ -190,9 +190,9 @@ unless PropertyGroup.exists?(name: "Multimedia files")
 end
 
 
-one_day = Property.joins(:property_group).where(property_groups: {name: "Interval"}).where(properties: {code: "1_day"}).first
-fourteen_days = Property.joins(:property_group).where(property_groups: {name: "Interval"}).where(properties: {code: "14_days"}).first
-starts_with = Property.joins(:property_group).where(property_groups: {name: "Filter type"}).where(properties: {code: "starts_with"}).first
+one_day = Property.joins(:property_group).where(property_groups: {code: "interval"}).where(properties: {code: "1_day"}).first
+fourteen_days = Property.joins(:property_group).where(property_groups: {code: "interval"}).where(properties: {code: "14_days"}).first
+starts_with = Property.joins(:property_group).where(property_groups: {code: "filter_type"}).where(properties: {code: "starts_with"}).first
 
 print "creating domains ==============================================\n"
 print "Trelleborg Sealing Solutions\n"

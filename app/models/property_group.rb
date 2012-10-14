@@ -15,7 +15,7 @@ class PropertyGroup < ActiveRecord::Base
     if record.type.nil? or record.type.empty?
       record.type= "int"
     end
-    if record.sort_order.nil? or record.sort_order.empty?
+    if record.sort_order.nil? or record.sort_order == 0
       record.sort_order= PropertyGroup.count + 1
     end
   end

@@ -9,9 +9,10 @@ class Area < ActiveRecord::Base
   validates :domain_id,               :presence => true
   validates :filter,                  :presence => true
   validates :filter_type_property_id, :presence => true
+  validates :interval_property_id,    :presence => true
 
   before_save do |record|
-    if record.sort_order.nil? or record.sort_order.empty?
+    if record.sort_order.nil? or record.sort_order == 0
       record.sort_order = Area.where(:domain_id => record.domain_id).count + 1
     end
   end

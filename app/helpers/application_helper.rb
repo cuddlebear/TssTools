@@ -57,4 +57,8 @@ module ApplicationHelper
         text
   end
 
+  def  property_select (field_name, field_value, property_code)
+    print collection_select(:page, :status, Property.where("property_group_id = ?",1), :id, :name, {:prompt => true}, class:"input-small")
+  end
+
 end

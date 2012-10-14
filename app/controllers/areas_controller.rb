@@ -28,6 +28,7 @@ class AreasController < ApplicationController
   # GET /areas/new.json
   def new
     @area = Area.new
+    @area.domain_id = params[:domain_id]
 
     respond_to do |format|
       format.html # new.html.erb
@@ -47,7 +48,7 @@ class AreasController < ApplicationController
 
     respond_to do |format|
       if @area.save
-        format.html { redirect_to @area, notice: 'Domain area was successfully created.' }
+        format.html { redirect_to  areas_url domain_id: @area.domain_id, notice: 'Area was successfully created.' }
         format.json { render json: @area, status: :created, location: @area }
       else
         format.html { render action: "new" }
@@ -63,7 +64,7 @@ class AreasController < ApplicationController
 
     respond_to do |format|
       if @area.update_attributes(params[:area])
-        format.html { redirect_to @area, notice: 'Domain area was successfully updated.' }
+        format.html { redirect_to areas_url domain_id: @area.domain_id, notice: 'Area was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -76,15 +77,16 @@ class AreasController < ApplicationController
   # DELETE /areas/1.json
   def destroy
     @area = Area.find(params[:id])
+    domain_id = @area.domain_id
     @area.destroy
 
     respond_to do |format|
-      format.html { redirect_to areas_url }
+      format.html { redirect_to areas_url domain_id: domain_id, notice: 'Area was successfully deleted.' }
       format.json { head :no_content }
     end
   end
 
   def get_paging_position(area)
-    position = 1 + Page.where(domain_id: area.domain_id ).order("sort_order").count(conditions: ["sort_order < ?", area.sort_order]) / @@page_size
+    position = 1 + Area.where(domain_id: area.domain_id ).order("sort_order").count(conditions: ["sort_order < ?", area.sort_order]) / @@page_size
   end
 end
