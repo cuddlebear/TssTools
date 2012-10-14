@@ -5,7 +5,8 @@ class AreasController < ApplicationController
   # GET /areas.json
   def index
     @domain = Domain.find(params[:domain_id])
-    @pages = Area.includes(:domain).where(domain_id: @domain.id).order("sortorder").page(params[:page]).per(@@page_size)
+    @areas = Area.includes(:domain).includes(:filter_type_property).includes(:interval_property).
+              where(domain_id: @domain.id).rank("row_order").page(params[:page]).per(@@page_size)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -48,7 +49,7 @@ class AreasController < ApplicationController
 
     respond_to do |format|
       if @area.save
-        format.html { redirect_to  areas_url domain_id: @area.domain_id, notice: 'Area was successfully created.' }
+        format.html { redirect_to  areas_url(domain_id: @area.domain_id), notice: 'Area was successfully created.' }
         format.json { render json: @area, status: :created, location: @area }
       else
         format.html { render action: "new" }
@@ -64,7 +65,7 @@ class AreasController < ApplicationController
 
     respond_to do |format|
       if @area.update_attributes(params[:area])
-        format.html { redirect_to areas_url domain_id: @area.domain_id, notice: 'Area was successfully updated.' }
+        format.html { redirect_to areas_url(domain_id: @area.domain_id), notice: 'Area was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -84,6 +85,14 @@ class AreasController < ApplicationController
       format.html { redirect_to areas_url domain_id: domain_id, notice: 'Area was successfully deleted.' }
       format.json { head :no_content }
     end
+  end
+
+  def sort
+    @area = Area.find(params[:id])
+    offset = Area.rank(:row_order).where("domain_id < ?",@area.domain_id).count()
+    @area.update_attribute :row_order_position,  offset + params[:row_order_position].to_i + 1
+    # this action will be called via ajax
+    render nothing: true
   end
 
   def get_paging_position(area)

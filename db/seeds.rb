@@ -256,7 +256,7 @@ print "Orkot Marine Bearings\n"
 if @domain.new_record?
   @domain.account_id                = a.id
   @domain.name                      = "Orkot Marine Bearings"
-  @domain.domain                    = "http://www.orkotmarine.com"
+  @domain.domain                    = "www.orkotmarine.com"
   @domain.check_content_for_changes = true
   @domain.save
 
@@ -272,8 +272,8 @@ print "Orkot Hydro Bearings\n"
 @domain = Domain.where(name: "Orkot Hydro Bearings").first_or_initialize
 if @domain.new_record?
   @domain.account_id                = a.id
-  @domain.name                      = "Orkot Marine Bearings"
-  @domain.domain                    = "http://www.orkothydro.com"
+  @domain.name                      = "Orkot Hydro Bearings"
+  @domain.domain                    = "www.orkothydro.com"
   @domain.check_content_for_changes = true
   @domain.save
 

@@ -1,5 +1,5 @@
 class Area < ActiveRecord::Base
-  attr_accessible :domain_id, :name, :filter, :filter_type_property_id, :interval_property_id, :language_code, :sort_order
+  attr_accessible :domain_id, :name, :filter, :filter_type_property_id, :interval_property_id, :language_code, :row_order
 
   has_many    :pages
   belongs_to  :domain
@@ -11,9 +11,12 @@ class Area < ActiveRecord::Base
   validates :filter_type_property_id, :presence => true
   validates :interval_property_id,    :presence => true
 
+  include RankedModel
+  ranks :row_order
+
   before_save do |record|
-    if record.sort_order.nil? or record.sort_order == 0
-      record.sort_order = Area.where(:domain_id => record.domain_id).count + 1
+    if record.row_order.nil? or record.row_order == 0
+      record.row_order_position = Area.where(:domain_id => record.domain_id).count + 1
     end
   end
 

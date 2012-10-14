@@ -2,7 +2,7 @@ class Domain < ActiveRecord::Base
   attr_accessible :account_id, :name, :description, :scheme, :domain, :port, :status,
                   :check_page_rank, :check_page_speed, :check_y_slow, :check_content_for_changes,
                   :check_publish_time, :regx_publish_time,
-                  :active, :sort_order, :pages
+                  :active, :row_order, :pages
 
   has_many    :pages
   has_many    :areas
@@ -18,6 +18,9 @@ class Domain < ActiveRecord::Base
                                       :less_than_or_equal_to => 65536 } ,:allow_blank => true
   validates :regx_publish_time, :presence => { :if => :check_publish_time?,
                                                :message => "When you want to check publish times you must define a selector for the publishing time." }
+
+  include RankedModel
+  ranks :row_order
 
   after_initialize do |record|
     #record.status = 0

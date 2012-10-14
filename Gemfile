@@ -26,6 +26,7 @@ gem 'jquery-rails'
 gem 'foreigner'
 gem 'kaminari'
 gem 'nokogiri'
+gem "ranked-model"
 
 
 # To use ActiveModel has_secure_password

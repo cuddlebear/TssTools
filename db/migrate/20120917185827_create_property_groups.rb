@@ -7,12 +7,12 @@ class CreatePropertyGroups < ActiveRecord::Migration
       t.text      :description
       t.boolean   :active
       t.string    :type
-      t.integer   :sort_order
+      t.integer   :row_order
 
       t.timestamps
     end
 
-    add_index :property_groups, :sort_order
+    add_index :property_groups, :row_order
     add_index :property_groups, :code
     add_index :property_groups, :property_group_id
 

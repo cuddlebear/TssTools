@@ -1,10 +1,5 @@
 Railstest::Application.routes.draw do
 
-  resources :page_contents
-
-  resources :contents
-
-  resources :containers
 
   get "domains/init"
   #get "domains/new"
@@ -31,9 +26,13 @@ Railstest::Application.routes.draw do
   resources :users
   resources :domains
   resources :areas
+  post "areas/sort"
   resources :pages
   resources :properties
   resources :checks
+  resources :page_contents
+  resources :contents
+  resources :containers
 
   # Sample resource route with options:
   #   resources :products do

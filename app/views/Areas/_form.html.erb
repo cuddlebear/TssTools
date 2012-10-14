@@ -1,37 +1,47 @@
 <%= form_for(@area) do |f| %>
-  <% if @area.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@area.errors.count, "error") %> prohibited this domain_area from being saved:</h2>
+    <%= f.hidden_field :domain_id %>
+    <% if @area.errors.any? %>
+        <div id="errorExplanation"  class="alert alert-error">
+          <button type="button" class="close" data-dismiss="alert">×</button>
+          <h3><%= pluralize(@area.errors.count, "error") %> prohibited
+            this page from being saved:</h3>
+          <ul>
+            <% @area.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+    <% end %>
 
-      <ul>
-      <% @area.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+    <div class="control-group<% if @area.errors["name"].any? %> error<% end %>">
+      <%=  f.label :name,"Name", class: "control-label" %>
+      <div class="controls"><%= f.text_field :name, class: "input-xxlarge" , placeholder: "Name" %></div>
     </div>
-  <% end %>
 
-  <div class="field">
-    <%= f.label :domain %><br />
-    <%= f.text_field :domain %>
-  </div>
-  <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </div>
-  <div class="field">
-    <%= f.label :filter %><br />
-    <%= f.text_field :filter %>
-  </div>
-  <div class="field">
-    <%= f.label :filterType %><br />
-    <%= f.text_field :filterType %>
-  </div>
-  <div class="field">
-    <%= f.label :sortOrder %><br />
-    <%= f.number_field :sortOrder %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+    <div class="control-group<% if @area.errors["filter_type_property_id"].any? %> error<% end %>">
+      <%=  f.label :filter_type_property_id, "Filter type", class: "control-label" %>
+      <div class="controls">
+        <%=  f.collection_select :filter_type_property_id,
+             Property.joins(:property_group).where(:property_groups => {:code => "filter_type"}).order(:row_order),
+             :id, :name, {:prompt => true}, class:"" %>
+      </div>
+    </div>
+
+    <div class="control-group<% if @area.errors["filter"].any? %> error<% end %>">
+      <%=  f.label :filter , "Filter", class: "control-label" %>
+      <div class="controls"><%= f.text_field :filter, class: "input-xxlarge" , placeholder: "Filtervalue" %></div>
+    </div>
+
+    <div class="control-group<% if @area.errors["interval_property_id"].any? %> error<% end %>">
+      <%=  f.label :interval_property_id, "Check interval", class: "control-label" %>
+      <div class="controls">
+        <%=  f.collection_select :interval_property_id,
+                                 Property.joins(:property_group).where(:property_groups => {:code => "interval"}).order(:row_order),
+                                 :id, :name, {:prompt => true}, class:"" %>
+      </div>
+    </div>
+
+    <div class="actions">
+      <%= f.submit %>
+    </div>
 <% end %>

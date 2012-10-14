@@ -15,7 +15,7 @@ class CreateDomains < ActiveRecord::Migration
       t.boolean     :check_content_for_changes
       t.boolean     :check_publish_time
       t.string      :regx_publish_time
-      t.integer     :sort_order
+      t.integer     :row_order
       
       t.timestamps
     end
@@ -23,7 +23,7 @@ class CreateDomains < ActiveRecord::Migration
     add_index :domains, :account_id
     add_index :domains, :name
     add_index :domains, :domain
-    add_index :domains, :sort_order
+    add_index :domains, :row_order
 
     add_foreign_key(:domains, :accounts)
   end

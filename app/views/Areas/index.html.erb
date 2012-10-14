@@ -1,0 +1,76 @@
+<%= render ("shared/show_notice_or_warning") %>
+<%= render("domains/header", :type => 'areas')%>
+
+<div class="navbar navbar-inverse">
+  <div class="navbar-inner">
+    <span class="brand">Areas list</span>
+    <ul class="nav pull-right">
+      <li><%= link_to "Add Area", new_area_path(domain_id: @domain.id) %></li>
+    </ul>
+  </div>
+</div>
+
+<table id="sort" class="table table-striped table-hover">
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Filter</th>
+    <th>Check interval</th>
+    <th></th>
+  </tr>
+  </thead>
+
+  <tbody>
+<% @areas.each do |area| %>
+  <tr id="area_<%= area.id %>">
+    <td class="handle">###</td>
+    <td><%= area.name %></td>
+    <td><%= area.filter_type_property.name %></td>
+    <td><%= area.filter %></td>
+    <td><%= area.interval_property.name %></td>
+    <td><div class="btn-group">
+      <%=  link_to "Show", area, class: "btn btn-small" %>
+      <%=  link_to "Edit", edit_area_path(area), class: "btn btn-small" %>
+      <%=  link_to "Delete", area_path(area), method: :delete,  data: { confirm: 'Are you sure?' },  class: "btn btn-danger btn-small"%>
+    </div>
+    </td>
+  </tr>
+<% end %>
+  </tbody>
+</table>
+
+
+<%= paginate @areas %>
+
+<script>
+    var fixHelper = function(e, ui) {
+        ui.children().each(function() {
+            $(this).width($(this).width());
+        });
+        return ui;
+    };
+
+    $(document).ready(function(){
+        $("#sort tbody").sortable({
+            axis: 'y',
+            handle: '.handle',
+            cursor: 'crosshair',
+            scroll: true,
+            opacity: 0.7,
+            helper: fixHelper,
+            update: function(e, ui){
+                id = ui.item.attr('id').substr(5);
+                //alert (id);
+                position = ui.item.index();
+                $.ajax({
+                    type: 'POST',
+                    url: '/areas/sort',
+                    dataType: 'json',
+                    data: { id: id, row_order_position: position }
+                })
+                ui.item.children('td').effect('highlight', {}, 1000)
+            }
+        }).disableSelection();
+    });
+</script>

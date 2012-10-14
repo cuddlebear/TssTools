@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
     t.integer  "filter_type_property_id"
     t.integer  "interval_property_id"
     t.string   "language_code"
-    t.integer  "sort_order"
+    t.integer  "row_order"
     t.datetime "created_at",              :null => false
     t.datetime "updated_at",              :null => false
   end
@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   add_index "areas", ["domain_id"], :name => "index_areas_on_domain_id"
   add_index "areas", ["filter_type_property_id"], :name => "index_areas_on_filter_type_property_id"
   add_index "areas", ["interval_property_id"], :name => "index_areas_on_interval_property_id"
-  add_index "areas", ["sort_order"], :name => "index_areas_on_sort_order"
+  add_index "areas", ["row_order"], :name => "index_areas_on_row_order"
 
   create_table "checks", :force => true do |t|
     t.integer  "page_id"
@@ -103,7 +103,7 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
     t.boolean  "check_content_for_changes"
     t.boolean  "check_publish_time"
     t.string   "regx_publish_time"
-    t.integer  "sort_order"
+    t.integer  "row_order"
     t.datetime "created_at",                :null => false
     t.datetime "updated_at",                :null => false
   end
@@ -111,7 +111,7 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   add_index "domains", ["account_id"], :name => "index_domains_on_account_id"
   add_index "domains", ["domain"], :name => "index_domains_on_domain"
   add_index "domains", ["name"], :name => "index_domains_on_name"
-  add_index "domains", ["sort_order"], :name => "index_domains_on_sort_order"
+  add_index "domains", ["row_order"], :name => "index_domains_on_row_order"
 
   create_table "page_contents", :force => true do |t|
     t.integer  "page_id"
@@ -170,13 +170,13 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
     t.integer  "int_value"
     t.string   "text_value"
     t.datetime "date_value"
-    t.integer  "sort_order"
+    t.integer  "row_order"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
   end
 
   add_index "properties", ["property_group_id", "code"], :name => "index_properties_on_property_group_id_and_code"
-  add_index "properties", ["property_group_id", "sort_order"], :name => "index_properties_on_property_group_id_and_sort_order"
+  add_index "properties", ["property_group_id", "row_order"], :name => "index_properties_on_property_group_id_and_row_order"
 
   create_table "property_groups", :force => true do |t|
     t.integer  "property_group_id"
@@ -185,14 +185,14 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
     t.text     "description"
     t.boolean  "active"
     t.string   "type"
-    t.integer  "sort_order"
+    t.integer  "row_order"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
   end
 
   add_index "property_groups", ["code"], :name => "index_property_groups_on_code"
   add_index "property_groups", ["property_group_id"], :name => "index_property_groups_on_property_group_id"
-  add_index "property_groups", ["sort_order"], :name => "index_property_groups_on_sort_order"
+  add_index "property_groups", ["row_order"], :name => "index_property_groups_on_row_order"
 
   create_table "users", :force => true do |t|
     t.integer  "account_id"
