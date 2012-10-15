@@ -34,24 +34,26 @@ print "creating properties============================================\n"
 print "Time intevals\n"
 unless PropertyGroup.exists?(name: "Interval")
   pg = PropertyGroup.create(name: "Interval", description: "Time period between checks", active: true, type:"int")
-  pg.properties.create(name: "don't",   int_value: 0)
-  pg.properties.create(name: "5 sec",   int_value: 5)
-  pg.properties.create(name: "10 sec",  int_value: 10)
-  pg.properties.create(name: "20 sec",  int_value: 20)
-  pg.properties.create(name: "30 sec",  int_value: 30)
-  pg.properties.create(name: "1 min",   int_value: 60)
-  pg.properties.create(name: "5 min",   int_value: 300)
-  pg.properties.create(name: "10 min",  int_value: 600)
-  pg.properties.create(name: "20 min",  int_value: 1200)
-  pg.properties.create(name: "30 min",  int_value: 1800)
-  pg.properties.create(name: "1 h",     int_value: 3600)
-  pg.properties.create(name: "2 h",     int_value: 7200)
-  pg.properties.create(name: "5 h",     int_value: 18000)
-  pg.properties.create(name: "10 h",    int_value: 36000)
-  pg.properties.create(name: "12 h",    int_value: 43200)
-  pg.properties.create(name: "1 day",   int_value: 86400)
-  pg.properties.create(name: "7 days",  int_value: 604800)
-  pg.properties.create(name: "14 days", int_value: 1209600)
+  pg.properties.create(name: "don't check",   int_value: 0)
+  pg.properties.create(name: "5 sec",         int_value: 5)
+  pg.properties.create(name: "10 sec",        int_value: 10)
+  pg.properties.create(name: "20 sec",        int_value: 20)
+  pg.properties.create(name: "30 sec",        int_value: 30)
+  pg.properties.create(name: "1 min",         int_value: 60)
+  pg.properties.create(name: "5 min",         int_value: 300)
+  pg.properties.create(name: "10 min",        int_value: 600)
+  pg.properties.create(name: "20 min",        int_value: 1200)
+  pg.properties.create(name: "30 min",        int_value: 1800)
+  pg.properties.create(name: "1 h",           int_value: 3600)
+  pg.properties.create(name: "2 h",           int_value: 7200)
+  pg.properties.create(name: "5 h",           int_value: 18000)
+  pg.properties.create(name: "10 h",          int_value: 36000)
+  pg.properties.create(name: "12 h",          int_value: 43200)
+  pg.properties.create(name: "1 day",         int_value: 86400)
+  pg.properties.create(name: "2 days",        int_value: 86400*2)
+  pg.properties.create(name: "3 days",        int_value: 86400*4)
+  pg.properties.create(name: "7 days",        int_value: 604800)
+  pg.properties.create(name: "14 days",       int_value: 1209600)
 end
 
 print "Filter types\n"
@@ -90,8 +92,6 @@ print "File extensions\n"
 unless PropertyGroup.exists?(name: "File extensions")
   file_extensions = PropertyGroup.create(name: "File extensions", description: "File extension main group", active: true, type:"text")
 end
-
-
 
 print "Image file type\n"
 unless PropertyGroup.exists?(name: "Image files")
@@ -293,8 +293,10 @@ if @domain.new_record?
   @domain.name                      = "Schittenhelm private homepage"
   @domain.domain                    = "www.schittenhelm.de"
   @domain.check_content_for_changes = true
-#  @domain.main_container            = "//*[@id=\"main\"]"
-#  @domain.navigation_container      = "//*[@id=\"navigation\"]"
+
+  print "containers\n"
+  @domain.containers.create(name: "Main content", x_path: "//*[@id=\"main\"]")
+  @domain.containers.create(name: "Top navigation", x_path: "//*[@id=\"navigation\"]",ignore:true)
   @domain.save
 end
 
@@ -305,9 +307,11 @@ if @domain.new_record?
   @domain.name                      = "Stihl"
   @domain.domain                    = "www.stihl.de"
   @domain.check_content_for_changes = true
- # @domain.main_container            = "//*[@id=\"main_content\"]/div[2]"
- # @domain.navigation_container      = "//*[@id=\"navigation\"]"
- # @domain.subnavigation_container   = "//*[@id=\"left_navigation\"]"
+
+  print "containers\n"
+  @domain.containers.create(name: "Main content", x_path: "//*[@id=\"main_content\"]/div[2]")
+  @domain.containers.create(name: "Top navigation", x_path: "//*[@id=\"navigation\"]",ignore:true)
+  @domain.containers.create(name: "Left navigation", x_path: "//*[@id=\"left_navigation\"]",ignore:true)
   @domain.save
 end
 
@@ -318,12 +322,13 @@ if @domain.new_record?
   @domain.name                      = "SFE"
   @domain.domain                    = "www.sfe.de"
   @domain.check_content_for_changes = true
-#  @domain.main_container            = "//*[@id='ctl4']"
-#  @domain.navigation_container      = "//*[@id='main-nav']"
-#  @domain.subnavigation_container   = "//*[@id='ctl12']"
+
+  print "containers\n"
+  @domain.containers.create(name: "Main content", x_path: "//*[@id='ctl4']")
+  @domain.containers.create(name: "Top navigation", x_path: "//*[@id='main-nav']",ignore:true)
+  @domain.containers.create(name: "Left navigation", x_path: "//*[@id='ctl12']",ignore:true)
   @domain.save
 end
-
 
 print "VHS Herrenberg\n"
 @domain = Domain.where(name: "VHS Herrenberg").first_or_initialize
@@ -332,11 +337,13 @@ if @domain.new_record?
   @domain.name                      = "VHS Herrenberg"
   @domain.domain                    = "www.vhs.herrenberg.de"
   @domain.check_content_for_changes = true
-#  @domain.main_container            = "//*[@id=\"main\"]"
-#  @domain.navigation_container      = "//*[@id=\"primary\"]"
-#  @domain.subnavigation_container   = "//*[@id=\"block-menu-menu-departments\"]"
+
+  print "containers\n"
+  @domain.containers.create(name: "Main content", x_path: "//*[@id=\"main\"]")
+  @domain.containers.create(name: "Top navigation", x_path: "//*[@id=\"primary\"]",ignore:true)
+  @domain.containers.create(name: "Left navigation", x_path: "//*[@id=\"block-menu-menu-departments\"]",ignore:true)
   @domain.save
-  @domain.save
+
   @domain.pages.create(path: "/kursliste/147", title: "", active: true)
   @domain.pages.create(path: "/kursliste/143", title: "", active: true)
   @domain.pages.create(path: "/kultur-kunst-gestalten-musik/informationen", title: "", active: true)
