@@ -4,155 +4,59 @@
   </div>
 </div>
 
-<%
+<dl class="dl-horizontal">
+  <dt>Active</dt>
+  <dd><%= icon_boolean(@page.active) %>&nbsp;</dd>
+  <dt>Title</dt>
+  <dd><%= @page.title %></dd>
+  <dt>Url</dt>
+  <dd><%= @page.path %>&nbsp;</dd>
+</dl>
 
-   require 'digest/md5'
+<dl class="dl-horizontal">
+  <dt>Last check</dt>
+  <dd><%= @page.last_check %>&nbsp;</dd>
+  <dt>Last change</dt>
+  <dd><%= @page.last_change %>&nbsp;</dd>
+  <dt>Last publish</dt>
+  <dd><%= @page.last_publish %>&nbsp;</dd>
+</dl>
 
-   doc = nil
-   begin
-     url = @page.domain.scheme + "://" + @page.domain.domain + (@page.domain.port? ? ":" + @page.domain.port : "") + @page.path
-     doc = Nokogiri::HTML(open(url))
-   rescue => e
-     title = "Error retrieving page"
-   end
-   unless doc.nil?
-     title =  doc.at_css("/html/head/title").text
-     main_content = WebPageAnalyser.analyze_content(@page.domain.main_container,doc, @page.domain_id)
-     navigation_content  = WebPageAnalyser.analyze_content(@page.domain.navigation_container,doc, @page.domain_id)
-     subnavigation_content  = WebPageAnalyser.analyze_content(@page.domain.subnavigation_container,doc, @page.domain_id)
-   end
+<dl class="dl-horizontal">
+  <dt>Page rank</dt>
+  <dd><%= @page.page_rank %>&nbsp;</dd>
+  <dt>Page speed</dt>
+  <dd><%= @page.page_speed %>&nbsp;</dd>
+  <dt>Yslow</dt>
+  <dd><%= @page.y_slow %>&nbsp;</dd>
+</dl>
 
-%>
 
-<table class="table table-bordered">
-  <tr>
-    <td>Url</td>
-    <td><%= url %></td>
-  </tr>
-  <tr>
-    <td>Title </td>
-    <td><%= title %></td>
-  </tr>
-  <tr>
-    <td>
-      Content<br />
-    </td>
-    <td>  <%=  Digest::MD5.hexdigest(main_content) %>
-      <ul class="nav nav-tabs" id="tab_header_main_content" style="margin-bottom: 1px;">
-        <li class="active"><a href="#main_content_raw">Content</a></li>
-        <li><a href="#main_content2">Content normalized</a></li>
-        <li><a href="#main_content_syntax_highlight">HTML View</a></li>
-        <li><a href="#main_content_normalized">HTML normalized</a></li>
-      </ul>
-      <div class="tab-content">
-        <div class="tab-pane active" id="main_content_raw">
-          <%= raw main_content %>
-        </div>
-        <div class="tab-pane" id="main_content2">
-          <%
-             docXml = WebPageAnalyser.beautify_html(WebPageAnalyser.normalize_html(main_content))
-          %>
-          <%= raw docXml %>
-        </div>
-        <div class="tab-pane" id="main_content_syntax_highlight">
-          <% docXml = Nokogiri::HTML::fragment(main_content.gsub(/[ \t]+/," ").gsub(/^[ \t]+/,"").gsub(/> </,"><")) %>
-          <pre class="brush: html"><%= docXml.to_html %></pre>
-        </div>
-        <div class="tab-pane" id="main_content_normalized">
-          <pre class="brush: html"><%= WebPageAnalyser.normalize_html(main_content) %></pre>
-        </div>
-      </div>
-      <script>
-          $('#tab_header_main_content a').click(function (e) {
-              e.preventDefault();
-              $(this).tab('show');
-          })
-          $('#tab_header_main_content a:first').tab('show');
-      </script>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      Navigation<br />
-    </td>
-    <td>
-      <ul class="nav nav-tabs" id="tab_header_navigation" style="margin-bottom: 1px;">
-        <li class="active"><a href="#navigation_raw">Content</a></li>
-        <li><a href="#navigation_raw2">Content normalized</a></li>
-        <li><a href="#navigation_syntax_highlight">HTML View</a></li>
-        <li><a href="#navigation_normalized">HTML normalized</a></li>
-      </ul>
-      <div class="tab-content">
-        <div class="tab-pane active" id="navigation_raw">
-          <%= raw navigation_content %>
-        </div>
-        <div class="tab-pane" id="navigation_raw2">
-          <%
-             docXml = WebPageAnalyser.beautify_html(WebPageAnalyser.normalize_html(navigation_content))
-          %>
-          <%= raw docXml %>
-        </div>
-        <div class="tab-pane" id="navigation_syntax_highlight">
-          <% docXml = Nokogiri::HTML::fragment(navigation_content.gsub(/[ \t]+/," ").gsub(/^[ \t]+/,"").gsub(/> </,"><")) %>
-          <pre class="brush: html"><%= docXml.to_html %></pre>
-        </div>
-        <div class="tab-pane" id="navigation_normalized">
-          <pre class="brush: html"><%= WebPageAnalyser.normalize_html(navigation_content) %></pre>
-        </div>
-      </div>
-      <script>
-          $('#tab_header_navigation a').click(function (e) {
-              e.preventDefault();
-              $(this).tab('show');
-          })
-      </script>
-  </tr>
-  <tr>
-    <td>
-      Subnavigation<br />
-    </td>
-    <td>
-      <ul class="nav nav-tabs" id="tab_header_subnavigation" style="margin-bottom: 1px;">
-        <li class="active"><a href="#subnavigation_raw">Content</a></li>
-        <li><a href="#subnavigation_raw2">Content normalized</a></li>
-        <li><a href="#subnavigation_syntax_highlight">HTML View</a></li>
-        <li><a href="#subnavigation_normalized">HTML normalized</a></li>
-      </ul>
-      <div class="tab-content">
-        <div class="tab-pane active" id="subnavigation_raw">
-          <%= raw subnavigation_content %>
-        </div>
-        <div class="tab-pane" id="subnavigation_raw2">
-          <%
-             docXml = WebPageAnalyser.beautify_html(WebPageAnalyser.normalize_html(subnavigation_content))
-          %>
-          <%= raw docXml %>
-        </div>
-        <div class="tab-pane" id="subnavigation_syntax_highlight">
-          <% docXml = Nokogiri::HTML::fragment(subnavigation_content.gsub(/[ \t]+/," ").gsub(/^[ \t]+/,"").gsub(/> </,"><")) %>
-          <pre class="brush: html"><%= docXml.to_html %></pre>
-        </div>
-        <div class="tab-pane" id="subnavigation_normalized">
-          <pre class="brush: html"><%= WebPageAnalyser.normalize_html(subnavigation_content) %></pre>
-        </div>
-      </div>
-      <script>
-          $('#tab_header_subnavigation a').click(function (e) {
-              e.preventDefault();
-              $(this).tab('show');
-          })
-      </script>
-    </td>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-  </tr>
-</table>
+Content<br />
+
+  <ul class="nav nav-tabs" id="tab_header_main_content" style="margin-bottom: 1px;">
+    <li class="active"><a href="#main_content">Content</a></li>
+    <li><a href="#main_content_normalized">HTML normalized</a></li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane" id="main_content">
+      <%
+         # docXml = WebPageAnalyser.beautify_html(WebPageAnalyser.normalize_html(main_content))
+      %>
+      %= raw docXml %
+    </div>
+    <div class="tab-pane" id="main_content_normalized">
+      <pre class="brush: html">= #WebPageAnalyser.normalize_html(main_content) </pre>
+    </div>
+  </div>
+  <script>
+      $('#tab_header_main_content a').click(function (e) {
+          e.preventDefault();
+          $(this).tab('show');
+      })
+      $('#tab_header_main_content a:first').tab('show');
+  </script>
+
 
 <script type="text/javascript">
     SyntaxHighlighter.all()

@@ -23,10 +23,5 @@
       <div class="controls"><%= f.text_field :path, class: "input-xxlarge" , placeholder: "Page" %></div>
     </div>
 
-    <div class="control-group<% if @page.errors["title"].any? %> error<% end %>">
-      <%=  f.label :title , "Title", class: "control-label" %>
-      <div class="controls"><%= f.text_field :title, class: "input-xxlarge" , placeholder: "Title" %></div>
-    </div>
-
     <%= f.submit class: "btn btn-primary btn-small" %>
 <% end %>

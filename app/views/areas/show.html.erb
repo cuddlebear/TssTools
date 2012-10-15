@@ -1,13 +1,19 @@
-<p id="notice"><%= notice %></p>
+<div class="navbar navbar-inverse">
+  <div class="navbar-inner">
+    <span class="brand">Area</span>
+  </div>
+</div>
 
-<p>
-  <b>Domain:</b>
-  <%= @area.domain %>
-</p>
+<p id="notice"><%= notice %></p>
 
 <p>
   <b>Name:</b>
   <%= @area.name %>
+</p>
+
+<p>
+  <b>Filtertype:</b>
+  <%= @area.filter_type_property.name %>
 </p>
 
 <p>
@@ -16,15 +22,6 @@
 </p>
 
 <p>
-  <b>Filtertype:</b>
-  <%= @area.filterType %>
+  <b>Check interval:</b>
+  <%= @area.interval_property.name %>
 </p>
-
-<p>
-  <b>Sortorder:</b>
-  <%= @area.sortOrder %>
-</p>
-
-
-<%= link_to 'Edit', edit_domain_area_path(@area) %> |
-<%= link_to 'Back', areas_path %>

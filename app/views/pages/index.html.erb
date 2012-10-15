@@ -21,7 +21,7 @@
   <tr>
     <th>&nbsp;</th>
     <th><%= collection_select(:page, :status, Property.where("property_group_id = 1"), :id, :name, {:prompt => true}, class:"input-small")%></th>
-    <th><%= collection_select(:page, :status, Property.where("property_group_id = 1"), :id, :name, {:prompt => true}, class:"input-small")%></th>
+    <th><%= collection_select(:page, :status, Area.where("domain_id = ?", @domain.id), :id, :name, {:prompt => true}, class:"input-small")%></th>
     <th></th>
     <th></th>
   </tr>

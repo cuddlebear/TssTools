@@ -13,6 +13,7 @@
 <table id="sort" class="table table-striped table-hover">
   <thead>
   <tr>
+    <th>Sort</th>
     <th>Name</th>
     <th>Type</th>
     <th>Filter</th>
@@ -24,7 +25,7 @@
   <tbody>
 <% @areas.each do |area| %>
   <tr id="area_<%= area.id %>">
-    <td class="handle">###</td>
+    <td class="handle">&nbsp;<i class="icon-align-justify"></i>&nbsp;</td>
     <td><%= area.name %></td>
     <td><%= area.filter_type_property.name %></td>
     <td><%= area.filter %></td>

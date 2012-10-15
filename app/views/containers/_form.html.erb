@@ -1,4 +1,4 @@
-<%= form_for(@container) do |f| %>
+<%= form_for(@container, html: {class: "form-horizontal"}) do |f| %>
     <%= f.hidden_field :domain_id %>
     <% if @container.errors.any? %>
         <div id="errorExplanation"  class="alert alert-error">

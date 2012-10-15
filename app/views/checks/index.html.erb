@@ -1,3 +1,4 @@
+<%= render("shared/show_notice_or_warning") %>
 <%= render("domains/header", :type => 'checks')%>
 
 <div class="navbar navbar-inverse">
@@ -27,7 +28,7 @@
 %>
   <tr>
     <td><%= check.priority %></td>
-    <td><%= check.page.path %></td>
+    <td><%= truncate(check.page.path, length:60) %></td>
     <td><%= check.result_code %></td>
     <td><div class="btn-group">
       <%=  link_to "Show", check, class: "btn btn-small" %>
@@ -40,7 +41,3 @@
 </table>
 
 <%= paginate @checks %>
-
-<br />
-
-<%= link_to 'New Check', new_check_path %>

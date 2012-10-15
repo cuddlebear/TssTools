@@ -13,14 +13,6 @@
     <% end %>
 
 
-    <ul class="nav nav-tabs" id="myTab">
-      <li class="active"><a href="#home">Default Parameters</a></li>
-      <li><a href="#profile">Check Parameters</a></li>
-    </ul>
-
-    <div class="tab-content">
-      <div class="tab-pane active" id="home">
-
         <div class="row">
           <div class="span6">
             <div class="control-group">
@@ -51,8 +43,7 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="tab-pane" id="profile">
+
         <div class="row">
           <div class="span6">
             <div class="control-group">
@@ -72,20 +63,6 @@
             </div>
           </div>
         </div>
-
-
-      </div>
-    </div>
-
-    <script>
-        $(function () {
-            $('#myTab a').click(function (e) {
-                e.preventDefault();
-                $(this).tab('show');
-            })
-            $('#myTab a:first').tab('show');
-        })
-    </script>
 
 
     <%= f.submit class: "btn btn-primary btn-small" %>
