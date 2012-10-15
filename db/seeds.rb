@@ -293,11 +293,11 @@ if @domain.new_record?
   @domain.name                      = "Schittenhelm private homepage"
   @domain.domain                    = "www.schittenhelm.de"
   @domain.check_content_for_changes = true
+  @domain.save
 
   print "containers\n"
   @domain.containers.create(name: "Main content", x_path: "//*[@id=\"main\"]")
   @domain.containers.create(name: "Top navigation", x_path: "//*[@id=\"navigation\"]",ignore:true)
-  @domain.save
 end
 
 print "Stihl\n"
@@ -307,12 +307,12 @@ if @domain.new_record?
   @domain.name                      = "Stihl"
   @domain.domain                    = "www.stihl.de"
   @domain.check_content_for_changes = true
+  @domain.save
 
   print "containers\n"
   @domain.containers.create(name: "Main content", x_path: "//*[@id=\"main_content\"]/div[2]")
   @domain.containers.create(name: "Top navigation", x_path: "//*[@id=\"navigation\"]",ignore:true)
   @domain.containers.create(name: "Left navigation", x_path: "//*[@id=\"left_navigation\"]",ignore:true)
-  @domain.save
 end
 
 print "SFE\n"
@@ -322,12 +322,12 @@ if @domain.new_record?
   @domain.name                      = "SFE"
   @domain.domain                    = "www.sfe.de"
   @domain.check_content_for_changes = true
+  @domain.save
 
   print "containers\n"
   @domain.containers.create(name: "Main content", x_path: "//*[@id='ctl4']")
   @domain.containers.create(name: "Top navigation", x_path: "//*[@id='main-nav']",ignore:true)
   @domain.containers.create(name: "Left navigation", x_path: "//*[@id='ctl12']",ignore:true)
-  @domain.save
 end
 
 print "VHS Herrenberg\n"
@@ -337,12 +337,12 @@ if @domain.new_record?
   @domain.name                      = "VHS Herrenberg"
   @domain.domain                    = "www.vhs.herrenberg.de"
   @domain.check_content_for_changes = true
+  @domain.save
 
   print "containers\n"
   @domain.containers.create(name: "Main content", x_path: "//*[@id=\"main\"]")
   @domain.containers.create(name: "Top navigation", x_path: "//*[@id=\"primary\"]",ignore:true)
   @domain.containers.create(name: "Left navigation", x_path: "//*[@id=\"block-menu-menu-departments\"]",ignore:true)
-  @domain.save
 
   @domain.pages.create(path: "/kursliste/147", title: "", active: true)
   @domain.pages.create(path: "/kursliste/143", title: "", active: true)
