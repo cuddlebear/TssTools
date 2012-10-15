@@ -4,7 +4,6 @@ require 'open-uri'
 require 'digest/md5'
 
 class WebPageAnalyser
-  unloadable
 
   def self.get_publish_date(url1, mask="<!-- published (.*?) -->")
     #data = open(url1)
@@ -42,7 +41,18 @@ class WebPageAnalyser
             if link['href'].start_with?("/") && link['href'].index("?") == nil
               unless link['href'].index(/\.(jpg|jpeg|gif|png|ico|xls|xlsx|doc|docx|ppt|pptx|pdf|img|zip|rar|tar|gz|flv|mp3|ogg|mkv|mp4|avi|wav|ape|aac|ac3|mpg|mpeg|eps)/)
                 unless Page.where(domain_id: domain_id, path: link['href']).exists?
-                  Page.create(domain_id: domain_id, path:link['href'])
+                  area_id = nil
+                      Area.where(:domain_id => domain_id).rank(:row_order).all do |area|
+                        regx = area.filter
+                        if area.filter_type_property.code == "starts_with"
+                          regx = "^" + regx
+                        end
+                        if link['href'].rindex(Regexp.new(regx)) > 0
+                          area_id = area.id
+                          break
+                        end
+                      end
+                  Page.create(domain_id: domain_id, path: link['href'], area_id: area_id)
                   #content += link['href'] +"<br />"
                 end
               end

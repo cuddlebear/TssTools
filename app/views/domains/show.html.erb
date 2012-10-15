@@ -25,3 +25,35 @@
       </div>
   </div>
 </div>
+
+<dl class="dl-horizontal">
+  <dt>Check changes</dt>
+  <dd><%= icon_boolean(@domain.check_content_for_changes) %>&nbsp;</dd>
+  <dt>Check publish time</dt>
+  <dd><%= icon_boolean(@domain.check_publish_time) %>&nbsp;</dd>
+</dl>
+
+<%
+   pages       = Page.where(:domain_id => @domain.id).count
+   pages_new   = Page.where(:domain_id => @domain.id, :status => 0).count
+   pages_unknown = Page.where(:domain_id => @domain.id, :status => 1).count
+   pages_maintainance = Page.where(:domain_id => @domain.id, :status => 2).count
+   pages_warning  = Page.where(:domain_id => @domain.id, :status => 3).count
+   pages_critical   = Page.where(:domain_id => @domain.id, :status => 4).count
+   pages_ok   = Page.where(:domain_id => @domain.id, :status => 5).count
+%>
+<p>
+  <b>Pages</b> <%= pages %> -
+  <b>New</b> <%= pages_new %> -
+  <b>Unknown</b> <%= pages_maintainance %> -
+  <b>Maint.</b> <%= pages_warning %> -
+  <b>Warning</b> <%= pages_warning %> -
+  <b>Critical</b> <%= pages_critical %> -
+  <b>Ok</b> <%= pages_ok %>
+</p>
+<div class="progress">
+  <div class="bar bar-info" style="width: <%= (pages_new + pages_unknown + pages_maintainance).to_f / (pages.to_f / 100.0) %>%;"></div>
+  <div class="bar bar-warning" style="width: <%= pages_warning.to_f / (pages.to_f / 100.0) %>%;"></div>
+  <div class="bar bar-danger" style="width: <%= pages_critical.to_f / (pages.to_f / 100.0) %>%;"></div>
+  <div class="bar bar-success" style="width: <%= pages_ok.to_f / (pages.to_f / 100.0) %>%;"></div>
+</div>
