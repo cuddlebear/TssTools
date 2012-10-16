@@ -1,12 +1,11 @@
+<%= render ("shared/show_notice_or_warning") %>
 <div class="navbar navbar-inverse">
   <div class="navbar-inner">
     <span class="brand">Add page</span>
   </div>
 </div>
-
+<%= render("help") %>
 <%= render 'form' %>
-
-
 
 <%
 #^(((?<scheme>.*):\/\/)|)(?<domain>([^\/:]*\.[^\/:]*)|)(:(?<port>[0-9]*)|)(?<path>.*?)(^[\?]|)(\?(?<query>[^#]*?)|)(#(?<ancor>.*?)|)$

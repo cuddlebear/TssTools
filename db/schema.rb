@@ -234,6 +234,8 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   add_foreign_key "containers", "containers", :name => "containers_container_id_fk"
   add_foreign_key "containers", "domains", :name => "containers_domain_id_fk"
 
+  add_foreign_key "contents", "containers", :name => "contents_container_id_fk"
+
   add_foreign_key "domains", "accounts", :name => "domains_account_id_fk"
 
   add_foreign_key "page_contents", "contents", :name => "page_contents_content_id_fk"

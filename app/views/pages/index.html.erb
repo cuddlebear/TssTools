@@ -1,14 +1,7 @@
 <%= render("shared/show_notice_or_warning") %>
 <%= render("domains/header", :type => 'pages')%>
-
-<div class="navbar navbar-inverse">
-  <div class="navbar-inner">
-    <span class="brand">Page list</span>
-    <ul class="nav pull-right">
-      <li><%= link_to "Add Page", new_page_path(domain_id: @domain.id) %></li>
-    </ul>
-  </div>
-</div>
+<p></p>
+<%= render("help") %>
 
 <table class="table table-striped table-hover">
   <tr>
@@ -16,14 +9,14 @@
     <th>Status</th>
     <th>Area</th>
     <th>Title</th>
-    <th colspan="3">Actions</th>
+    <th><%= link_to "Add Page", new_page_path(domain_id: @domain.id), class: "btn btn-small" %></th>
   </tr>
   <tr>
     <th>&nbsp;</th>
     <th><%= collection_select(:page, :status, Property.where("property_group_id = 1"), :id, :name, {:prompt => true}, class:"input-small")%></th>
     <th><%= collection_select(:page, :status, Area.where("domain_id = ?", @domain.id), :id, :name, {:prompt => true}, class:"input-small")%></th>
     <th></th>
-    <th></th>
+    <th><%=  link_to "Apply filter", "#", class: "btn btn-small" %></th>
   </tr>
 
   <% @pages.each do |page|%>

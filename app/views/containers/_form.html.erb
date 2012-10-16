@@ -14,11 +14,6 @@
     <% end %>
 
 
-    <div class="control-group">
-      <%=  f.label :ignore, "Ignore content", class: "control-label" %>
-      <div class="controls"><%= f.check_box :ignore %></div>
-    </div>
-
     <div class="control-group<% if @container.errors["name"].any? %> error<% end %>">
       <%=  f.label :name,"Name", class: "control-label" %>
       <div class="controls"><%= f.text_field :name, class: "input-xxlarge" , placeholder: "Name" %></div>
@@ -26,9 +21,16 @@
 
     <div class="control-group<% if @container.errors["x_path"].any? %> error<% end %>">
       <%=  f.label :x_path , "x_path", class: "control-label" %>
-      <div class="controls"><%= f.text_area :x_path, class: "input-xxlarge" , placeholder: "X-path" %></div>
+      <div class="controls"><%= f.text_area :x_path, rows:5, class: "input-xxlarge" , placeholder: "X-path" %></div>
     </div>
 
-    <%= f.submit class: "btn btn-primary btn-small" %>
+    <div class="control-group">
+      <%=  f.label :ignore, "Ignore content", class: "control-label" %>
+      <div class="controls"><%= f.check_box :ignore %></div>
+    </div>
+
+    <div class="control-group">
+      <div class="controls"><%= f.submit class: "btn btn-primary btn-small" %></div>
+    </div>
 
 <% end %>
