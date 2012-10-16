@@ -54,7 +54,9 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
     t.datetime "updated_at",      :null => false
   end
 
+  add_index "checks", ["check_start"], :name => "index_checks_on_check_start"
   add_index "checks", ["page_id"], :name => "index_checks_on_page_id"
+  add_index "checks", ["scheduled_start"], :name => "index_checks_on_scheduled_start"
 
   create_table "containers", :force => true do |t|
     t.integer  "container_id"
@@ -233,6 +235,9 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   add_foreign_key "containers", "domains", :name => "containers_domain_id_fk"
 
   add_foreign_key "domains", "accounts", :name => "domains_account_id_fk"
+
+  add_foreign_key "page_contents", "contents", :name => "page_contents_content_id_fk"
+  add_foreign_key "page_contents", "pages", :name => "page_contents_page_id_fk"
 
   add_foreign_key "page_properties", "pages", :name => "page_properties_page_id_fk"
   add_foreign_key "page_properties", "properties", :name => "page_properties_property_id_fk"

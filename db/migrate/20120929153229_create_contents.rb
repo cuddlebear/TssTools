@@ -18,6 +18,9 @@ class CreateContents < ActiveRecord::Migration
     add_index :contents, :container_id
     add_index :contents, :language_property_id
     add_index :contents, :md5_hash
+
+    add_foreign_key(:contents, :containers)
+
   end
 
   def down

@@ -4,6 +4,7 @@ class Container < ActiveRecord::Base
   belongs_to :domain
   belongs_to :container
   has_many   :containers
+  has_many   :contents
 
   validates :domain_id, :presence => true
   validates :name,      :presence => true

@@ -4,6 +4,8 @@ class Content < ActiveRecord::Base
                   :links_file, :links_file_broken
 
   belongs_to  :container
+  belongs_to  :language_property, class_name: Property, :foreign_key => "language_property_id"
+
   has_many    :page_contents
   has_many    :pages, :through => :page_contents
 
