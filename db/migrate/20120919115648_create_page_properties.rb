@@ -10,8 +10,8 @@ class CreatePageProperties < ActiveRecord::Migration
     add_index :page_properties, :page_id
     add_index :page_properties, :property_id
 
-    add_foreign_key(:page_properties, :properties)
     add_foreign_key(:page_properties, :pages)
+    add_foreign_key(:page_properties, :properties)
   end
 
   def down

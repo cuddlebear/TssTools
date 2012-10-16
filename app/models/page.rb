@@ -7,8 +7,10 @@ class Page < ActiveRecord::Base
 
   belongs_to  :domain
   belongs_to  :area
+  has_many    :page_properties
   has_many    :properties, :through => :page_properties
   has_many    :page_contents
+  has_many    :contents, :through => :page_contents
   has_many    :checks
 
   validates :domain_id, :presence => true

@@ -13,6 +13,8 @@ class CreateChecks < ActiveRecord::Migration
       t.timestamps
     end
     add_index :checks, :page_id
+    add_index :checks, :scheduled_start
+    add_index :checks, :check_start
 
     add_foreign_key(:checks, :pages)
   end

@@ -4,7 +4,8 @@ class Content < ActiveRecord::Base
                   :links_file, :links_file_broken
 
   belongs_to  :container
-  belongs_to  :page_content
+  has_many    :page_contents
+  has_many    :pages, :through => :page_contents
 
   validates :container_id, :presence => true
 

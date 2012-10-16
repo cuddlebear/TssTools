@@ -2,6 +2,7 @@ class Property < ActiveRecord::Base
   attr_accessible :property_group_id,:code, :name, :int_value, :text_value, :date_value, :row_order
 
   belongs_to :property_group
+  has_many :page_properties
   has_many :pages, :through => :page_properties
 
   validates :property_group_id, :presence => true
