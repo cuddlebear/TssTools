@@ -13,45 +13,32 @@
     <% end %>
 
 
-        <div class="row">
-          <div class="span6">
             <div class="control-group">
               <%=  f.label :active, "Active", class: "control-label" %>
               <div class="controls"><%= f.check_box :active %></div>
             </div>
             <div class="control-group<% if @domain.errors["name"].any? %> error<% end %>">
               <%=  f.label :name, "Name", class: "control-label" %>
-              <div class="controls"> <%= f.text_field :name , placeholder: "Name" %></div>
+              <div class="controls"> <%= f.text_field :name , placeholder: "Name", class: "span6" %></div>
             </div>
             <div class="control-group">
               <%=  f.label :description, "Description", class: "control-label" %>
-              <div class="controls"><%= f.text_area :description , placeholder: "Description", rows: 4 %></div>
+              <div class="controls"><%= f.text_area :description , placeholder: "Description", rows: 4, class: "span6" %></div>
             </div>
-          </div>
-          <div class="span6">
-            <div class="control-group<% if @domain.errors["scheme"].any? %> error<% end %>">
-              <%=  f.label :scheme, "Scheme", class: "control-label" %>
-              <div class="controls"><%= f.text_field :scheme , placeholder: "Scheme", class: "input-mini" %></div>
-            </div>
-            <div class="control-group<% if @domain.errors["port"].any? %> error<% end %>">
-              <%=  f.label :port, "Port", class: "control-label" %>
-              <div class="controls"><%= f.text_field :port , placeholder: "Port", class: "input-mini"  %></div>
-            </div>
-            <div class="control-group<% if @domain.errors["domain"].any? %> error<% end %>">
-              <%=  f.label :domain, "Domain", class: "control-label" %>
-              <div class="controls"><%= f.text_field :domain , placeholder: "Page" %></div>
-            </div>
-          </div>
-        </div>
 
-        <div class="row">
-          <div class="span6">
+            <div class="control-group<% if @domain.errors["scheme"].any? || @domain.errors["port"].any? || @domain.errors["domain"].any?%> error<% end %>">
+              <%=  f.label :scheme, "Domain", class: "control-label" %>
+              <div class="controls controls-row">
+                <%= f.text_field :scheme , placeholder: "Scheme", class: "span1" %>
+                <%= f.text_field :port , placeholder: "Port", class: "span1" %>
+                <%= f.text_field :domain , placeholder: "Page", class: "span4" %>
+              </div>
+            </div>
+
             <div class="control-group">
               <%=  f.label :active, "Check content for changes", class: "control-label" %>
               <div class="controls"><%= f.check_box :check_content_for_changes %></div>
             </div>
-          </div>
-          <div class="span6">
             <div class="control-group">
               <%=  f.label :check_publish_time, "Check publish times", class: "control-label" %>
               <div class="controls"><%= f.check_box :check_publish_time %></div>
@@ -59,12 +46,15 @@
 
             <div class="control-group<% if @domain.errors["regx_publish_time"].any? %> error<% end %>">
               <%=  f.label :regx_publish_time, "Selector for publish times", class: "control-label" %>
-              <div class="controls"><%= f.text_field :regx_publish_time, placeholder: "Regular expression" %></div>
+              <div class="controls">
+                <%= f.text_field :regx_publish_time, placeholder: "Regular expression", class: "span6" %>
+                <span class="help-inline">For example &lt;!-- published (?&lt;day&gt;d{2}).(?&lt;month&gt;d{2}).(?&lt;year&gt;d{4}) (?&lt;hour&gt;d{2}):(?&lt;min&gt;d{2}):(?&lt;sec&gt;d{2}) --&gt;</span>
+              </div>
             </div>
-          </div>
-        </div>
 
     <div class="control-group">
-      <div class="controls"><%= f.submit class: "btn btn-primary btn-small" %></div>
+      <div class="controls"><%= f.submit class: "btn btn-primary" %>
+        <%= link_to "Back", domains_path, class: "btn btn-danger "%>
+      </div>
     </div>
 <% end %>

@@ -33,35 +33,9 @@
   <dd><%= @page.y_slow %>&nbsp;</dd>
 </dl>
 
-
-Content<br />
+<h2>Content</h2>
 
 <%=  render("page_contents/index_for_page") %>
 
-  <ul class="nav nav-tabs" id="tab_header_main_content" style="margin-bottom: 1px;">
-    <li class="active"><a href="#main_content">Content</a></li>
-    <li><a href="#main_content_normalized">HTML normalized</a></li>
-  </ul>
-  <div class="tab-content">
-    <div class="tab-pane" id="main_content">
-      <%
-         # docXml = WebPageAnalyser.beautify_html(WebPageAnalyser.normalize_html(main_content))
-      %>
-      %= raw docXml %
-    </div>
-    <div class="tab-pane" id="main_content_normalized">
-      <pre class="brush: html">= #WebPageAnalyser.normalize_html(main_content) </pre>
-    </div>
-  </div>
-  <script>
-      $('#tab_header_main_content a').click(function (e) {
-          e.preventDefault();
-          $(this).tab('show');
-      })
-      $('#tab_header_main_content a:first').tab('show');
-  </script>
-
-
-<script type="text/javascript">
-    SyntaxHighlighter.all()
-</script>
+<p></p>
+<%= link_to "Back", pages_path(domain_id: @page.domain_id),  class: "btn btn-danger " %>

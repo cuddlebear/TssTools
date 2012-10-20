@@ -8,7 +8,7 @@
     <th>Name</th>
     <th>X path</th>
     <th>Ignore</th>
-    <th><%= link_to "Add Container", new_container_path(domain_id: @domain.id), class: "btn btn-small" %></th>
+    <th><%= link_to "Add Container", new_container_path(domain_id: @domain.id), class: "btn" %></th>
   </tr>
 
 <% @containers = @domain.containers.order("name").page(params[:container]).per(10) %>
@@ -18,9 +18,9 @@
     <td><%= container.x_path %></td>
     <td><%= icon_boolean(container.ignore)%></td>
     <td><div class="btn-group">
-      <%=  link_to "Show", container, class: "btn btn-small" %>
-      <%=  link_to "Edit", edit_container_path(container), class: "btn btn-small" %>
-      <%=  link_to "Delete", container_path(container), method: :delete,  data: { confirm: 'Are you sure?' },  class: "btn btn-danger btn-small"%>
+      <%=  link_to "Show", container, class: "btn" %>
+      <%=  link_to "Edit", edit_container_path(container), class: "btn" %>
+      <%=  link_to "Delete", container_path(container), method: :delete,  data: { confirm: 'Are you sure?' },  class: "btn btn-danger"%>
     </div>
     </td>
   </tr>

@@ -42,6 +42,9 @@
     </div>
 
     <div class="control-group">
-      <div class="controls"><%= f.submit class: "btn btn-primary btn-small" %></div>
+      <div class="controls">
+        <%= f.submit class: "btn btn-primary" %>
+        <%= link_to "Back", areas_path(domain_id: @area.domain_id),  class: "btn btn-danger " %>
+      </div>
     </div>
 <% end %>

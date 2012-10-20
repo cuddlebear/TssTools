@@ -19,6 +19,11 @@ class Domain < ActiveRecord::Base
   validates :regx_publish_time, :presence => { :if => :check_publish_time?,
                                                :message => "When you want to check publish times you must define a selector for the publishing time." }
 
+  validates :regx_publish_time, :format => {:if => :regx_publish_time?,
+                                            :with => /(\?(<day>|<month>|<year>|<hour>|<min>|<sec>).*?){6}/i,
+                                            :message => "The regular expression needs to have named selectors for; day,month,year,hour,min and sec." }
+
+
   include RankedModel
   ranks :row_order
 

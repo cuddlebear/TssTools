@@ -77,5 +77,35 @@ class DomainsController < ApplicationController
     end
   end
 
+  def disable
+    @domain = Domain.find(params[:id])
+    if @domain.active?
+      @domain.active = false
+      @domain.save
+      logger.debug "Debug: Domain #{@domain.domain} disabled "
+    end
+
+    respond_to do |format|
+      format.html { redirect_to domains_path,
+                                :notice => 'Domain was ' + @domain.name + 'successfully disabled.'}
+      format.json { head :no_content }
+    end
+  end
+
+  def enable
+    @domain = Domain.find(params[:id])
+    unless @domain.active?
+      @domain.active = true
+      @domain.save
+      logger.debug "Debug: Domain #{@domain.domain} enabled "
+    end
+
+    respond_to do |format|
+      format.html { redirect_to domains_path,
+                                :notice => 'Domain was ' + @domain.name + ' successfully enabled.'}
+      format.json { head :no_content }
+    end
+  end
+
 
 end

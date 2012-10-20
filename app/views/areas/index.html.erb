@@ -10,7 +10,7 @@
     <th>Type</th>
     <th>Filter</th>
     <th>Check interval</th>
-    <th><%= link_to "Add Area", new_area_path(domain_id: @domain.id), class: "btn btn-small" %></th>
+    <th><%= link_to "Add Area", new_area_path(domain_id: @domain.id), class: "btn" %></th>
     <th>Sort</th>
   </tr>
   </thead>
@@ -23,9 +23,9 @@
     <td><%= area.filter %></td>
     <td><%= area.interval_property.name %></td>
     <td><div class="btn-group">
-      <%=  link_to "Show", area, class: "btn btn-small" %>
-      <%=  link_to "Edit", edit_area_path(area), class: "btn btn-small" %>
-      <%=  link_to "Delete", area_path(area), method: :delete,  data: { confirm: 'Are you sure?' },  class: "btn btn-danger btn-small"%>
+      <%=  link_to "Show", area, class: "btn" %>
+      <%=  link_to "Edit", edit_area_path(area), class: "btn" %>
+      <%=  link_to "Delete", area_path(area), method: :delete,  data: { confirm: 'Are you sure?' },  class: "btn btn-danger"%>
     </div>
     </td>
     <td class="handle">&nbsp;<i class="icon-align-justify"></i>&nbsp;</td>

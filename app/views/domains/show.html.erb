@@ -1,26 +1,24 @@
 <%= render ("shared/show_notice_or_warning") %>
 <%= render("domains/header", :type => 'parameter')%>
+<p></p>
+<%= render("help") %>
 
-<div class="tab-content">
-  <div class="tab-pane active" id="default_parameters">
-      <div class="row">
-        <div class="span6">
-          <dl class="dl-horizontal">
-            <dt>Active</dt>
-            <dd><%= icon_boolean(@domain.active) %>&nbsp;</dd>
-            <dt>Name</dt>
-            <dd><%= @domain.name %>&nbsp;</dd>
-            <dt>Domain</dt>
-            <dd><%= link_to @domain.scheme + "://" + @domain.domain + (@domain.port ? ":"+@domain.port : "") , @domain.scheme + "://" + @domain.domain + (@domain.port ? ":"+@domain.port : ""), target: "_blank"  %></dd>
-          </dl>
-        </div>
-        <div class="span6">
-          <dl class="dl-horizontal">
-            <dt>Description</dt>
-            <dd><%= @domain.description %>&nbsp;</dd>
-          </dl>
-        </div>
-      </div>
+<div class="row">
+  <div class="span6">
+    <dl class="dl-horizontal">
+      <dt>Active</dt>
+      <dd><%= icon_boolean(@domain.active) %>&nbsp;</dd>
+      <dt>Name</dt>
+      <dd><%= @domain.name %>&nbsp;</dd>
+      <dt>Domain</dt>
+      <dd><%= link_to @domain.scheme + "://" + @domain.domain + (@domain.port ? ":"+@domain.port : "") , @domain.scheme + "://" + @domain.domain + (@domain.port ? ":"+@domain.port : ""), target: "_blank"  %></dd>
+    </dl>
+  </div>
+  <div class="span6">
+    <dl class="dl-horizontal">
+      <dt>Description</dt>
+      <dd><%= @domain.description %>&nbsp;</dd>
+    </dl>
   </div>
 </div>
 
@@ -29,6 +27,8 @@
   <dd><%= icon_boolean(@domain.check_content_for_changes) %>&nbsp;</dd>
   <dt>Check publish time</dt>
   <dd><%= icon_boolean(@domain.check_publish_time) %>&nbsp;</dd>
+  <dt>Regex publish time</dt>
+  <dd><%= @domain.regx_publish_time %></dd>
 </dl>
 
 <%

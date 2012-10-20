@@ -4,10 +4,8 @@
     <span class="brand">Domains</span>
   </div>
 </div>
-
-<p>
-<%= link_to "Create domain", new_domain_path, class: "btn btn-primary" %>
-</p>
+<p></p>
+<%= render("help") %>
 
 <table class="table table-striped table-hover">
   <tr>
@@ -15,7 +13,7 @@
     <th>&nbsp;</th>
     <th>Name</th>
     <th>Url</th>
-    <th>Actions</th>
+    <th><%= link_to "Add domain", new_domain_path, class: "btn" %></th>
   </tr>
 <% @domains.each do |domain|%>
   <tr>
@@ -24,12 +22,45 @@
     <td><%= domain.name%></td>
     <td><%= link_to domain.domain, domain.scheme + "://" + domain.domain, target: "_blank"  %></td>
     <td>
-      <%=  link_to "Show", domain, class: "btn btn-primary btn-small" %>
-      <%=  link_to "Edit", edit_domain_path(domain), class: "btn btn-small" %>
-      <%=  link_to "Delete", domain_path(domain), method: :delete,  data: { confirm: 'Are you sure?' },  class: "btn btn-danger btn-small"%>
+      <div class="btn-group">
+        <%=  link_to "Show", domain, class: "btn" %>
+        <button class="btn dropdown-toggle" data-toggle="dropdown">
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><%=  link_to "Show", domain %></li>
+          <li><%=  link_to "Edit", edit_domain_path(domain)%></li>
+          <li class="divider"></li>
+          <li><%= link_to "Pages", pages_path(domain_id:domain.id) %></li>
+          <li><%= link_to "Container", containers_path(domain_id:domain.id) %></li>
+          <li><%= link_to "Areas", areas_path(domain_id:domain.id) %></li>
+          <li class="divider"></li>
+          <% if domain.active %>
+              <li><%= link_to "Disable", "domains/" + domain.id.to_s + "/disable" %></li>
+          <% else %>
+              <li><%= link_to "Enable", "domains/" + domain.id.to_s + "/enable" %></li>
+          <% end %>
+          <li><%=  link_to "Delete", domain_path(domain), method: :delete,  data: { confirm: 'Are you sure?' }%></li>
+        </ul>
+      </div>
     </td>
   </tr>
 <%end%>
 </table>
 <%= paginate @domains %>
 
+<a onclick="$('#myModal').modal()">Test Modal</a>
+
+<div class="modal hide" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Delete domain</h3>
+  </div>
+  <div class="modal-body">
+    <p>One fine body…</p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    <button class="btn btn-primary">Save changes</button>
+  </div>
+</div>

@@ -1,13 +1,6 @@
 Railstest::Application.routes.draw do
 
 
-  get "domains/init"
-  #get "domains/new"
-  #get "domains/edit"
-  #get "domains/show"
-  #get "domains/index"
-  #get "home/index"
-
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -25,6 +18,9 @@ Railstest::Application.routes.draw do
   resources :accounts
   resources :users
   resources :domains
+  get "domains/init"
+  get 'domains/:id/enable' => 'domains#enable'
+  get 'domains/:id/disable' => 'domains#disable'
   resources :areas
   post "areas/sort"
   resources :pages
