@@ -26,10 +26,10 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
 
   create_table "areas", :force => true do |t|
     t.integer  "domain_id"
-    t.string   "name"
-    t.string   "filter"
     t.integer  "filter_type_property_id"
     t.integer  "interval_property_id"
+    t.string   "name"
+    t.string   "filter"
     t.string   "language_code"
     t.integer  "row_order"
     t.datetime "created_at",              :null => false
@@ -61,14 +61,17 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   create_table "containers", :force => true do |t|
     t.integer  "container_id"
     t.integer  "domain_id"
+    t.integer  "content_type_property_id"
     t.string   "name"
     t.string   "x_path"
     t.boolean  "ignore"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.integer  "row_order"
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
   end
 
   add_index "containers", ["container_id"], :name => "index_containers_on_container_id"
+  add_index "containers", ["content_type_property_id"], :name => "index_containers_on_content_type_property_id"
   add_index "containers", ["domain_id"], :name => "index_containers_on_domain_id"
 
   create_table "contents", :force => true do |t|
@@ -82,6 +85,11 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
     t.integer  "links_external_broken"
     t.integer  "links_file"
     t.integer  "links_file_broken"
+    t.integer  "headlines"
+    t.integer  "paragraphs"
+    t.integer  "words"
+    t.integer  "characters"
+    t.integer  "images"
     t.datetime "created_at",            :null => false
     t.datetime "updated_at",            :null => false
   end
@@ -145,6 +153,9 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
     t.string   "path"
     t.string   "title"
     t.integer  "status"
+    t.boolean  "check_for_content"
+    t.string   "content_to_check_for_existence"
+    t.string   "content_to_check_for_not_existence"
     t.integer  "page_rank"
     t.integer  "page_speed"
     t.integer  "y_slow"
@@ -154,8 +165,8 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
     t.datetime "last_publish"
     t.boolean  "area_is_dirty"
     t.string   "actual_content"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
   end
 
   add_index "pages", ["area_id"], :name => "index_pages_on_area_id"

@@ -16,19 +16,20 @@ Railstest::Application.routes.draw do
   #   resources :products
 
   resources :accounts
-  resources :users
+  resources :areas
+  post "areas/sort"
+  resources :checks
+  resources :contents
+  resources :containers
+  post "containers/sort"
   resources :domains
   get "domains/init"
   get 'domains/:id/enable' => 'domains#enable'
   get 'domains/:id/disable' => 'domains#disable'
-  resources :areas
-  post "areas/sort"
+  resources :page_contents
   resources :pages
   resources :properties
-  resources :checks
-  resources :page_contents
-  resources :contents
-  resources :containers
+  resources :users
 
   # Sample resource route with options:
   #   resources :products do

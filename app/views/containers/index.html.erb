@@ -3,26 +3,64 @@
 <p></p>
 <%= render ("help") %>
 
-<table class="table table-striped table-hover">
+<table id="sort" class="table table-striped table-hover">
+  <thead>
   <tr>
     <th>Name</th>
     <th>X path</th>
     <th>Ignore</th>
     <th><%= link_to "Add Container", new_container_path(domain_id: @domain.id), class: "btn" %></th>
   </tr>
+  </thead>
 
-<% @containers = @domain.containers.order("name").page(params[:container]).per(10) %>
-<% @containers.each do |container| %>
-  <tr>
-    <td><%= container.name %></td>
-    <td><%= container.x_path %></td>
-    <td><%= icon_boolean(container.ignore)%></td>
-    <td><div class="btn-group">
-      <%=  link_to "Show", container, class: "btn" %>
-      <%=  link_to "Edit", edit_container_path(container), class: "btn" %>
-      <%=  link_to "Delete", container_path(container), method: :delete,  data: { confirm: 'Are you sure?' },  class: "btn btn-danger"%>
-    </div>
-    </td>
-  </tr>
-<% end %>
+  <tbody>
+  <% @containers.each do |container| %>
+      <tr id="container_<%= container.id %>">
+        <td><%= container.name %></td>
+        <td><%= container.x_path %></td>
+        <td><%= icon_boolean(container.ignore)%></td>
+        <td><div class="btn-group">
+          <%=  link_to "Show", container, class: "btn" %>
+          <%=  link_to "Edit", edit_container_path(container), class: "btn" %>
+          <%=  link_to "Delete", container_path(container), method: :delete,  data: { confirm: 'Are you sure?' },  class: "btn btn-danger"%>
+        </div>
+        </td>
+        <td class="handle">&nbsp;<i class="icon-align-justify"></i>&nbsp;</td>
+      </tr>
+  <% end %>
+  </tbody>
 </table>
+
+<%= paginate @containers %>
+
+<script>
+    var fixHelper = function(e, ui) {
+        ui.children().each(function() {
+            $(this).width($(this).width());
+        });
+        return ui;
+    };
+
+    $(document).ready(function(){
+        $("#sort tbody").sortable({
+            axis: 'y',
+            handle: '.handle',
+            cursor: 'crosshair',
+            scroll: true,
+            opacity: 0.7,
+            helper: fixHelper,
+            update: function(e, ui){
+                id = ui.item.attr('id').substr(10);
+                //alert (id);
+                position = ui.item.index();
+                $.ajax({
+                    type: 'POST',
+                    url: '/containers/sort',
+                    dataType: 'json',
+                    data: { id: id, row_order_position: position }
+                })
+                ui.item.children('td').effect('highlight', {}, 1000)
+            }
+        }).disableSelection();
+    });
+</script>

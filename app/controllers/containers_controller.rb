@@ -1,9 +1,12 @@
 class ContainersController < ApplicationController
+  @@page_size = 100
+
   # GET /containers
   # GET /containers.json
   def index
-    @containers = Container.all
     @domain = Domain.find(params[:domain_id])
+    @containers = Container.includes(:domain).includes(:content_type_property).
+        where(domain_id: @domain.id).rank("row_order").page(params[:page]).per(@@page_size)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -83,4 +86,14 @@ class ContainersController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+
+  def sort
+    @container = Container.find(params[:id])
+    offset = Container.rank(:row_order).where("domain_id < ?",@container.domain_id).count()
+    @container.update_attribute :row_order_position,  offset + params[:row_order_position].to_i
+    # this action will be called via ajax
+    render nothing: true
+  end
+
 end

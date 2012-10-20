@@ -7,6 +7,9 @@ class CreatePages < ActiveRecord::Migration
       t.string      :path
       t.string      :title
       t.integer     :status
+      t.boolean     :check_for_content
+      t.string      :content_to_check_for_existence
+      t.string      :content_to_check_for_not_existence
       t.integer     :page_rank
       t.integer     :page_speed
       t.integer     :y_slow

@@ -64,6 +64,18 @@ unless PropertyGroup.exists?(name: "Filter type")
   pg.properties.create(name: "Regular expression",  int_value: 2)
 end
 
+print "Content types\n"
+unless PropertyGroup.exists?(name: "Content type")
+  pg = PropertyGroup.create(name: "Content type", description: "Type of content which is assigned to the container", active: true, type:"int")
+  pg.properties.create(name: "Main content",        int_value: 0)
+  pg.properties.create(name: "Navigation",          int_value: 1)
+  pg.properties.create(name: "Subnavigation",       int_value: 2)
+  pg.properties.create(name: "Teaser",              int_value: 3)
+  pg.properties.create(name: "Advertisement",       int_value: 4)
+  pg.properties.create(name: "SEO",                 int_value: 5)
+  pg.properties.create(name: "Other",               int_value: 6)
+end
+
 print "Action types\n"
 unless PropertyGroup.exists?(name: "Action type")
   pg = PropertyGroup.create(name: "Action type", description: "Type of action used on url, page, domain...", active: true, type:"int")
@@ -203,6 +215,8 @@ if @domain.new_record?
   @domain.domain                    = "www.tss.trelleborg.com"
   @domain.active                    = true
   @domain.check_content_for_changes = true
+  @domain.check_publish_time        = true
+  @domain.regx_publish_time         = "<!-- published (?<day>\d{2})\.(?<month>\d{2})\.(?<year>\d{4}) (?<hour>\d{2}):(?<min>\d{2}):(?<sec>\d{2}) -->"
   @domain.save
 
   print "areas\n"
@@ -213,7 +227,7 @@ if @domain.new_record?
   @domain.areas.create(name: "complete site",                    filter: "/", filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
 
   print "containers\n"
-  @domain.containers.create(name: "Main content", x_path:'//*[@id="content-home"]\r\n//*[@id="content"]')
+  @domain.containers.create(name: "Main content", x_path:"//*[@id=\"content-home\"]\r\n//*[@id=\"content\"]")
   @domain.containers.create(name: "Top navigation", x_path:'//*[@id="navigation-area"]',ignore:true)
   @domain.containers.create(name: "Left navigation", x_path:'//*[@id="leftnavi"]',ignore:true)
 

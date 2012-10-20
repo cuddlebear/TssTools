@@ -11,6 +11,11 @@ class CreateContents < ActiveRecord::Migration
       t.integer     :links_external_broken
       t.integer     :links_file
       t.integer     :links_file_broken
+      t.integer     :headlines
+      t.integer     :paragraphs
+      t.integer     :words
+      t.integer     :characters
+      t.integer     :images
 
       t.timestamps
     end
