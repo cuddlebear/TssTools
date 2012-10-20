@@ -40,10 +40,8 @@ class WebPageAnalyser
         if link['href'].start_with?("/") && link['href'].index("?") == nil
           unless link['href'].index(/\.(jpg|jpeg|gif|png|ico|xls|xlsx|doc|docx|ppt|pptx|pdf|img|zip|rar|tar|gz|flv|mp3|ogg|mkv|mp4|avi|wav|ape|aac|ac3|mpg|mpeg|eps)/)
             unless Page.where(domain_id: domain_id, path: link['href']).exists?
-              Rails.logger.debug "Debug: Search area for url #{link['href']}"
               area_id = nil
               Area.where(:domain_id => domain_id).rank(:row_order).all do |area|
-                Rails.logger.debug "Debug: Filter  #{area.filter}"
                 regx = area.filter
                 if area.filter_type_property.code == "starts_with"
                   regx = "^" + regx
@@ -65,7 +63,6 @@ class WebPageAnalyser
   end
 
   def self.get_publish_time(filter, dom)
-    Rails.logger.debug "Debug: Get publish time #{dom.to_html}"
     x = dom.to_html
     r = Regexp.new(filter,"i").match(dom.to_html)
     unless r == nil
@@ -121,7 +118,6 @@ class WebPageAnalyser
   def self.check_page(id)
     to_check = Check.includes(:page).includes(:page => :domain).find(id)
     if to_check.page.domain.active                      # Only check on active domains
-      Rails.logger.debug "Debug: Check page #{to_check.page.path}"
       doc = nil
       # Retrieving the page
       begin                                             # don't check pictures, docs...
@@ -147,7 +143,6 @@ class WebPageAnalyser
         to_check.page.status = 5
         # Analysing the content for changes
         if to_check.page.domain.check_content_for_changes
-          Rails.logger.debug "Debug: Container check"
           @containers = Container.where(domain_id: to_check.page.domain_id)
           @containers.each do |container|
 
@@ -163,21 +158,25 @@ class WebPageAnalyser
             md5_hash = Digest::MD5.hexdigest(container_content)
             content = Content.where(md5_hash: md5_hash ).first_or_initialize
             if content.new_record?
-              # Add the new content
-              content.container_id = container.id
-              content.md5_hash     = md5_hash
-              content.text         = container_content
-              content.save
+              # fill the new content
+              content.container_id   = container.id
+              content.md5_hash       = md5_hash
+              content.text           = container_content
+              content.links_internal = 0
+              content.links_external = 0
+              content.links_file     = 0
+              content.headlines      = container_content.scan(/(<h[1-7].*?>.*?<\/h[1-7]>)/m).size
+              content.words          = container_content.gsub(/<[^<]*?>/m," ").gsub(/(\s)\s+/,"\\1").scan(/(\S+)/mi).size
+
               # Analyse the links in the content
               dom = Nokogiri::HTML::DocumentFragment.parse(container_content)
               dom.css('a[@href]').each do |link|
                 if link['href'].start_with?("/") && link['href'].index("?") == nil
                   unless link['href'].index(/\.(jpg|jpeg|gif|png|ico|xls|xlsx|doc|docx|ppt|pptx|pdf|img|zip|rar|tar|gz|flv|mp3|ogg|mkv|mp4|avi|wav|ape|aac|ac3|mpg|mpeg|eps)/)
+                    content.links_internal += 1
                     unless Page.where(domain_id: to_check.page.domain_id, path: link['href']).exists?
-                      Rails.logger.debug "Debug: Search area for url #{link['href']}"
                       area_id = nil
                       Area.where(:domain_id => to_check.page.domain_id).rank(:row_order).all do |area|
-                        Rails.logger.debug "Debug: Filter  #{area.filter}"
                         regx = area.filter
                         if area.filter_type_property.code == "starts_with"
                           regx = "^" + regx
@@ -189,11 +188,15 @@ class WebPageAnalyser
                       end
                       Page.create(domain_id: to_check.page.domain_id, path: link['href'], area_id: area_id)
                     end
+                  else
+                    content.links_file += 1
                   end
+                else
+                  content.links_external += 1
                 end
               end
-            end                                         # make connection to content
-
+              content.save
+            end
 
             page_content = to_check.page.page_contents.where(content_id: content.id).first_or_initialize
             if page_content.new_record?
