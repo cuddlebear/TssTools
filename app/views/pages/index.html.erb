@@ -4,6 +4,7 @@
 <%= render("help") %>
 
 <table class="table table-striped table-hover">
+  <thead>
   <tr>
     <th>&nbsp;</th>
     <th>Status</th>
@@ -18,7 +19,9 @@
     <th></th>
     <th><%=  link_to "Apply filter", "#", class: "btn" %></th>
   </tr>
+  </thead>
 
+  <tbody>
   <% @pages.each do |page|%>
       <tr>
         <td><% unless page.active %><i class="icon-ban-circle" title="Inactive"></i><% end %></td>
@@ -46,6 +49,7 @@
         </td>
       </tr>
   <%end%>
+  </tbody>
 </table>
 
 <%= paginate @pages %>

@@ -1,16 +1,8 @@
 <%= render("shared/show_notice_or_warning") %>
 <%= render("domains/header", :type => 'checks')%>
 
-<div class="navbar navbar-inverse">
-  <div class="navbar-inner">
-    <span class="brand">Checks list</span>
-    <ul class="nav pull-right">
-      <li><%= link_to "Add Container", new_container_path(domain_id: @domain.id) %></li>
-    </ul>
-  </div>
-</div>
-
 <table class="table table-striped table-hover">
+  <thead>
   <tr>
     <th>Prio</th>
     <!-- <th>Domain</th> -->
@@ -21,23 +13,26 @@
     <th></th>
     <th></th>
   </tr>
+  </thead>
 
-<% @checks.each do |check|
-  WebPageAnalyser.check_page(check.id)
-   a=check.id
-%>
-  <tr>
-    <td><%= check.priority %></td>
-    <td><%= truncate(check.page.path, length:60) %></td>
-    <td><%= check.result_code %></td>
-    <td><div class="btn-group">
-      <%=  link_to "Show", check, class: "btn btn-small" %>
-      <%=  link_to "Edit", edit_check_path(check), class: "btn btn-small" %>
-      <%=  link_to "Delete", check_path(check), method: :delete,  data: { confirm: 'Are you sure?' },  class: "btn btn-danger btn-small"%>
-    </div>
-    </td>
-  </tr>
-<% end %>
+  <tbody>
+  <% @checks.each do |check|
+    WebPageAnalyser.check_page(check.id)
+    a=check.id
+  %>
+      <tr>
+        <td><%= check.priority %></td>
+        <td><%= truncate(check.page.path, length:60) %></td>
+        <td><%= check.result_code %></td>
+        <td><div class="btn-group">
+          <%=  link_to "Show", check, class: "btn btn-small" %>
+          <%=  link_to "Edit", edit_check_path(check), class: "btn btn-small" %>
+          <%=  link_to "Delete", check_path(check), method: :delete,  data: { confirm: 'Are you sure?' },  class: "btn btn-danger btn-small"%>
+        </div>
+        </td>
+      </tr>
+  <% end %>
+  </tbody>
 </table>
 
 <%= paginate @checks %>

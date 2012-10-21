@@ -1,11 +1,4 @@
-<div class="navbar navbar-inverse">
-  <div class="navbar-inner">
-    <span class="brand">Domain <%=  @domain.name %></span>
-    <ul class="nav pull-right">
-      <li><%= link_to "Edit Domain", edit_domain_path(@domain.id) %></li>
-    </ul>
-  </div>
-</div>
+<h1>Domain <%= @domain.name %></h1>
 
 <ul class="nav nav-tabs" id="myTab" style="margin-bottom: 1px;">
   <li<%= raw type=="parameter" ? " class=\"active\"": ''%>><%= link_to "Parameter", domain_path(@domain.id) %></li>

@@ -5,6 +5,7 @@ class CreatePages < ActiveRecord::Migration
       t.references  :area
       t.boolean     :active
       t.string      :path
+      t.string      :parameter
       t.string      :title
       t.integer     :status
       t.boolean     :check_for_content

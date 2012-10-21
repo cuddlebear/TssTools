@@ -13,6 +13,14 @@
         </div>
     <% end %>
 
+    <div class="control-group<% if @container.errors["content_type_property_id"].any? %> error<% end %>">
+      <%=  f.label :content_type_property_id, "Content type", class: "control-label" %>
+      <div class="controls">
+        <%=  f.collection_select :content_type_property_id,
+                                 Property.joins(:property_group).where(:property_groups => {:code => "content_type"}).order(:row_order),
+                                 :id, :name, {:prompt => true}, class:"" %>
+      </div>
+    </div>
 
     <div class="control-group<% if @container.errors["name"].any? %> error<% end %>">
       <%=  f.label :name,"Name", class: "control-label" %>
@@ -22,11 +30,6 @@
     <div class="control-group<% if @container.errors["x_path"].any? %> error<% end %>">
       <%=  f.label :x_path , "x_path", class: "control-label" %>
       <div class="controls"><%= f.text_area :x_path, rows:5, class: "input-xxlarge" , placeholder: "X-path" %></div>
-    </div>
-
-    <div class="control-group">
-      <%=  f.label :ignore, "Ignore content", class: "control-label" %>
-      <div class="controls"><%= f.check_box :ignore %></div>
     </div>
 
     <div class="control-group">

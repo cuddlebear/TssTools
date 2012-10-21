@@ -166,7 +166,7 @@ class WebPageAnalyser
               content.links_external = 0
               content.links_file     = 0
               content.headlines      = container_content.scan(/(<h[1-7].*?>.*?<\/h[1-7]>)/m).size
-              content.words          = container_content.gsub(/<[^<]*?>/m," ").gsub(/(\s)\s+/,"\\1").scan(/(\S+)/mi).size
+              content.words          = container_content.gsub(/<[^<]*?>/m," ").gsub(/(\s)\s+/,"\\1").scan(/((^|)[a-zA-Z]\S{3,}($| ))/mi).size
 
               # Analyse the links in the content
               dom = Nokogiri::HTML::DocumentFragment.parse(container_content)

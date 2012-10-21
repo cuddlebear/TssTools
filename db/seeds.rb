@@ -6,7 +6,6 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-# Stati
 
 print "start =========================================================\n"
 
@@ -56,6 +55,11 @@ unless PropertyGroup.exists?(name: "Interval")
   pg.properties.create(name: "14 days",       int_value: 1209600)
 end
 
+# for later use in this script
+one_day = Property.joins(:property_group).where(property_groups: {code: "interval"}).where(properties: {code: "1_day"}).first
+fourteen_days = Property.joins(:property_group).where(property_groups: {code: "interval"}).where(properties: {code: "14_days"}).first
+
+
 print "Filter types\n"
 unless PropertyGroup.exists?(name: "Filter type")
   pg = PropertyGroup.create(name: "Filter type", description: "Type of filter to match area with url", active: true, type:"int")
@@ -63,6 +67,10 @@ unless PropertyGroup.exists?(name: "Filter type")
   pg.properties.create(name: "Contains",            int_value: 1)
   pg.properties.create(name: "Regular expression",  int_value: 2)
 end
+
+# for later use in this script
+starts_with = Property.joins(:property_group).where(property_groups: {code: "filter_type"}).where(properties: {code: "starts_with"}).first
+contains = Property.joins(:property_group).where(property_groups: {code: "filter_type"}).where(properties: {code: "contains"}).first
 
 print "Content types\n"
 unless PropertyGroup.exists?(name: "Content type")
@@ -75,6 +83,12 @@ unless PropertyGroup.exists?(name: "Content type")
   pg.properties.create(name: "SEO",                 int_value: 5)
   pg.properties.create(name: "Other",               int_value: 6)
 end
+
+# for later use in this script
+main_content = Property.joins(:property_group).where(property_groups: {code: "content_type"}).where(properties: {code: "main_content"}).first
+navigation = Property.joins(:property_group).where(property_groups: {code: "content_type"}).where(properties: {code: "navigation"}).first
+subnavigation = Property.joins(:property_group).where(property_groups: {code: "content_type"}).where(properties: {code: "subnavigation"}).first
+
 
 print "Action types\n"
 unless PropertyGroup.exists?(name: "Action type")
@@ -202,10 +216,6 @@ unless PropertyGroup.exists?(name: "Multimedia files")
 end
 
 
-one_day = Property.joins(:property_group).where(property_groups: {code: "interval"}).where(properties: {code: "1_day"}).first
-fourteen_days = Property.joins(:property_group).where(property_groups: {code: "interval"}).where(properties: {code: "14_days"}).first
-starts_with = Property.joins(:property_group).where(property_groups: {code: "filter_type"}).where(properties: {code: "starts_with"}).first
-
 print "creating domains ==============================================\n"
 print "Trelleborg Sealing Solutions\n"
 @domain = Domain.where(name: "Trelleborg Sealing Solutions").first_or_initialize
@@ -220,16 +230,21 @@ if @domain.new_record?
   @domain.save
 
   print "areas\n"
-  @domain.areas.create(name: "Global Site - News archive",       filter: "/global/en/news_1/newsarchive/", filter_type_property_id: starts_with.id, interval_property_id: fourteen_days.id)
-  @domain.areas.create(name: "Global Site",                      filter: "/global/en", filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
-  @domain.areas.create(name: "German Site - News archive",       filter: "/de/de/news_1/newsarchive/", filter_type_property_id: starts_with.id, interval_property_id: fourteen_days.id)
-  @domain.areas.create(name: "German Site",                      filter: "/de/de", filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
-  @domain.areas.create(name: "complete site",                    filter: "/", filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
+  @domain.areas.create(name: "News archives",                    filter: "/newsarchive/",                         filter_type_property_id: contains.id,    interval_property_id: fourteen_days.id)
+  @domain.areas.create(name: "Austrian site",                    filter: "/at/de/",                               filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
+  @domain.areas.create(name: "Belguim site",                     filter: "/be/en/",                               filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
+  @domain.areas.create(name: "Brasilian site",                   filter: "/br/pt/",                               filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
+  @domain.areas.create(name: "Bulgarian site",                   filter: "/bg/bg/",                               filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
+  @domain.areas.create(name: "Global site",                      filter: "/global/en/",                           filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
+  @domain.areas.create(name: "German site",                      filter: "/de/de/",                               filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
+  @domain.areas.create(name: "Swiss site",                       filter: "/ch/de/",                               filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
+  @domain.areas.create(name: "USA site",                         filter: "/us/en/",                               filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
+  @domain.areas.create(name: "all other parts",                  filter: "/",                                     filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
 
   print "containers\n"
-  @domain.containers.create(name: "Main content", x_path:"//*[@id=\"content-home\"]\r\n//*[@id=\"content\"]")
-  @domain.containers.create(name: "Top navigation", x_path:'//*[@id="navigation-area"]',ignore:true)
-  @domain.containers.create(name: "Left navigation", x_path:'//*[@id="leftnavi"]',ignore:true)
+  @domain.containers.create(name: "Main content",    content_type_id: main_content.id,  x_path:"//*[@id=\"content-home\"]\r\n//*[@id=\"content\"]")
+  @domain.containers.create(name: "Top navigation",  content_type_id: navigation.id,    x_path:'//*[@id="navigation-area"]',ignore:true)
+  @domain.containers.create(name: "Left navigation", content_type_id: subnavigation.id, x_path:'//*[@id="leftnavi"]',ignore:true)
 
   print "pages\n"
   @domain.pages.create(path: "/global/en/homepage/homepage.html", title: "Hydraulic Seals, Rotary Shaft Seals, O-Rings by Trelleborg", active: true)
@@ -260,9 +275,9 @@ if @domain.new_record?
   @domain.save
 
   print "containers\n"
-  @domain.containers.create(name: "Main content", x_path:"//*[@id=\"subpage\"]")
-  @domain.containers.create(name: "Top navigation", x_path:"//*[@id=\"topmenu\"]",ignore:true)
-  @domain.containers.create(name: "Left navigation", x_path:"//*[@id=\"leftmenu\"]",ignore:true)
+  @domain.containers.create(name: "Main content",    content_type_id: main_content.id,  x_path:"//*[@id=\"subpage\"]")
+  @domain.containers.create(name: "Top navigation",  content_type_id: navigation.id,    x_path:"//*[@id=\"topmenu\"]",ignore:true)
+  @domain.containers.create(name: "Left navigation", content_type_id: subnavigation.id, x_path:"//*[@id=\"leftmenu\"]",ignore:true)
 end
 
 print "Orkot Marine Bearings\n"
@@ -278,8 +293,8 @@ if @domain.new_record?
   @domain.areas.create(name: "complete site", filter: "/", filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
 
   print "containers\n"
-  @domain.containers.create(name: "Main content", x_path:'/html/body/table')
-  @domain.containers.create(name: "Top navigation", x_path:'//*[@id="menu0"]',ignore:true)
+  @domain.containers.create(name: "Main content",    content_type_id: main_content.id, x_path:'/html/body/table')
+  @domain.containers.create(name: "Top navigation",  content_type_id: navigation.id,   x_path:'//*[@id="menu0"]',ignore:true)
 end
 
 print "Orkot Hydro Bearings\n"
@@ -295,8 +310,8 @@ if @domain.new_record?
   @domain.areas.create(name: "complete site", filter: "/", filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
 
   print "containers\n"
-  @domain.containers.create(name: "Main content", x_path:'/html/body/table')
-  @domain.containers.create(name: "Top navigation", x_path:'//*[@id="menu0"]',ignore:true)
+  @domain.containers.create(name: "Main content",    content_type_id: main_content.id, x_path:'/html/body/table')
+  @domain.containers.create(name: "Top navigation",  content_type_id: navigation.id,   x_path:'//*[@id="menu0"]',ignore:true)
 end
 
 
@@ -310,8 +325,8 @@ if @domain.new_record?
   @domain.save
 
   print "containers\n"
-  @domain.containers.create(name: "Main content", x_path: "//*[@id=\"main\"]")
-  @domain.containers.create(name: "Top navigation", x_path: "//*[@id=\"navigation\"]",ignore:true)
+  @domain.containers.create(name: "Main content",    content_type_id: main_content.id, x_path: "//*[@id=\"main\"]")
+  @domain.containers.create(name: "Top navigation",  content_type_id: navigation.id,   x_path: "//*[@id=\"navigation\"]",ignore:true)
 end
 
 print "Stihl\n"
@@ -324,9 +339,9 @@ if @domain.new_record?
   @domain.save
 
   print "containers\n"
-  @domain.containers.create(name: "Main content", x_path: "//*[@id=\"main_content\"]/div[2]")
-  @domain.containers.create(name: "Top navigation", x_path: "//*[@id=\"navigation\"]",ignore:true)
-  @domain.containers.create(name: "Left navigation", x_path: "//*[@id=\"left_navigation\"]",ignore:true)
+  @domain.containers.create(name: "Main content",    content_type_id: main_content.id,  x_path: "//*[@id=\"main_content\"]/div[2]")
+  @domain.containers.create(name: "Top navigation",  content_type_id: navigation.id,    x_path: "//*[@id=\"navigation\"]",ignore:true)
+  @domain.containers.create(name: "Left navigation", content_type_id: subnavigation.id, x_path: "//*[@id=\"left_navigation\"]",ignore:true)
 end
 
 print "SFE\n"
@@ -339,9 +354,9 @@ if @domain.new_record?
   @domain.save
 
   print "containers\n"
-  @domain.containers.create(name: "Main content", x_path: "//*[@id='ctl4']")
-  @domain.containers.create(name: "Top navigation", x_path: "//*[@id='main-nav']",ignore:true)
-  @domain.containers.create(name: "Left navigation", x_path: "//*[@id='ctl12']",ignore:true)
+  @domain.containers.create(name: "Main content",    content_type_id: main_content.id,  x_path: "//*[@id='ctl4']")
+  @domain.containers.create(name: "Top navigation",  content_type_id: navigation.id,    x_path: "//*[@id='main-nav']",ignore:true)
+  @domain.containers.create(name: "Left navigation", content_type_id: subnavigation.id, x_path: "//*[@id='ctl12']",ignore:true)
 end
 
 print "VHS Herrenberg\n"
@@ -354,9 +369,9 @@ if @domain.new_record?
   @domain.save
 
   print "containers\n"
-  @domain.containers.create(name: "Main content", x_path: "//*[@id=\"main\"]")
-  @domain.containers.create(name: "Top navigation", x_path: "//*[@id=\"primary\"]",ignore:true)
-  @domain.containers.create(name: "Left navigation", x_path: "//*[@id=\"block-menu-menu-departments\"]",ignore:true)
+  @domain.containers.create(name: "Main content",    content_type_id: main_content.id,  x_path: "//*[@id=\"main\"]")
+  @domain.containers.create(name: "Top navigation",  content_type_id: navigation.id,    x_path: "//*[@id=\"primary\"]",ignore:true)
+  @domain.containers.create(name: "Left navigation", content_type_id: subnavigation.id, x_path: "//*[@id=\"block-menu-menu-departments\"]",ignore:true)
 
   @domain.pages.create(path: "/kursliste/147", title: "", active: true)
   @domain.pages.create(path: "/kursliste/143", title: "", active: true)
