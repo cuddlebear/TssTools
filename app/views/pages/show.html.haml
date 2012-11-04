@@ -1,0 +1,70 @@
+.page_header
+  %h1
+    Page
+    %small= @page.title
+
+=render("shared/show_notice_or_warning")
+=render("help")
+
+%ul{class: "nav nav-tabs", id: "tab_header"}
+  %li
+    %a{href: "#parameters"} Parameters
+  -@page.page_contents.includes(:content => :container).joins(:content => :container).order("containers.row_order").each do |page_content|
+    %li
+      %a{href: "#container_#{page_content.id}"}=page_content.content.container.name
+
+
+.tab-content
+  .tab-pane#parameters
+    %form.form-horizontal
+      .control-group
+        %label.control-label Active
+        .controls
+          %span{class: "input-small uneditable-input"}= icon_boolean(@page.active)
+      .control-group
+        %label.control-label Title
+        .controls
+          %span{class: "input-xxlarge uneditable-input"}= @page.title
+      .control-group
+        %label.control-label Url
+        .controls
+          %span{class: "input-xxlarge uneditable-input"}= WebPageAnalyser.get_url_from_page(@page)
+
+      .control-group
+        %label.control-label Last check
+        .controls
+          %span{class: "input-large uneditable-input"}= @page.last_check
+      .control-group
+        %label.control-label Last change
+        .controls
+          %span{class: "input-large uneditable-input"}= @page.last_change
+      .control-group
+        %label.control-label Last publish
+        .controls
+          %span{class: "input-large uneditable-input"}= @page.last_publish
+
+
+  -@page.page_contents.joins(:content => :container).order("containers.row_order").each do |page_content|
+    .tab-pane{id: "container_#{page_content.id}"}
+      = "From #{page_content.from} - until #{page_content.until}"
+      %br
+      = "Internal links #{page_content.content.links_internal}"
+      = "External links #{page_content.content.links_external}"
+      = "File links #{page_content.content.links_file}"
+      = "Headlines #{page_content.content.headlines}"
+      = "Words #{page_content.content.words}"
+      .well=  raw  WebPageAnalyser.beautify_html(page_content.content.text)
+
+:javascript
+  $('#tab_header a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    })
+  $('#tab_header a:first').tab('show');
+
+:javascript
+  SyntaxHighlighter.all()
+
+
+
+=link_to "Back", pages_path(domain_id: @page.domain_id),  class: "btn btn-danger"

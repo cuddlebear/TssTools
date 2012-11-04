@@ -11,7 +11,7 @@ class Property < ActiveRecord::Base
   include RankedModel
   ranks :row_order
 
-  before_save do |record|
+    before_save do |record|
     if record.code.nil? or record.code.empty?
       record.code = record.name.downcase.gsub(/[[^a-z0-9]]/,"_").gsub(/__+/,"_")
     end

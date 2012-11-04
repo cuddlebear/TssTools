@@ -18,10 +18,12 @@
       <div class="controls"><%= f.check_box :active %></div>
     </div>
 
-    <div class="control-group<% if @page.errors["path"].any? %> error<% end %>">
-      <%=  f.label :path,"Url", class: "control-label" %>
-      <div class="controls"><%= f.text_field :path, class: "input-xxlarge" , placeholder: "Page" %></div>
+
+    <div class="control-group">
+      <%=  label_tag "url", "Url", class: "control-label" %>
+      <div class="controls"><%= text_field_tag "url", WebPageAnalyser.get_url_from_page(@page), class: "input-xxlarge" , placeholder: "Path" %></div>
     </div>
+
 
     <div class="control-group">
       <div class="controls"><%= f.submit class: "btn btn-primary" %>

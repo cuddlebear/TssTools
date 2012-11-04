@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Domain:</b>
+  <%= @path.domain %>
+</p>
+
+<p>
+  <b>Path:</b>
+  <%= @path.path %>
+</p>
+
+<p>
+  <b>Value:</b>
+  <%= @path.value %>
+</p>
+
+<p>
+  <b>Level:</b>
+  <%= @path.level %>
+</p>
+
+
+<%= link_to 'Edit', edit_path_path(@path) %> |
+<%= link_to 'Back', paths_path %>

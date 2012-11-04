@@ -5,7 +5,8 @@ class AreasController < ApplicationController
   # GET /areas.json
   def index
     @domain = Domain.find(params[:domain_id])
-    @areas = Area.includes(:domain).includes(:filter_type_property).includes(:interval_property).
+    @areas = Area.includes(:domain).includes(:filter_type_property).
+              includes(:interval_property).includes(:language_code_property).
               where(domain_id: @domain.id).rank("row_order").page(params[:page]).per(@@page_size)
 
     respond_to do |format|

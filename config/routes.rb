@@ -1,6 +1,5 @@
 Railstest::Application.routes.draw do
 
-
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -30,6 +29,7 @@ Railstest::Application.routes.draw do
   resources :pages
   resources :properties
   resources :users
+  resources :paths
 
   # Sample resource route with options:
   #   resources :products do

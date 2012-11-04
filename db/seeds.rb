@@ -8,17 +8,36 @@
 
 
 print "start =========================================================\n"
-
+print "\n"
 print "creating accounts =============================================\n"
 print "Sabine\n"
 a = Account.create(name: "Sabines first account", active: true)
 a.users.create(user_name: "Sabine", email: "sabine.mustermann@evil.orgs", first_name: "Sabine", last_name:"Mustermann", active: true, account_admin: true, super_admin: false)
-
 print "Max\n"
 a = Account.create(name: "Maxs first account", active: true)
 a.users.create(user_name: "Max", email: "max.mustermann@evil.orgs", first_name: "Max", last_name:"Mustermann", active: true, account_admin: true, super_admin: true)
+print "\n"
 
 print "creating property groups ======================================\n"
+print "Global settings\n"
+unless PropertyGroup.exists?(name: "Global settinges")
+  global_settings = PropertyGroup.create(name: "Global settings", description: "Global settings of application.", active: true, type:"int")
+
+  print "Global settings numeric\n"
+  unless PropertyGroup.exists?(name: "Global settings numeric")
+    pg = PropertyGroup.create(name: "Global settings numeric", description: "Global numeric settings", active: true, type:"int", property_group_id: global_settings.id)
+    pg.properties.create(name: "Page Size",     int_value: 25)
+  end
+
+  print "Global settings text\n"
+  unless PropertyGroup.exists?(name: "Global settings text")
+    pg = PropertyGroup.create(name: "Global settings text", description: "Global text settings", active: true, type:"string", property_group_id: global_settings.id)
+    pg.properties.create(name: "Application name",            text_value: "TSS Tools")
+    pg.properties.create(name: "detectlanguage.com API key",  text_value: "54773be03dacdff3fa3cf3f19a839423")
+  end
+end
+
+print "Stati\n"
 unless PropertyGroup.exists?(name: "Status")
   pg = PropertyGroup.create(name: "Status", description: "Describes the status of a domain or page.", active: true, type:"int")
   pg.properties.create(name: "New",           int_value: 0)
@@ -29,7 +48,6 @@ unless PropertyGroup.exists?(name: "Status")
   pg.properties.create(name: "OK",            int_value: 5)
 end
 
-print "creating properties============================================\n"
 print "Time intevals\n"
 unless PropertyGroup.exists?(name: "Interval")
   pg = PropertyGroup.create(name: "Interval", description: "Time period between checks", active: true, type:"int")
@@ -54,11 +72,9 @@ unless PropertyGroup.exists?(name: "Interval")
   pg.properties.create(name: "7 days",        int_value: 604800)
   pg.properties.create(name: "14 days",       int_value: 1209600)
 end
-
 # for later use in this script
 one_day = Property.joins(:property_group).where(property_groups: {code: "interval"}).where(properties: {code: "1_day"}).first
 fourteen_days = Property.joins(:property_group).where(property_groups: {code: "interval"}).where(properties: {code: "14_days"}).first
-
 
 print "Filter types\n"
 unless PropertyGroup.exists?(name: "Filter type")
@@ -67,7 +83,6 @@ unless PropertyGroup.exists?(name: "Filter type")
   pg.properties.create(name: "Contains",            int_value: 1)
   pg.properties.create(name: "Regular expression",  int_value: 2)
 end
-
 # for later use in this script
 starts_with = Property.joins(:property_group).where(property_groups: {code: "filter_type"}).where(properties: {code: "starts_with"}).first
 contains = Property.joins(:property_group).where(property_groups: {code: "filter_type"}).where(properties: {code: "contains"}).first
@@ -88,7 +103,6 @@ end
 main_content = Property.joins(:property_group).where(property_groups: {code: "content_type"}).where(properties: {code: "main_content"}).first
 navigation = Property.joins(:property_group).where(property_groups: {code: "content_type"}).where(properties: {code: "navigation"}).first
 subnavigation = Property.joins(:property_group).where(property_groups: {code: "content_type"}).where(properties: {code: "subnavigation"}).first
-
 
 print "Action types\n"
 unless PropertyGroup.exists?(name: "Action type")
@@ -113,6 +127,82 @@ unless PropertyGroup.exists?(name: "Action type")
   pg.properties.create(name: "Check content changes", int_value: 103)
   pg.properties.create(name: "Check Publish time",    int_value: 104)
 end
+
+print "Languages\n"
+unless PropertyGroup.exists?(name: "Language Code")
+  pg = PropertyGroup.create(name: "Language Code", description: "Languages", active: true, type:"text")
+
+  pg.properties.create(name: "unknown",          text_value: "xxx")
+  pg.properties.create(name: "AFRIKAANS",        text_value: "af")
+  pg.properties.create(name: "ARABIC",           text_value: "ar")
+  pg.properties.create(name: "BELARUSIAN",       text_value: "be")
+  pg.properties.create(name: "BULGARIAN",        text_value: "bg")
+  pg.properties.create(name: "CATALAN",          text_value: "ca")
+  pg.properties.create(name: "CHEROKEE",         text_value: "chr")
+  pg.properties.create(name: "CZECH",            text_value: "cs")
+  pg.properties.create(name: "WELSH",            text_value: "cy")
+  pg.properties.create(name: "DANISH",           text_value: "da")
+  pg.properties.create(name: "GERMAN",           text_value: "de")
+  pg.properties.create(name: "DHIVEHI",          text_value: "dv")
+  pg.properties.create(name: "GREEK",            text_value: "el")
+  pg.properties.create(name: "ENGLISH",          text_value: "en")
+  pg.properties.create(name: "SPANISH",          text_value: "es")
+  pg.properties.create(name: "ESTONIAN",         text_value: "et")
+  pg.properties.create(name: "PERSIAN",          text_value: "fa")
+  pg.properties.create(name: "FINNISH",          text_value: "fi")
+  pg.properties.create(name: "TAGALOG",          text_value: "fil")
+  pg.properties.create(name: "FRENCH",           text_value: "fr")
+  pg.properties.create(name: "IRISH",            text_value: "ga")
+  pg.properties.create(name: "GUJARATI",         text_value: "gu")
+  pg.properties.create(name: "HEBREW",           text_value: "he")
+  pg.properties.create(name: "HINDI",            text_value: "hi")
+  pg.properties.create(name: "CROATIAN",         text_value: "hr")
+  pg.properties.create(name: "HUNGARIAN",        text_value: "hu")
+  pg.properties.create(name: "ARMENIAN",         text_value: "hy")
+  pg.properties.create(name: "ICELANDIC",        text_value: "is")
+  pg.properties.create(name: "ITALIAN",          text_value: "it")
+  pg.properties.create(name: "INUKTITUT",        text_value: "iu")
+  pg.properties.create(name: "JAPANESE",         text_value: "ja")
+  pg.properties.create(name: "GEORGIAN",         text_value: "ka")
+  pg.properties.create(name: "KHMER",            text_value: "km")
+  pg.properties.create(name: "KANNADA",          text_value: "kn")
+  pg.properties.create(name: "KOREAN",           text_value: "ko")
+  pg.properties.create(name: "LAOTHIAN",         text_value: "lo")
+  pg.properties.create(name: "LITHUANIAN",       text_value: "lt")
+  pg.properties.create(name: "LATVIAN",          text_value: "lv")
+  pg.properties.create(name: "MACEDONIAN",       text_value: "mk")
+  pg.properties.create(name: "MALAYALAM",        text_value: "ml")
+  pg.properties.create(name: "MALAY",            text_value: "ms")
+  pg.properties.create(name: "NORWEGIAN",        text_value: "nb")
+  pg.properties.create(name: "DUTCH",            text_value: "nl")
+  pg.properties.create(name: "ORIYA",            text_value: "or")
+  pg.properties.create(name: "PUNJABI",          text_value: "pa")
+  pg.properties.create(name: "POLISH",           text_value: "pl")
+  pg.properties.create(name: "PORTUGUESE",       text_value: "pt")
+  pg.properties.create(name: "ROMANIAN",         text_value: "ro")
+  pg.properties.create(name: "RUSSIAN",          text_value: "ru")
+  pg.properties.create(name: "SINHALESE",        text_value: "si")
+  pg.properties.create(name: "SLOVAK",           text_value: "sk")
+  pg.properties.create(name: "SLOVENIAN",        text_value: "sl")
+  pg.properties.create(name: "SERBIAN",          text_value: "sr")
+  pg.properties.create(name: "SWEDISH",          text_value: "sv")
+  pg.properties.create(name: "SWAHILI",          text_value: "sw")
+  pg.properties.create(name: "SYRIAC",           text_value: "syr")
+  pg.properties.create(name: "TAMIL",            text_value: "ta")
+  pg.properties.create(name: "TELUGU",           text_value: "te")
+  pg.properties.create(name: "THAI",             text_value: "th")
+  pg.properties.create(name: "TURKISH",          text_value: "tr")
+  pg.properties.create(name: "UKRAINIAN",        text_value: "uk")
+  pg.properties.create(name: "VIETNAMESE",       text_value: "vi")
+  pg.properties.create(name: "YIDDISH",          text_value: "yi")
+  pg.properties.create(name: "CHINESE",          text_value: "zh")
+  pg.properties.create(name: "CHINESET",         text_value: "zh-TW")
+end
+# for later use in this script
+language_en = Property.joins(:property_group).where(property_groups: {code: "language_code"}).where(properties: {code: "english"}).first
+language_de = Property.joins(:property_group).where(property_groups: {code: "language_code"}).where(properties: {code: "german"}).first
+language_fr = Property.joins(:property_group).where(property_groups: {code: "language_code"}).where(properties: {code: "french"}).first
+language_it = Property.joins(:property_group).where(property_groups: {code: "language_code"}).where(properties: {code: "italian"}).first
 
 print "File extensions\n"
 unless PropertyGroup.exists?(name: "File extensions")
@@ -215,7 +305,7 @@ unless PropertyGroup.exists?(name: "Multimedia files")
   pg.properties.create(name: "XVID Encoded Video File",              text_value: "xvid")
 end
 
-
+print "\n"
 print "creating domains ==============================================\n"
 print "Trelleborg Sealing Solutions\n"
 @domain = Domain.where(name: "Trelleborg Sealing Solutions").first_or_initialize
@@ -230,40 +320,39 @@ if @domain.new_record?
   @domain.save
 
   print "areas\n"
-  @domain.areas.create(name: "News archives",                    filter: "/newsarchive/",                         filter_type_property_id: contains.id,    interval_property_id: fourteen_days.id)
-  @domain.areas.create(name: "Austrian site",                    filter: "/at/de/",                               filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
-  @domain.areas.create(name: "Belguim site",                     filter: "/be/en/",                               filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
-  @domain.areas.create(name: "Brasilian site",                   filter: "/br/pt/",                               filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
-  @domain.areas.create(name: "Bulgarian site",                   filter: "/bg/bg/",                               filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
-  @domain.areas.create(name: "Global site",                      filter: "/global/en/",                           filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
-  @domain.areas.create(name: "German site",                      filter: "/de/de/",                               filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
-  @domain.areas.create(name: "Swiss site",                       filter: "/ch/de/",                               filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
-  @domain.areas.create(name: "USA site",                         filter: "/us/en/",                               filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
-  @domain.areas.create(name: "all other parts",                  filter: "/",                                     filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
+  @domain.areas.last.destroy
+  @domain.areas.create(name: "News archives",            filter: "/newsarchive/",                         filter_type_property_id: contains.id,    interval_property_id: fourteen_days.id)
+  @domain.areas.create(name: "Austrian site",            filter: "/at/de/",                               filter_type_property_id: starts_with.id, interval_property_id: one_day.id, language_code_property_id: language_de.id)
+  @domain.areas.create(name: "Belguim site",             filter: "/be/en/",                               filter_type_property_id: starts_with.id, interval_property_id: one_day.id, language_code_property_id: language_en.id)
+  @domain.areas.create(name: "Brasilian site",           filter: "/br/pt/",                               filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
+  @domain.areas.create(name: "Bulgarian site",           filter: "/bg/bg/",                               filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
+  @domain.areas.create(name: "Global site",              filter: "/global/en/",                           filter_type_property_id: starts_with.id, interval_property_id: one_day.id, language_code_property_id: language_en.id)
+  @domain.areas.create(name: "German site",              filter: "/de/de/",                               filter_type_property_id: starts_with.id, interval_property_id: one_day.id, language_code_property_id: language_de.id)
+  @domain.areas.create(name: "Swiss site",               filter: "/ch/de/",                               filter_type_property_id: starts_with.id, interval_property_id: one_day.id, language_code_property_id: language_de.id)
+  @domain.areas.create(name: "USA site",                 filter: "/us/en/",                               filter_type_property_id: starts_with.id, interval_property_id: one_day.id, language_code_property_id: language_en.id)
+  @domain.areas.create(name: "all other parts",          filter: "/",                                     filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
 
   print "containers\n"
-  @domain.containers.create(name: "Main content",    content_type_id: main_content.id,  x_path:"//*[@id=\"content-home\"]\r\n//*[@id=\"content\"]")
-  @domain.containers.create(name: "Top navigation",  content_type_id: navigation.id,    x_path:'//*[@id="navigation-area"]',ignore:true)
-  @domain.containers.create(name: "Left navigation", content_type_id: subnavigation.id, x_path:'//*[@id="leftnavi"]',ignore:true)
+  @domain.containers.create(name: "Main content",        content_type_property_id: main_content.id,       x_path:"//*[@id=\"content-home\"]\r\n//*[@id=\"content\"]")
+  @domain.containers.create(name: "Top navigation",      content_type_property_id: navigation.id,         x_path:"//*[@id=\"navigation-area\"]")
+  @domain.containers.create(name: "Left navigation",     content_type_property_id: subnavigation.id,      x_path:"//*[@id=\"leftnavi\"]")
 
   print "pages\n"
-  @domain.pages.create(path: "/global/en/homepage/homepage.html", title: "Hydraulic Seals, Rotary Shaft Seals, O-Rings by Trelleborg", active: true)
-  @domain.pages.create(path: "/global/en/industries/industries.html", title: "Industry Specific Solutions: Aerospace, Automotive, Marine, Food", active: true)
-  @domain.pages.create(path: "/global/en/industries/automotive/automotive.html", title: "Automotive Sealing Products, Seals & Gaskets: Automotive Industry", active: true)
-  @domain.pages.create(path: "/global/en/company/facts_1/tss-facts.html", title: "TSS Company Facts Company Profile  - Trelleborg", active: true)
-  @domain.pages.create(path: "/global/en/products_2/productrange.html", title: "", active: true)
-  @domain.pages.create(path: "/global/en/industries/industries.html", title: "", active: true)
-  @domain.pages.create(path: "/global/en/news_1/newsoverview/newsoverview.html", title: "", active: true)
-  @domain.pages.create(path: "/global/en/service/service.html", title: "", active: true)
-  @domain.pages.create(path: "/global/en/contact_1/contactform/contact-form.html", title: "", active: true)
-  @domain.pages.create(path: "/global/en/company/manufacturingcapabilities/index.html", title: "", active: true)
-  @domain.pages.create(path: "/global/en/company/manufacturingcapabilities/engineeredplastics/oringenergizedptfeseals/tsshelsingrdenmark/tss-helsingoer-denmark.html", title: "", active: true)
-  @domain.pages.create(path: "/global/en/company/manufacturingcapabilities/engineeredplastics/bushingsandbearings/tssstreamwoodusa/tss-streamwood-usa.html", title: "", active: true)
-  @domain.pages.create(path: "/global/en/news_1/newsarchive/archive2010/archiveoverview-2010.html", title: "", active: true)
-  @domain.pages.create(path: "/global/en/products_2/orings_2/o-ring.html", title: "", active: true)
-  @domain.pages.create(path: "/global/en/products_2/siliconetubingandhose/silicone-tubing-and-hose.html", title: "", active: true)
+  #@domain.pages.create(path: "/global/en/homepage/homepage.html", title: "Hydraulic Seals, Rotary Shaft Seals, O-Rings by Trelleborg", active: true)
+  #@domain.pages.create(path: "/global/en/industries/industries.html", title: "Industry Specific Solutions: Aerospace, Automotive, Marine, Food", active: true)
+  #@domain.pages.create(path: "/global/en/industries/automotive/automotive.html", title: "Automotive Sealing Products, Seals & Gaskets: Automotive Industry", active: true)
+  #@domain.pages.create(path: "/global/en/company/facts_1/tss-facts.html", title: "TSS Company Facts Company Profile  - Trelleborg", active: true)
+  #@domain.pages.create(path: "/global/en/products_2/productrange.html", title: "", active: true)
+  #@domain.pages.create(path: "/global/en/industries/industries.html", title: "", active: true)
+  #@domain.pages.create(path: "/global/en/news_1/newsoverview/newsoverview.html", title: "", active: true)
+  #@domain.pages.create(path: "/global/en/service/service.html", title: "", active: true)
+  #@domain.pages.create(path: "/global/en/contact_1/contactform/contact-form.html", title: "", active: true)
+  #@domain.pages.create(path: "/global/en/company/manufacturingcapabilities/index.html", title: "", active: true)
+  #@domain.pages.create(path: "/global/en/news_1/newsarchive/archive2010/archiveoverview-2010.html", title: "", active: true)
+  #@domain.pages.create(path: "/global/en/products_2/orings_2/o-ring.html", title: "", active: true)
+  #@domain.pages.create(path: "/global/en/products_2/siliconetubingandhose/silicone-tubing-and-hose.html", title: "", active: true)
 end
-
+print "\n"
 print "Trelleborg group\n"
 @domain = Domain.where(name: "Trelleborg group").first_or_initialize
 if @domain.new_record?
@@ -275,11 +364,12 @@ if @domain.new_record?
   @domain.save
 
   print "containers\n"
-  @domain.containers.create(name: "Main content",    content_type_id: main_content.id,  x_path:"//*[@id=\"subpage\"]")
-  @domain.containers.create(name: "Top navigation",  content_type_id: navigation.id,    x_path:"//*[@id=\"topmenu\"]",ignore:true)
-  @domain.containers.create(name: "Left navigation", content_type_id: subnavigation.id, x_path:"//*[@id=\"leftmenu\"]",ignore:true)
+  @domain.containers.create(name: "Main content",    content_type_property_id: main_content.id,  x_path:"//*[@id=\"subpage\"]")
+  @domain.containers.create(name: "Top navigation",  content_type_property_id: navigation.id,    x_path:"//*[@id=\"topmenu\"]")
+  @domain.containers.create(name: "Left navigation", content_type_property_id: subnavigation.id, x_path:"//*[@id=\"leftmenu\"]")
 end
 
+print "\n"
 print "Orkot Marine Bearings\n"
 @domain = Domain.where(name: "Orkot Marine Bearings").first_or_initialize
 if @domain.new_record?
@@ -293,10 +383,11 @@ if @domain.new_record?
   @domain.areas.create(name: "complete site", filter: "/", filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
 
   print "containers\n"
-  @domain.containers.create(name: "Main content",    content_type_id: main_content.id, x_path:'/html/body/table')
-  @domain.containers.create(name: "Top navigation",  content_type_id: navigation.id,   x_path:'//*[@id="menu0"]',ignore:true)
+  @domain.containers.create(name: "Main content",    content_type_property_id: main_content.id, x_path:'/html/body/table')
+  @domain.containers.create(name: "Top navigation",  content_type_property_id: navigation.id,   x_path:'//*[@id="menu0"]')
 end
 
+print "\n"
 print "Orkot Hydro Bearings\n"
 @domain = Domain.where(name: "Orkot Hydro Bearings").first_or_initialize
 if @domain.new_record?
@@ -310,11 +401,11 @@ if @domain.new_record?
   @domain.areas.create(name: "complete site", filter: "/", filter_type_property_id: starts_with.id, interval_property_id: one_day.id)
 
   print "containers\n"
-  @domain.containers.create(name: "Main content",    content_type_id: main_content.id, x_path:'/html/body/table')
-  @domain.containers.create(name: "Top navigation",  content_type_id: navigation.id,   x_path:'//*[@id="menu0"]',ignore:true)
+  @domain.containers.create(name: "Main content",    content_type_property_id: main_content.id, x_path:'/html/body/table')
+  @domain.containers.create(name: "Top navigation",  content_type_property_id: navigation.id,   x_path:'//*[@id="menu0"]')
 end
 
-
+print "\n"
 print "Schittenhelm\n"
 @domain = Domain.where(name: "Schittenhelm private homepage").first_or_initialize
 if @domain.new_record?
@@ -325,10 +416,11 @@ if @domain.new_record?
   @domain.save
 
   print "containers\n"
-  @domain.containers.create(name: "Main content",    content_type_id: main_content.id, x_path: "//*[@id=\"main\"]")
-  @domain.containers.create(name: "Top navigation",  content_type_id: navigation.id,   x_path: "//*[@id=\"navigation\"]",ignore:true)
+  @domain.containers.create(name: "Main content",    content_type_property_id: main_content.id, x_path: "//*[@id=\"main\"]")
+  @domain.containers.create(name: "Top navigation",  content_type_property_id: navigation.id,   x_path: "//*[@id=\"navigation\"]")
 end
 
+print "\n"
 print "Stihl\n"
 @domain = Domain.where(name: "Stihl").first_or_initialize
 if @domain.new_record?
@@ -339,11 +431,12 @@ if @domain.new_record?
   @domain.save
 
   print "containers\n"
-  @domain.containers.create(name: "Main content",    content_type_id: main_content.id,  x_path: "//*[@id=\"main_content\"]/div[2]")
-  @domain.containers.create(name: "Top navigation",  content_type_id: navigation.id,    x_path: "//*[@id=\"navigation\"]",ignore:true)
-  @domain.containers.create(name: "Left navigation", content_type_id: subnavigation.id, x_path: "//*[@id=\"left_navigation\"]",ignore:true)
+  @domain.containers.create(name: "Main content",    content_type_property_id: main_content.id,  x_path: "//*[@id=\"main_content\"]/div[2]")
+  @domain.containers.create(name: "Top navigation",  content_type_property_id: navigation.id,    x_path: "//*[@id=\"navigation\"]")
+  @domain.containers.create(name: "Left navigation", content_type_property_id: subnavigation.id, x_path: "//*[@id=\"left_navigation\"]")
 end
 
+print "\n"
 print "SFE\n"
 @domain = Domain.where(name: "SFE").first_or_initialize
 if @domain.new_record?
@@ -354,11 +447,12 @@ if @domain.new_record?
   @domain.save
 
   print "containers\n"
-  @domain.containers.create(name: "Main content",    content_type_id: main_content.id,  x_path: "//*[@id='ctl4']")
-  @domain.containers.create(name: "Top navigation",  content_type_id: navigation.id,    x_path: "//*[@id='main-nav']",ignore:true)
-  @domain.containers.create(name: "Left navigation", content_type_id: subnavigation.id, x_path: "//*[@id='ctl12']",ignore:true)
+  @domain.containers.create(name: "Main content",    content_type_property_id: main_content.id,  x_path: "//*[@id='ctl4']")
+  @domain.containers.create(name: "Top navigation",  content_type_property_id: navigation.id,    x_path: "//*[@id='main-nav']")
+  @domain.containers.create(name: "Left navigation", content_type_property_id: subnavigation.id, x_path: "//*[@id='ctl12']")
 end
 
+print "\n"
 print "VHS Herrenberg\n"
 @domain = Domain.where(name: "VHS Herrenberg").first_or_initialize
 if @domain.new_record?
@@ -369,15 +463,16 @@ if @domain.new_record?
   @domain.save
 
   print "containers\n"
-  @domain.containers.create(name: "Main content",    content_type_id: main_content.id,  x_path: "//*[@id=\"main\"]")
-  @domain.containers.create(name: "Top navigation",  content_type_id: navigation.id,    x_path: "//*[@id=\"primary\"]",ignore:true)
-  @domain.containers.create(name: "Left navigation", content_type_id: subnavigation.id, x_path: "//*[@id=\"block-menu-menu-departments\"]",ignore:true)
+  @domain.containers.create(name: "Main content",    content_type_property_id: main_content.id,  x_path: "//*[@id=\"main\"]")
+  @domain.containers.create(name: "Top navigation",  content_type_property_id: navigation.id,    x_path: "//*[@id=\"primary\"]")
+  @domain.containers.create(name: "Left navigation", content_type_property_id: subnavigation.id, x_path: "//*[@id=\"block-menu-menu-departments\"]")
 
-  @domain.pages.create(path: "/kursliste/147", title: "", active: true)
-  @domain.pages.create(path: "/kursliste/143", title: "", active: true)
-  @domain.pages.create(path: "/kultur-kunst-gestalten-musik/informationen", title: "", active: true)
+  #@domain.pages.create(path: "/kursliste/147", title: "", active: true)
+  #@domain.pages.create(path: "/kursliste/143", title: "", active: true)
+  #@domain.pages.create(path: "/kultur-kunst-gestalten-musik/informationen", title: "", active: true)
 end
 
+print "\n"
 print "Heise\n"
 @domain = Domain.where(name: "Heise").first_or_initialize
 if @domain.new_record?

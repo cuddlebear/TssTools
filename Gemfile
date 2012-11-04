@@ -27,7 +27,11 @@ gem 'foreigner'
 gem 'kaminari'
 gem 'nokogiri'
 gem "ranked-model"
-
+gem "PageRankr"
+gem "wtf_lang"
+gem "haml"
+gem "uuidtools"
+gem "google_visualr"
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
@@ -42,4 +46,4 @@ gem "ranked-model"
 # gem 'capistrano'
 
 # To use debugger
-# gem 'debugger'
+#gem 'debugger'

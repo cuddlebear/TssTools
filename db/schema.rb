@@ -14,6 +14,7 @@
 ActiveRecord::Schema.define(:version => 20120929155156) do
 
   create_table "accounts", :force => true do |t|
+    t.string   "uuid",        :null => false
     t.string   "name"
     t.string   "description"
     t.boolean  "active"
@@ -23,23 +24,27 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   end
 
   add_index "accounts", ["name"], :name => "index_accounts_on_name"
+  add_index "accounts", ["uuid"], :name => "index_accounts_on_uuid", :unique => true
 
   create_table "areas", :force => true do |t|
+    t.string   "uuid",                      :null => false
     t.integer  "domain_id"
     t.integer  "filter_type_property_id"
     t.integer  "interval_property_id"
+    t.integer  "language_code_property_id"
     t.string   "name"
     t.string   "filter"
-    t.string   "language_code"
     t.integer  "row_order"
-    t.datetime "created_at",              :null => false
-    t.datetime "updated_at",              :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
   add_index "areas", ["domain_id"], :name => "index_areas_on_domain_id"
   add_index "areas", ["filter_type_property_id"], :name => "index_areas_on_filter_type_property_id"
   add_index "areas", ["interval_property_id"], :name => "index_areas_on_interval_property_id"
+  add_index "areas", ["language_code_property_id"], :name => "index_areas_on_language_code_property_id"
   add_index "areas", ["row_order"], :name => "index_areas_on_row_order"
+  add_index "areas", ["uuid"], :name => "index_areas_on_uuid", :unique => true
 
   create_table "checks", :force => true do |t|
     t.integer  "page_id"
@@ -99,6 +104,7 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   add_index "contents", ["md5_hash"], :name => "index_contents_on_md5_hash"
 
   create_table "domains", :force => true do |t|
+    t.string   "uuid",                      :null => false
     t.integer  "account_id"
     t.boolean  "active"
     t.string   "name"
@@ -122,6 +128,7 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   add_index "domains", ["domain"], :name => "index_domains_on_domain"
   add_index "domains", ["name"], :name => "index_domains_on_name"
   add_index "domains", ["row_order"], :name => "index_domains_on_row_order"
+  add_index "domains", ["uuid"], :name => "index_domains_on_uuid", :unique => true
 
   create_table "page_contents", :force => true do |t|
     t.integer  "page_id"
@@ -147,10 +154,14 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   add_index "page_properties", ["property_id"], :name => "index_page_properties_on_property_id"
 
   create_table "pages", :force => true do |t|
+    t.string   "uuid",                               :null => false
     t.integer  "domain_id"
     t.integer  "area_id"
+    t.integer  "path_id"
     t.boolean  "active"
-    t.string   "path"
+    t.integer  "level"
+    t.string   "file_name"
+    t.string   "parameter"
     t.string   "title"
     t.integer  "status"
     t.boolean  "check_for_content"
@@ -170,11 +181,31 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   end
 
   add_index "pages", ["area_id"], :name => "index_pages_on_area_id"
-  add_index "pages", ["domain_id", "path"], :name => "index_pages_on_domain_id_and_path"
+  add_index "pages", ["domain_id", "path_id", "file_name"], :name => "index_pages_on_domain_id_and_path_id_and_file_name"
   add_index "pages", ["last_change"], :name => "index_pages_on_last_change"
   add_index "pages", ["last_check"], :name => "index_pages_on_last_check"
   add_index "pages", ["last_publish"], :name => "index_pages_on_last_publish"
+  add_index "pages", ["level"], :name => "index_pages_on_level"
+  add_index "pages", ["path_id"], :name => "pages_path_id_fk"
   add_index "pages", ["status"], :name => "index_pages_on_status"
+  add_index "pages", ["uuid"], :name => "index_pages_on_uuid", :unique => true
+
+  create_table "paths", :force => true do |t|
+    t.string   "uuid",       :null => false
+    t.integer  "domain_id"
+    t.integer  "path_id"
+    t.string   "value"
+    t.integer  "level"
+    t.integer  "status"
+    t.boolean  "dirty"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "paths", ["domain_id", "path_id"], :name => "index_paths_on_domain_id_and_path_id"
+  add_index "paths", ["domain_id", "value"], :name => "index_paths_on_domain_id_and_value"
+  add_index "paths", ["path_id"], :name => "paths_path_id_fk"
+  add_index "paths", ["uuid"], :name => "index_paths_on_uuid", :unique => true
 
   create_table "properties", :force => true do |t|
     t.integer  "property_group_id"
@@ -208,6 +239,7 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   add_index "property_groups", ["row_order"], :name => "index_property_groups_on_row_order"
 
   create_table "users", :force => true do |t|
+    t.string   "uuid",              :null => false
     t.integer  "account_id"
     t.string   "user_name"
     t.string   "email"
@@ -237,6 +269,7 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   add_index "users", ["email"], :name => "index_users_on_email"
   add_index "users", ["last_name"], :name => "index_users_on_last_name"
   add_index "users", ["user_name"], :name => "index_users_on_user_name"
+  add_index "users", ["uuid"], :name => "index_users_on_uuid", :unique => true
 
   add_foreign_key "areas", "domains", :name => "areas_domain_id_fk"
 
@@ -257,6 +290,10 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
 
   add_foreign_key "pages", "areas", :name => "pages_area_id_fk"
   add_foreign_key "pages", "domains", :name => "pages_domain_id_fk"
+  add_foreign_key "pages", "paths", :name => "pages_path_id_fk"
+
+  add_foreign_key "paths", "domains", :name => "paths_domain_id_fk"
+  add_foreign_key "paths", "paths", :name => "paths_path_id_fk"
 
   add_foreign_key "properties", "property_groups", :name => "properties_property_group_id_fk"
 

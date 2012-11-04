@@ -22,7 +22,7 @@ class Domain < ActiveRecord::Base
   validates :regx_publish_time, :format => {:if => :regx_publish_time?,
                                             :with => /(\?(<day>|<month>|<year>|<hour>|<min>|<sec>).*?){6}/i,
                                             :message => "The regular expression needs to have named selectors for; day,month,year,hour,min and sec." }
-
+  validates :uuid, :presence => true, :uniqueness => true
 
   include RankedModel
   ranks :row_order
@@ -36,6 +36,10 @@ class Domain < ActiveRecord::Base
     record.areas.destroy_all
   end
 
+  before_validation(:on => :create) do
+    self.uuid = UUIDTools::UUID.random_create.to_s
+  end
+
   before_save do |record|
     if record.scheme.nil? or record.scheme.empty?
       record.scheme="http"
@@ -46,7 +50,8 @@ class Domain < ActiveRecord::Base
   after_create do |record| # create default page
     record.status = 0
     record.save
-    record.pages.create(path: "/", title: "Homepage")
+    path_id = WebPageAnalyser.get_path_id(record.id,"/")
+    record.pages.create(path_id: path_id , title: "Homepage")
     record.areas.create(name: "root only",
                         filter: "^/*$",
                         interval_property_id: Property.joins(:property_group).where(property_groups: {code: "interval"}).where(properties: {code: "1_h"}).first.id,

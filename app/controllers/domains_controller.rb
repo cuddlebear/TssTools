@@ -36,7 +36,42 @@ class DomainsController < ApplicationController
   end
 
   def show
-    @domain = Domain.find(params[:id])
+    id = params[:id]
+    unless id.nil?
+      if id.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/)
+        @domain = Domain.find_all_by_uuid(id).first
+      else
+        @domain = Domain.find(id)
+      end
+    end
+
+    pages_new          = Page.where(:domain_id => @domain.id, :status => 0).count
+    pages_unknown      = Page.where(:domain_id => @domain.id, :status => 1).count
+    pages_maintainance = Page.where(:domain_id => @domain.id, :status => 2).count
+    pages_warning      = Page.where(:domain_id => @domain.id, :status => 3).count
+    pages_critical     = Page.where(:domain_id => @domain.id, :status => 4).count
+    pages_ok           = Page.where(:domain_id => @domain.id, :status => 5).count
+
+    data_table = GoogleVisualr::DataTable.new
+    data_table.new_column('string', 'Pages')
+    data_table.new_column('number', 'Count')
+    data_table.add_rows(5)
+    data_table.set_cell(0, 0, 'New'     )
+    data_table.set_cell(0, 1, pages_new )
+    data_table.set_cell(1, 0, 'Unknown'      )
+    data_table.set_cell(1, 1, pages_unknown  )
+    data_table.set_cell(2, 0, 'Warning' )
+    data_table.set_cell(2, 1, pages_warning  )
+    data_table.set_cell(3, 0, 'Critical'    )
+    data_table.set_cell(3, 1, pages_critical  )
+    data_table.set_cell(4, 0, 'OK'    )
+    data_table.set_cell(4, 1, pages_ok  )
+
+    opts   = { :width => 400, :height => 300, :title => 'Status of pages', :is3D => true }
+    @chart = GoogleVisualr::Interactive::PieChart.new(data_table, opts)
+    @table = GoogleVisualr::Interactive::Table.new(data_table)
+
+
     respond_to do |format|
       format.html
       format.json  { render :json => @domain }
@@ -44,7 +79,15 @@ class DomainsController < ApplicationController
   end
 
   def edit
-    @domain = Domain.find(params[:id])
+    id = params[:id]
+    unless id.nil?
+      if id.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/)
+        @domain = Domain.find_all_by_uuid(id).first
+      else
+        @domain = Domain.find(id)
+      end
+    end
+
     respond_to do |format|
       format.html
       format.json  { render :json => @domain }
@@ -52,7 +95,15 @@ class DomainsController < ApplicationController
   end
 
   def update
-    @domain = Domain.find(params[:id])
+    id = params[:id]
+    unless id.nil?
+      if id.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/)
+        @domain = Domain.find_all_by_uuid(id).first
+      else
+        @domain = Domain.find(id)
+      end
+    end
+
     respond_to do |format|
       if @domain.update_attributes(params[:domain])
         format.html  { redirect_to(@domain,

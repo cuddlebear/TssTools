@@ -1,6 +1,7 @@
 class CreateUsers < ActiveRecord::Migration
   def self.up
     create_table :users do |t|
+      t.string      :uuid, :null => false
       t.references  :account
       t.string      :user_name
       t.string      :email
@@ -25,6 +26,7 @@ class CreateUsers < ActiveRecord::Migration
       t.timestamps
     end
 
+    add_index :users, :uuid, :unique => true
     add_index :users, :account_id
     add_index :users, :email
     add_index :users, :user_name

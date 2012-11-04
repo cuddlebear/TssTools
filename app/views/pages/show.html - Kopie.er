@@ -1,11 +1,18 @@
+<div class="page-header">
+  <h1>Page <small><%= @page.title %></small></h1>
+</div>
 <%= render ("shared/show_notice_or_warning") %>
 <%= render("help") %>
-<div class="navbar navbar-inverse">
-  <div class="navbar-inner">
-    <span class="brand">Show page</span>
+
+<form class="form-horizontal">
+<div class="control-group">
+  <label class="control-label">Url</label>
+  <div class="controls">
+    <span class="input-xlarge uneditable-input"><%= @page.path %></span>
+
   </div>
 </div>
-
+</form>
 <dl class="dl-horizontal">
   <dt>Active</dt>
   <dd><%= icon_boolean(@page.active) %>&nbsp;</dd>
@@ -35,7 +42,7 @@
 
 <h2>Content</h2>
 
-<%=  render("page_contents/index_for_page") %>
+<%= render("page_contents/index_for_page") %>
 
 <p></p>
 <%= link_to "Back", pages_path(domain_id: @page.domain_id),  class: "btn btn-danger " %>

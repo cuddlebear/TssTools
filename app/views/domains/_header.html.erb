@@ -1,8 +1,10 @@
-<h1>Domain <%= @domain.name %></h1>
+<div class="page-header">
+  <h1>Domain <small><%= @domain.name %></small></h1>
+</div>
 
 <ul class="nav nav-tabs" id="myTab" style="margin-bottom: 1px;">
-  <li<%= raw type=="parameter" ? " class=\"active\"": ''%>><%= link_to "Parameter", domain_path(@domain.id) %></li>
-  <li<%= raw type=="pages" ? " class=\"active\"": ''%>><%= link_to "Pages", pages_path(domain_id:@domain.id) %></li>
+  <li<%= raw type=="parameter" ? " class=\"active\"": ''%>><%= link_to "Parameter", domain_path(@domain.uuid) %></li>
+  <li<%= raw type=="pages" ? " class=\"active\"": ''%>><%= link_to "Pages", pages_path(domain_id: @domain.uuid) %></li>
   <li<%= raw type=="containers" ? " class=\"active\"": ''%>><%= link_to "Container", containers_path(domain_id:@domain.id) %></li>
   <li<%= raw type=="areas" ? " class=\"active\"": ''%>><%= link_to "Areas", areas_path(domain_id:@domain.id) %></li>
   <li<%= raw type=="checks" ? " class=\"active\"": ''%>><%= link_to "Checks", checks_path(domain_id:@domain.id) %></li>

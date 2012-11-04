@@ -9,7 +9,8 @@
     <th>Name</th>
     <th>Type</th>
     <th>Filter</th>
-    <th>Check interval</th>
+    <th>Check<br /> interval</th>
+    <th>Expected<br /> language</th>
     <th><%= link_to "Add Area", new_area_path(domain_id: @domain.id), class: "btn" %></th>
     <th>Sort</th>
   </tr>
@@ -22,6 +23,7 @@
         <td><%= area.filter_type_property.name if area.filter_type_property != nil %></td>
         <td><%= area.filter %></td>
         <td><%= area.interval_property.name if area.interval_property != nil %></td>
+        <td><%= area.language_code_property.name if area.language_code_property != nil %></td>
         <td><div class="btn-group">
           <%=  link_to "Show", area, class: "btn" %>
           <%=  link_to "Edit", edit_area_path(area), class: "btn" %>

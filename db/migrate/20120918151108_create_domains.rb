@@ -1,6 +1,7 @@
 class CreateDomains < ActiveRecord::Migration
   def up
     create_table :domains do |t|
+      t.string      :uuid, :null => false
       t.references  :account
       t.boolean     :active
       t.string      :name
@@ -20,6 +21,7 @@ class CreateDomains < ActiveRecord::Migration
       t.timestamps
     end
 
+    add_index :domains, :uuid, :unique => true
     add_index :domains, :account_id
     add_index :domains, :name
     add_index :domains, :domain

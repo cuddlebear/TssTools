@@ -41,6 +41,15 @@
       </div>
     </div>
 
+    <div class="control-group<% if @area.errors["language_code_property_id"].any? %> error<% end %>">
+      <%=  f.label :language_code_property_id, "Expected language", class: "control-label" %>
+      <div class="controls">
+        <%=  f.collection_select :language_code_property_id,
+                                 Property.joins(:property_group).where(:property_groups => {:code => "language_code"}).order(:text_value),
+                                 :id, :name,{:include_blank => true}, class:"" %>
+      </div>
+    </div>
+
     <div class="control-group">
       <div class="controls">
         <%= f.submit class: "btn btn-primary" %>

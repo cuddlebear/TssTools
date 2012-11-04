@@ -9,5 +9,10 @@ class User < ActiveRecord::Base
 
   validates :email, :presence => true
   validates :last_name, :presence => true
+  validates :uuid, :presence => true, :uniqueness => true
+
+  before_validation(:on => :create) do
+    self.uuid = UUIDTools::UUID.random_create.to_s
+  end
 
 end

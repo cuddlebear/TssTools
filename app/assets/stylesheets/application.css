@@ -12,3 +12,7 @@
  *= require_tree .
  *= require_tree ../../../vendor/assets/stylesheets
  */
+
+.google-visualization-orgchart-node {
+    border: 0 none black !important;
+}

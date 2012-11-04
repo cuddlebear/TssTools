@@ -6,11 +6,64 @@ require 'digest/md5'
 class WebPageAnalyser
   unloadable
 
+
+  def self.get_uri_from_page(page)
+    uri = page.domain.scheme + "://" + page.domain.domain + (page.domain.port ? ":" + page.domain.port : "") +
+        page.path.value + (page.file_name ? "/" + page.file_name : "") + (page.parameter.empty? ? "" : "?" + page.parameter)
+  end
+
+  def self.get_url_from_page(page)
+    if page && page.path
+      url = page.path.value + (page.file_name ? "/" + page.file_name : "") + (page.parameter.empty? ? "" : "?" + page.parameter)
+    else
+      url = ""
+    end
+  end
+
+  def self.get_path_id(domain_id, url)
+    level = url=="/" ? 0 :  url.count("/")
+    list = Array.new
+    while level > 0
+      list <<  url
+      url = url.rpartition("/")[0]
+      level = url=="/" ? 0 :  url.count("/")
+    end
+    list <<  ""
+
+    child = nil
+    parent = nil
+    list.reverse_each do |value|
+      level = value=="/" ? 0 : value.count("/")
+      child = Path.where(domain_id: domain_id, value: value).first_or_create(domain_id: domain_id, value: value, level: level)
+      if parent.nil? == false && child.path_id != parent.id
+        child.update_column("path_id",parent.id)
+      end
+      parent = child
+    end
+
+    return child.id
+  end
+
+  def self.page_exists(domain_id,url)
+    result = false
+    #split url in parts
+    match = /^(((?<scheme>.*):\/\/)|)(?<domain>([^\/:]+\.[^\/:]+)|)(:(?<port>[0-9]*)|)((?<path>.*?)|)(\/(?<file_name>[^\/]*?)|)(\?(?<parameter>[^#]*?)|)(#(?<ancor>.*?)|)$/.match(url)
+    if match
+      #check if page with this url exists
+      parameter = match[:parameter].nil? ? "" : match[:parameter].null
+      path = Path.where(value: match[:path]).first
+      if path.nil? == false && Page.where(domain_id: domain_id, path_id: path.id , file_name: match[:file_name], parameter: parameter).exists?
+        result = true
+      end
+    end
+    return result
+  end
+
   def self.initialize_page(page)
     doc = nil
     begin
-      url = page.domain.scheme + "://" + page.domain.domain + (page.domain.port? ? ":" + page.domain.port : "") + page.path
-      doc = Nokogiri::HTML(open(url))
+      uri = get_uri_from_page(page)
+      doc = Nokogiri::HTML(open(uri))
     rescue => e
       page.title = "Error retrieving page"
       page.save
@@ -32,34 +85,6 @@ class WebPageAnalyser
       end
     end
     return content
-  end
-
-  def self.analyze_links(tmp)
-    unless tmp.nil?
-      tmp.css('a[@href]').each do |link|
-        if link['href'].start_with?("/") && link['href'].index("?") == nil
-          unless link['href'].index(/\.(jpg|jpeg|gif|png|ico|xls|xlsx|doc|docx|ppt|pptx|pdf|img|zip|rar|tar|gz|flv|mp3|ogg|mkv|mp4|avi|wav|ape|aac|ac3|mpg|mpeg|eps)/)
-            unless Page.where(domain_id: domain_id, path: link['href']).exists?
-              area_id = nil
-              Area.where(:domain_id => domain_id).rank(:row_order).all do |area|
-                regx = area.filter
-                if area.filter_type_property.code == "starts_with"
-                  regx = "^" + regx
-                end
-                if link['href'].rindex(Regexp.new(regx)) > 0
-                  area_id = area.id
-                  break
-                end
-              end
-              Page.create(domain_id: domain_id, path: link['href'], area_id: area_id)
-              #content += link['href'] +"<br />"
-            end
-          end
-        end
-      end
-      content += tmp.inner_html
-    end
-
   end
 
   def self.get_publish_time(filter, dom)
@@ -121,9 +146,9 @@ class WebPageAnalyser
       doc = nil
       # Retrieving the page
       begin                                             # don't check pictures, docs...
-        unless to_check.page.path.index(/\.(jpg|jpeg|gif|png|ico|xls|xlsx|doc|docx|ppt|pptx|pdf|img|zip|rar|tar|gz|flv|mp3|ogg|mkv|mp4|avi|wav|ape|aac|ac3|mpg|mpeg|eps)/)
-          url = to_check.page.domain.scheme + "://" + to_check.page.domain.domain + (to_check.page.domain.port? ? ":" + to_check.page.domain.port : "") +to_check.page.path
-          doc = Nokogiri::HTML(open(url))               # retrieve url
+        unless to_check.page.file_name.index(/\.(jpg|jpeg|gif|png|ico|xls|xlsx|doc|docx|ppt|pptx|pdf|img|zip|rar|tar|gz|flv|mp3|ogg|mkv|mp4|avi|wav|ape|aac|ac3|mpg|mpeg|eps)/)
+          uri = get_uri_from_page(to_check.page)
+          doc = Nokogiri::HTML(open(uri))               # retrieve url
         end
       rescue => e
         to_check.page.title = "Error retrieving page"
@@ -171,10 +196,13 @@ class WebPageAnalyser
               # Analyse the links in the content
               dom = Nokogiri::HTML::DocumentFragment.parse(container_content)
               dom.css('a[@href]').each do |link|
+                # Ignore links with parameters and external links
                 if link['href'].start_with?("/") && link['href'].index("?") == nil
+                  # ignore links to files
                   unless link['href'].index(/\.(jpg|jpeg|gif|png|ico|xls|xlsx|doc|docx|ppt|pptx|pdf|img|zip|rar|tar|gz|flv|mp3|ogg|mkv|mp4|avi|wav|ape|aac|ac3|mpg|mpeg|eps)/)
                     content.links_internal += 1
-                    unless Page.where(domain_id: to_check.page.domain_id, path: link['href']).exists?
+                    # create page for link if it does not exist
+                    unless page_exists(to_check.page.domain_id,link['href'])
                       area_id = nil
                       Area.where(:domain_id => to_check.page.domain_id).rank(:row_order).all do |area|
                         regx = area.filter
@@ -186,7 +214,20 @@ class WebPageAnalyser
                           break
                         end
                       end
-                      Page.create(domain_id: to_check.page.domain_id, path: link['href'], area_id: area_id)
+
+                      match = /^(((?<scheme>.*):\/\/)|)(?<domain>([^\/:]+\.[^\/:]+)|)(:(?<port>[0-9]*)|)((?<path>.*?)|)(\/(?<file_name>[^\/]*?)|)(\?(?<parameter>[^#]*?)|)(#(?<ancor>.*?)|)$/.match(link['href'])
+                      if match
+                          path_id   = get_path_id(to_check.page.domain_id,match[:path])
+                          file_name = match[:file_name]
+                          parameter = match[:parameter].nil? ? "" : match[:parameter].nil
+                          Page.create(domain_id: to_check.page.domain_id,
+                                      path_id:   path_id,
+                                      area_id:   area_id,
+                                      file_name: file_name,
+                                      parameter: parameter)
+                      else
+                        #Error, should never get here
+                      end
                     end
                   else
                     content.links_file += 1
