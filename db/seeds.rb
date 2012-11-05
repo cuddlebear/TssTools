@@ -472,6 +472,22 @@ if @domain.new_record?
   #@domain.pages.create(path: "/kultur-kunst-gestalten-musik/informationen", title: "", active: true)
 end
 
+print "Simrit\n"
+@domain = Domain.where(name: "Simrit").first_or_initialize
+if @domain.new_record?
+  @domain.account_id                = a.id
+  @domain.name                      = "Simrit"
+  @domain.domain                    = "www.simrit.de"
+  @domain.check_content_for_changes = true
+  @domain.save
+
+  print "containers\n"
+  @domain.containers.create(name: "Main content",    content_type_property_id: main_content.id,  x_path: "//*[@id=\"layout-middle-container\"]/div/div[3]")
+  @domain.containers.create(name: "Top navigation",  content_type_property_id: navigation.id,    x_path: "//*[@id=\"navbar\"]")
+  @domain.containers.create(name: "Left navigation", content_type_property_id: subnavigation.id, x_path: "//*[@id="\layout-middle-container\"]/div/div[1]/div[1]")
+end
+
+
 print "\n"
 print "Heise\n"
 @domain = Domain.where(name: "Heise").first_or_initialize

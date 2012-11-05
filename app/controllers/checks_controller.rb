@@ -1,6 +1,6 @@
 class ChecksController < ApplicationController
   require "web_page_analyser"
-  @@page_size = 100
+  @@page_size = 25
 
   # GET /checks
   # GET /checks.json

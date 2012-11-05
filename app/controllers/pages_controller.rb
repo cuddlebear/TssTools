@@ -1,7 +1,7 @@
 require "web_page_analyser"
 
 class PagesController < ApplicationController
-  @@page_size = 25
+  @page_size = 25
 
   def index
     path_id = params[:path_id]
@@ -26,12 +26,12 @@ class PagesController < ApplicationController
 
     @parent_path = Path.where(id: @path.path_id).first
     @paths = Path.where(path_id: @path.id).order(:value)
-    @pages = Page.includes(:domain).includes(:area).where(domain_id: @domain.id, path_id: @path.id).order("file_name").page(params[:page]).per(@@page_size)
+    @pages = Page.includes(:domain).includes(:area).where(domain_id: @domain.id, path_id: @path.id).order("file_name").page(params[:page]).per(@page_size)
 
 
     data_table = GoogleVisualr::DataTable.new
-    data_table.new_column('string', 'Name'   )
-    data_table.new_column('string', 'Manager')
+    data_table.new_column('string', 'Directory'   )
+    data_table.new_column('string', 'Parent directory')
     data_table.new_column('string', 'ToolTip')
     t = []
 
@@ -49,14 +49,18 @@ class PagesController < ApplicationController
     max_lines = 3
     while akt_path && a < max_lines
       a = a+1
-      f = akt_path.value.rpartition("/")[2]
-      f = "/" if f.empty?
-      f = "<span style=\"color: red; font-size: 2em;\">#{f}</span>" if a==1
-      parent_path_value = akt_path.value.rpartition("/")[0]
-      parent_path_value = "/" if parent_path_value.empty?
-      parent_path_value = "" if a == max_lines
-      link = view_context.link_to f.html_safe, pages_path(path_id: akt_path.uuid)
-      t << [{v: akt_path.value == '' ? '/' : akt_path.value, f: link}, parent_path_value, '']
+
+      #left box
+      left_path = Path.where("path_id = ? and value < ?", akt_path.path_id, akt_path.value).order(:value).last
+      t << get_leaf(left_path,false,a==max_lines) if left_path && a < max_lines
+
+      #actual box
+      t << get_leaf(akt_path,a==1,a==max_lines)
+
+      #right box
+      right_path = Path.where("path_id = ? and value > ?", akt_path.path_id, akt_path.value).order(:value).first
+      t << get_leaf(right_path,false,a==max_lines) if right_path && a < max_lines
+
       akt_path = Path.where(id: akt_path.path_id).first
     end
 
@@ -69,6 +73,17 @@ class PagesController < ApplicationController
       format.html # index.html.erb
       format.json { render json: @pages }
     end
+  end
+
+  def get_leaf(path, selected=false, last=false )
+    f = path.value.rpartition("/")[2]
+    f = "/" if f.empty?
+    f = "<span style=\"color: red; font-size: 2em;\">#{f}</span>" if selected
+    parent_path_value = path.value.rpartition("/")[0]
+    parent_path_value = "/" if parent_path_value.empty?
+    parent_path_value = "" if last
+    link = view_context.link_to f.html_safe, pages_path(path_id: path.uuid)
+    [{v: path.value == '' ? '/' : path.value, f: link}, parent_path_value, '']
   end
 
   def show
@@ -136,7 +151,7 @@ class PagesController < ApplicationController
     id = params[:id]
     unless id.nil?
       if id.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/)
-        @page = Page.find_all_by_uuid(id).firsr
+        @page = Page.find_all_by_uuid(id).first
       else
         @page = Page.find(id)
       end
@@ -163,12 +178,11 @@ class PagesController < ApplicationController
     id = params[:id]
     unless id.nil?
       if id.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/)
-        @page = Page.find_all_by_uuid(id).firsr
+        @page = Page.find_all_by_uuid(id).first
       else
         @page = Page.find(id)
       end
     end
-    domain_id = @page.domain_id
     position = get_paging_position(@page)
     @page.destroy
 
@@ -180,7 +194,7 @@ class PagesController < ApplicationController
   end
 
   def get_paging_position(page)
-    position = 1 #+ Page.where(domain_id: page.domain_id ).order("path").count(conditions: ["path < ?", page.path]) / @@page_size
+     1 #+ Page.where(domain_id: page.domain_id ).order("path").count(conditions: ["path < ?", page.path]) / @page_size
   end
 end
 
