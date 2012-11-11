@@ -24,6 +24,7 @@ end
 
 gem 'jquery-rails'
 gem 'foreigner'
+gem 'ancestry'
 gem 'kaminari'
 gem 'nokogiri'
 gem "ranked-model"
@@ -32,6 +33,11 @@ gem "wtf_lang"
 gem "haml"
 gem "uuidtools"
 gem "google_visualr"
+gem "watir-webdriver"
+gem "watir-webdriver-performance"
+gem "chunky_png"
+gem "oily_png"
+
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

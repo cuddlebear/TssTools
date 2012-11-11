@@ -122,10 +122,11 @@ unless PropertyGroup.exists?(name: "Action type")
   pg.properties.create(name: "Activate page",         int_value: 43)
   pg.properties.create(name: "Delete page",           int_value: 14)
   pg.properties.create(name: "Do all possible checks",int_value: 100)
-  pg.properties.create(name: "Check Page Head only",  int_value: 101)
-  pg.properties.create(name: "Check Page exists",     int_value: 102)
+  pg.properties.create(name: "Check page head only",  int_value: 101)
+  pg.properties.create(name: "Check page exists",     int_value: 102)
   pg.properties.create(name: "Check content changes", int_value: 103)
-  pg.properties.create(name: "Check Publish time",    int_value: 104)
+  pg.properties.create(name: "Check publish time",    int_value: 104)
+  pg.properties.create(name: "Make screen shot",      int_value: 105)
 end
 
 print "Languages\n"
@@ -484,20 +485,36 @@ if @domain.new_record?
   print "containers\n"
   @domain.containers.create(name: "Main content",    content_type_property_id: main_content.id,  x_path: "//*[@id=\"layout-middle-container\"]/div/div[3]")
   @domain.containers.create(name: "Top navigation",  content_type_property_id: navigation.id,    x_path: "//*[@id=\"navbar\"]")
-  @domain.containers.create(name: "Left navigation", content_type_property_id: subnavigation.id, x_path: "//*[@id="\layout-middle-container\"]/div/div[1]/div[1]")
+  @domain.containers.create(name: "Left navigation", content_type_property_id: subnavigation.id, x_path: "//*[@id=\"layout-middle-container\"]/div/div[1]/div[1]")
 end
 
-
-print "\n"
-print "Heise\n"
-@domain = Domain.where(name: "Heise").first_or_initialize
+print "AHP seals\n"
+@domain = Domain.where(name: "AHP seals").first_or_initialize
 if @domain.new_record?
   @domain.account_id                = a.id
-  @domain.name                      = "Heise"
-  @domain.domain                    = "www.heise.de"
-  @domain.check_content_for_changes = false
-#  @domain.main_container            = "//div[@class='meldung_wrapper']\r//*[@id='artikel_shortnews']\r//*[@id='bildergalerie']\r//*[@id='mitte_artikel']"
-#  @domain.navigation_container      = "//*[@id='heisetopnavi_sub_container']"
-#  @domain.subnavigation_container   = "//*[@id='mitte_rechts']"
+  @domain.name                      = "AHP seals"
+  @domain.domain                    = "www.ahpseals.com"
+  @domain.check_content_for_changes = true
   @domain.save
+
+  print "containers\n"
+  @domain.containers.create(name: "Main content",    content_type_property_id: main_content.id,  x_path: "//*[@id=\"l-col-home\"]  //*[@id=\"l-col\"]")
+  @domain.containers.create(name: "Top navigation",  content_type_property_id: navigation.id,    x_path: "//*[@id=\"menu\"]")
+  @domain.containers.create(name: "Left navigation", content_type_property_id: subnavigation.id, x_path: "//*[@id=\"r-col\"]")
+end
+
+print "Eriks\n"
+@domain = Domain.where(name: "Eriks").first_or_initialize
+if @domain.new_record?
+  @domain.account_id                = a.id
+  @domain.name                      = "Eriks"
+  @domain.domain                    = "eriks.com"
+  @domain.check_content_for_changes = true
+  @domain.save
+
+  print "containers\n"
+  @domain.containers.create(name: "Main content",    content_type_property_id: main_content.id,  x_path: "//*[@id=\"content\"]")
+  @domain.containers.create(name: "Top navigation",  content_type_property_id: navigation.id,    x_path: "//*[@id=\"main-nav\"]")
+  @domain.containers.create(name: "Left navigation", content_type_property_id: subnavigation.id, x_path: "//*[@id=\"sidenav\"]")
+  @domain.containers.create(name: "Site links",      content_type_property_id: subnavigation.id, x_path: "//*[@id=\"siteLinks\"]")
 end

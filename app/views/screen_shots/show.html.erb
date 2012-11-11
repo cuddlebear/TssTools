@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Domain:</b>
+  <%= @screen_shot.domain %>
+</p>
+
+<p>
+  <b>Page:</b>
+  <%= @screen_shot.page %>
+</p>
+
+<p>
+  <b>Uuid:</b>
+  <%= @screen_shot.uuid %>
+</p>
+
+<p>
+  <b>Directory:</b>
+  <%= @screen_shot.directory %>
+</p>
+
+<p>
+  <b>From:</b>
+  <%= @screen_shot.from %>
+</p>
+
+<p>
+  <b>Until:</b>
+  <%= @screen_shot.until %>
+</p>
+
+
+<%= link_to 'Edit', edit_screen_shot_path(@screen_shot) %> |
+<%= link_to 'Back', screen_shots_path %>

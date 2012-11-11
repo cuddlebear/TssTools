@@ -51,6 +51,7 @@
     <th><%=  link_to "Apply filter", "#", class: "btn" %></th>
   </tr>
   -->
+  <!--
   <% @pages.each do |page|%>
       <tr>
         <td><% unless page.active %><i class="icon-ban-circle" title="Inactive"></i><% end %></td>
@@ -75,5 +76,33 @@
   <%end%>
   </tbody>
 </table>
+-->
+<% @pages.each do |page|%>
+    <div class="span4 well" style="height:300px">
+      <h5 style="height: 3em; overflow: hidden;"><%= page.title %></h5>
+      <p><%= page.file_name %></p>
+      <% img = page.screen_shots.first
+      unless img.nil?%>
+      <div style="width: 200px; height: 180px; overflow: hidden;">
+      <img src="screenshots/thumbs/<%=img.directory%>/<%=img.uuid%>.png" />
+      </div>
+      <% end %>
+      <div class="btn-group">
+        <%=  link_to "Show", page, class: "btn" %>
+        <button class="btn dropdown-toggle" data-toggle="dropdown">
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><%= link_to "Put in check queue", edit_page_path(page,page: params[:page])%></li>
+          <li><%= link_to "Edit", edit_page_path(page, page: params[:page])%></li>
+          <li><%= link_to "Go to" ,WebPageAnalyser.get_uri_from_page(page), target: "_blank", title: page.file_name  %></li>
+          <li class="divider"></li>
+          <li><%=  link_to "Delete", page_path(page), method: :delete,  data: { confirm: 'Are you sure?' }%></li>
+        </ul>
+      </div>
+      <%= status_badge(page.status) %>
+      <!--<div id="content-<%= page.id%>" rel="popover" data-content="iiii">AAA</div>-->
+    </div>
+<%end%>
 
 <%= paginate @pages %>

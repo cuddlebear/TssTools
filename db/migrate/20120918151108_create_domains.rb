@@ -15,6 +15,8 @@ class CreateDomains < ActiveRecord::Migration
       t.boolean     :check_y_slow
       t.boolean     :check_content_for_changes
       t.boolean     :check_publish_time
+      t.boolean     :screen_shot
+      t.integer     :max_screen_shots_per_page
       t.string      :regx_publish_time
       t.integer     :row_order
       

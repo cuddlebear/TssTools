@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120929155156) do
+ActiveRecord::Schema.define(:version => 20121111132824) do
 
   create_table "accounts", :force => true do |t|
     t.string   "uuid",        :null => false
@@ -34,6 +34,8 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
     t.integer  "language_code_property_id"
     t.string   "name"
     t.string   "filter"
+    t.boolean  "screen_shot"
+    t.integer  "max_screen_shots_per_page"
     t.integer  "row_order"
     t.datetime "created_at",                :null => false
     t.datetime "updated_at",                :null => false
@@ -47,12 +49,15 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   add_index "areas", ["uuid"], :name => "index_areas_on_uuid", :unique => true
 
   create_table "checks", :force => true do |t|
+    t.string   "uuid",            :null => false
+    t.integer  "domain_id"
     t.integer  "page_id"
     t.integer  "priority"
     t.integer  "type"
     t.integer  "result_code"
     t.string   "result_text"
     t.datetime "scheduled_start"
+    t.boolean  "in_process"
     t.datetime "check_start"
     t.integer  "duration"
     t.datetime "created_at",      :null => false
@@ -60,10 +65,13 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   end
 
   add_index "checks", ["check_start"], :name => "index_checks_on_check_start"
+  add_index "checks", ["domain_id"], :name => "index_checks_on_domain_id"
   add_index "checks", ["page_id"], :name => "index_checks_on_page_id"
   add_index "checks", ["scheduled_start"], :name => "index_checks_on_scheduled_start"
+  add_index "checks", ["uuid"], :name => "index_checks_on_uuid", :unique => true
 
   create_table "containers", :force => true do |t|
+    t.string   "uuid",                     :null => false
     t.integer  "container_id"
     t.integer  "domain_id"
     t.integer  "content_type_property_id"
@@ -78,6 +86,7 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   add_index "containers", ["container_id"], :name => "index_containers_on_container_id"
   add_index "containers", ["content_type_property_id"], :name => "index_containers_on_content_type_property_id"
   add_index "containers", ["domain_id"], :name => "index_containers_on_domain_id"
+  add_index "containers", ["uuid"], :name => "index_containers_on_uuid", :unique => true
 
   create_table "contents", :force => true do |t|
     t.integer  "container_id"
@@ -118,6 +127,8 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
     t.boolean  "check_y_slow"
     t.boolean  "check_content_for_changes"
     t.boolean  "check_publish_time"
+    t.boolean  "screen_shot"
+    t.integer  "max_screen_shots_per_page"
     t.string   "regx_publish_time"
     t.integer  "row_order"
     t.datetime "created_at",                :null => false
@@ -129,6 +140,16 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   add_index "domains", ["name"], :name => "index_domains_on_name"
   add_index "domains", ["row_order"], :name => "index_domains_on_row_order"
   add_index "domains", ["uuid"], :name => "index_domains_on_uuid", :unique => true
+
+  create_table "links", :force => true do |t|
+    t.integer  "content_id"
+    t.integer  "page_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "links", ["content_id"], :name => "index_links_on_content_id"
+  add_index "links", ["page_id"], :name => "index_links_on_page_id"
 
   create_table "page_contents", :force => true do |t|
     t.integer  "page_id"
@@ -175,6 +196,8 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
     t.datetime "last_check"
     t.datetime "last_publish"
     t.boolean  "area_is_dirty"
+    t.boolean  "screen_shot"
+    t.integer  "max_screen_shots_per_page"
     t.string   "actual_content"
     t.datetime "created_at",                         :null => false
     t.datetime "updated_at",                         :null => false
@@ -191,23 +214,27 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   add_index "pages", ["uuid"], :name => "index_pages_on_uuid", :unique => true
 
   create_table "paths", :force => true do |t|
-    t.string   "uuid",       :null => false
+    t.string   "uuid",           :null => false
     t.integer  "domain_id"
     t.integer  "path_id"
+    t.string   "ancestry"
+    t.integer  "ancestry_depth"
     t.string   "value"
     t.integer  "level"
     t.integer  "status"
     t.boolean  "dirty"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
+  add_index "paths", ["ancestry"], :name => "index_paths_on_ancestry"
   add_index "paths", ["domain_id", "path_id"], :name => "index_paths_on_domain_id_and_path_id"
   add_index "paths", ["domain_id", "value"], :name => "index_paths_on_domain_id_and_value"
   add_index "paths", ["path_id"], :name => "paths_path_id_fk"
   add_index "paths", ["uuid"], :name => "index_paths_on_uuid", :unique => true
 
   create_table "properties", :force => true do |t|
+    t.string   "uuid",              :null => false
     t.integer  "property_group_id"
     t.string   "code"
     t.string   "name"
@@ -221,8 +248,10 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
 
   add_index "properties", ["property_group_id", "code"], :name => "index_properties_on_property_group_id_and_code"
   add_index "properties", ["property_group_id", "row_order"], :name => "index_properties_on_property_group_id_and_row_order"
+  add_index "properties", ["uuid"], :name => "index_properties_on_uuid", :unique => true
 
   create_table "property_groups", :force => true do |t|
+    t.string   "uuid",              :null => false
     t.integer  "property_group_id"
     t.string   "code"
     t.string   "name"
@@ -237,6 +266,24 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   add_index "property_groups", ["code"], :name => "index_property_groups_on_code"
   add_index "property_groups", ["property_group_id"], :name => "index_property_groups_on_property_group_id"
   add_index "property_groups", ["row_order"], :name => "index_property_groups_on_row_order"
+  add_index "property_groups", ["uuid"], :name => "index_property_groups_on_uuid", :unique => true
+
+  create_table "screen_shots", :force => true do |t|
+    t.string   "uuid",       :null => false
+    t.integer  "domain_id"
+    t.integer  "page_id"
+    t.string   "directory"
+    t.datetime "from"
+    t.datetime "until"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "screen_shots", ["domain_id"], :name => "index_screen_shots_on_domain_id"
+  add_index "screen_shots", ["from"], :name => "index_screen_shots_on_from"
+  add_index "screen_shots", ["page_id"], :name => "index_screen_shots_on_page_id"
+  add_index "screen_shots", ["until"], :name => "index_screen_shots_on_until"
+  add_index "screen_shots", ["uuid"], :name => "index_screen_shots_on_uuid", :unique => true
 
   create_table "users", :force => true do |t|
     t.string   "uuid",              :null => false
@@ -273,6 +320,7 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
 
   add_foreign_key "areas", "domains", :name => "areas_domain_id_fk"
 
+  add_foreign_key "checks", "domains", :name => "checks_domain_id_fk"
   add_foreign_key "checks", "pages", :name => "checks_page_id_fk"
 
   add_foreign_key "containers", "containers", :name => "containers_container_id_fk"
@@ -298,6 +346,9 @@ ActiveRecord::Schema.define(:version => 20120929155156) do
   add_foreign_key "properties", "property_groups", :name => "properties_property_group_id_fk"
 
   add_foreign_key "property_groups", "property_groups", :name => "property_groups_property_group_id_fk"
+
+  add_foreign_key "screen_shots", "domains", :name => "screen_shots_domain_id_fk"
+  add_foreign_key "screen_shots", "pages", :name => "screen_shots_page_id_fk"
 
   add_foreign_key "users", "accounts", :name => "users_account_id_fk"
 

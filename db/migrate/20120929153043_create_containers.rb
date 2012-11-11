@@ -1,6 +1,7 @@
 class CreateContainers < ActiveRecord::Migration
   def change
     create_table :containers do |t|
+      t.string      :uuid, :null => false
       t.integer     :container_id
       t.references  :domain
       t.references  :content_type_property
@@ -12,6 +13,7 @@ class CreateContainers < ActiveRecord::Migration
       t.timestamps
     end
 
+    add_index :containers, :uuid, :unique => true
     add_index :containers, :domain_id
     add_index :containers, :container_id
     add_index :containers, :content_type_property_id

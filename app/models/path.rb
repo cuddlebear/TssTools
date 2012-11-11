@@ -1,10 +1,11 @@
 class Path < ActiveRecord::Base
   attr_accessible :domain_id, :path_id, :level, :value
 
-  belongs_to :domain
-  belongs_to :path
-  has_many   :pages
-  has_many   :paths
+  belongs_to   :domain
+  belongs_to   :path
+  has_many     :pages
+  has_many     :paths
+  has_ancestry :cache_depth => true
 
   validates :domain_id, :presence => true
   validates :uuid, :presence => true, :uniqueness => true

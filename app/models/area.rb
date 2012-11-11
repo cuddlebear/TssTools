@@ -1,6 +1,7 @@
 class Area < ActiveRecord::Base
   attr_accessible :domain_id, :filter_type_property_id, :interval_property_id, :language_code_property_id,
-                  :name, :filter, :row_order
+                  :name, :filter, :row_order, :screen_shot, :max_screen_shots_per_page
+
 
   has_many    :pages
   belongs_to  :domain

@@ -1,5 +1,9 @@
 Railstest::Application.routes.draw do
 
+  resources :links
+
+  resources :screen_shots
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

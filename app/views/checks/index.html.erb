@@ -1,6 +1,7 @@
 <%= render("shared/show_notice_or_warning") %>
 <%= render("domains/header", :type => 'checks')%>
 
+
 <table class="table table-striped table-hover">
   <thead>
   <tr>
@@ -34,5 +35,12 @@
   <% end %>
   </tbody>
 </table>
+<%
+   Browser::start_browser
+   @checks.each do |check|
+     Browser::create_screen_shot(check.page)
+   end
+   Browser::stop_browser
+%>
 
 <%= paginate @checks %>

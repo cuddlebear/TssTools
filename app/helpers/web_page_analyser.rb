@@ -1,11 +1,9 @@
-
 require 'nokogiri'
 require 'open-uri'
 require 'digest/md5'
 
 class WebPageAnalyser
   unloadable
-
 
   def self.get_uri_from_page(page)
     uri = page.domain.scheme + "://" + page.domain.domain + (page.domain.port ? ":" + page.domain.port : "") +

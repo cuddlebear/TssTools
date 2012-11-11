@@ -2,7 +2,8 @@ class Domain < ActiveRecord::Base
   attr_accessible :account_id, :name, :description, :scheme, :domain, :port, :status,
                   :check_page_rank, :check_page_speed, :check_y_slow, :check_content_for_changes,
                   :check_publish_time, :regx_publish_time,
-                  :active, :row_order, :pages
+                  :active, :row_order, :pages,
+                  :screen_shot, :max_screen_shots_per_page
 
   has_many    :pages
   has_many    :areas

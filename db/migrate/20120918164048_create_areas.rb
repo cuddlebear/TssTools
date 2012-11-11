@@ -8,6 +8,8 @@ class CreateAreas < ActiveRecord::Migration
       t.references  :language_code_property   # the language which is expected in this area
       t.string      :name
       t.string      :filter
+      t.boolean     :screen_shot
+      t.integer     :max_screen_shots_per_page
       t.integer     :row_order
 
       t.timestamps

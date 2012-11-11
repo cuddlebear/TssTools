@@ -22,6 +22,8 @@ class CreatePages < ActiveRecord::Migration
       t.datetime    :last_check
       t.datetime    :last_publish
       t.boolean     :area_is_dirty
+      t.boolean     :screen_shot
+      t.integer     :max_screen_shots_per_page
       t.string      :actual_content
       t.timestamps
     end

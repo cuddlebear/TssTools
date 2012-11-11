@@ -16,6 +16,10 @@ class Container < ActiveRecord::Base
   include RankedModel
   ranks :row_order
 
+  before_validation(:on => :create) do
+    self.uuid = UUIDTools::UUID.random_create.to_s
+  end
+
   before_save do |record|
     record.name = record.name.strip
     record.x_path = record.x_path.strip

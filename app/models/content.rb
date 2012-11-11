@@ -8,6 +8,8 @@ class Content < ActiveRecord::Base
 
   has_many    :page_contents
   has_many    :pages, :through => :page_contents
+  has_many    :links
+  has_many    :refered_pages, :source => :page, :through => :links
 
   validates :container_id, :presence => true
 

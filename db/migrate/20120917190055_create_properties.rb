@@ -1,6 +1,7 @@
 class CreateProperties < ActiveRecord::Migration
   def up
     create_table :properties do |t|
+      t.string      :uuid, :null => false
       t.references  :property_group
       t.string      :code
       t.string      :name
@@ -12,6 +13,7 @@ class CreateProperties < ActiveRecord::Migration
       t.timestamps
     end
 
+    add_index :properties, :uuid, :unique => true
     add_index :properties, [:property_group_id, :code]
     add_index :properties, [:property_group_id, :row_order]
 

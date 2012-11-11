@@ -1,0 +1,33 @@
+<h1>Listing screen_shots</h1>
+
+<table>
+  <tr>
+    <th>Domain</th>
+    <th>Page</th>
+    <th>Uuid</th>
+    <th>Directory</th>
+    <th>From</th>
+    <th>Until</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @screen_shots.each do |screen_shot| %>
+  <tr>
+    <td><%= screen_shot.domain %></td>
+    <td><%= screen_shot.page %></td>
+    <td><%= screen_shot.uuid %></td>
+    <td><%= screen_shot.directory %></td>
+    <td><%= screen_shot.from %></td>
+    <td><%= screen_shot.until %></td>
+    <td><%= link_to 'Show', screen_shot %></td>
+    <td><%= link_to 'Edit', edit_screen_shot_path(screen_shot) %></td>
+    <td><%= link_to 'Destroy', screen_shot, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Screen shot', new_screen_shot_path %>
