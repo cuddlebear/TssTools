@@ -1,5 +1,7 @@
 Railstest::Application.routes.draw do
 
+  resources :statistics
+
   resources :links
 
   resources :screen_shots
@@ -27,6 +29,7 @@ Railstest::Application.routes.draw do
   post "containers/sort"
   resources :domains
   get "domains/init"
+  get "domains/:id/statistic" => 'domains#statistic'
   get 'domains/:id/enable' => 'domains#enable'
   get 'domains/:id/disable' => 'domains#disable'
   resources :page_contents

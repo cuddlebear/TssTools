@@ -1,6 +1,6 @@
 class Page < ActiveRecord::Base
-  attr_accessible :domain_id, :area_id, :active,
-                  :path_id, :level, :file_name, :parameter, :title, :status,
+  attr_accessible :domain_id, :area_id, :path_id, :active,
+                  :level, :file_name, :parameter, :title, :status,
                   :page_rank, :page_speed, :y_slow,
                   :check_counter,
                   :last_change, :last_check, :last_publish,
@@ -15,7 +15,7 @@ class Page < ActiveRecord::Base
   has_many    :page_contents
   has_many    :contents, :through => :page_contents
   has_many    :links
-  has_many    :refering_links,:source => :contents, :through => :links
+  has_many    :refering_links, :source => :contents, :through => :links
   has_many    :checks
   has_many    :screen_shots
 

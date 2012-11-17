@@ -5,6 +5,7 @@
 
 =render("shared/show_notice_or_warning")
 =render("help")
+-img = @page.screen_shots.first
 
 %ul{class: "nav nav-tabs", id: "tab_header"}
   %li
@@ -12,7 +13,9 @@
   -@page.page_contents.includes(:content => :container).joins(:content => :container).order("containers.row_order").each do |page_content|
     %li
       %a{href: "#container_#{page_content.id}"}=page_content.content.container.name
-
+  -unless img.nil?
+    %li
+      %a{href: "#screenshot"} Screen shot
 
 .tab-content
   .tab-pane#parameters
@@ -28,7 +31,7 @@
       .control-group
         %label.control-label Url
         .controls
-          %span{class: "input-xxlarge uneditable-input"}= WebPageAnalyser.get_url_from_page(@page)
+          %span{class: "input-xxlarge uneditable-input"}= WebPageAnalyser.get_url(@page)
 
       .control-group
         %label.control-label Last check
@@ -43,7 +46,6 @@
         .controls
           %span{class: "input-large uneditable-input"}= @page.last_publish
 
-
   -@page.page_contents.joins(:content => :container).order("containers.row_order").each do |page_content|
     .tab-pane{id: "container_#{page_content.id}"}
       = "From #{page_content.from} - until #{page_content.until}"
@@ -55,6 +57,11 @@
       = "Words #{page_content.content.words}"
       .well=  raw  WebPageAnalyser.beautify_html(page_content.content.text)
 
+  -unless img.nil?
+    .tab-pane#screenshot
+      %div{style: "width: 100%; "}
+        %img{src: "/screenshots/originals/#{img.directory}/#{img.uuid}.png"}/
+
 :javascript
   $('#tab_header a').click(function (e) {
         e.preventDefault();
@@ -64,7 +71,5 @@
 
 :javascript
   SyntaxHighlighter.all()
-
-
 
 =link_to "Back", pages_path(domain_id: @page.domain_id),  class: "btn btn-danger"

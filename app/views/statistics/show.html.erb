@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Domain:</b>
+  <%= @statistic.domain %>
+</p>
+
+<p>
+  <b>Area:</b>
+  <%= @statistic.area %>
+</p>
+
+<p>
+  <b>Path:</b>
+  <%= @statistic.path %>
+</p>
+
+<p>
+  <b>Page:</b>
+  <%= @statistic.page %>
+</p>
+
+<p>
+  <b>From:</b>
+  <%= @statistic.from %>
+</p>
+
+<p>
+  <b>Until:</b>
+  <%= @statistic.until %>
+</p>
+
+
+<%= link_to 'Edit', edit_statistic_path(@statistic) %> |
+<%= link_to 'Back', statistics_path %>

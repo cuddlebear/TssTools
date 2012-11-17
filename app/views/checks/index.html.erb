@@ -17,8 +17,11 @@
   </thead>
 
   <tbody>
-  <% @checks.each do |check|
+  <%
+    Browser::start_browser
+    @checks.each do |check|
     WebPageAnalyser.check_page(check.id)
+    Browser::create_screen_shot(check.page)
     a=check.id
   %>
       <tr>
@@ -36,10 +39,6 @@
   </tbody>
 </table>
 <%
-   Browser::start_browser
-   @checks.each do |check|
-     Browser::create_screen_shot(check.page)
-   end
    Browser::stop_browser
 %>
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121111132824) do
+ActiveRecord::Schema.define(:version => 20121117105725) do
 
   create_table "accounts", :force => true do |t|
     t.string   "uuid",        :null => false
@@ -284,6 +284,54 @@ ActiveRecord::Schema.define(:version => 20121111132824) do
   add_index "screen_shots", ["page_id"], :name => "index_screen_shots_on_page_id"
   add_index "screen_shots", ["until"], :name => "index_screen_shots_on_until"
   add_index "screen_shots", ["uuid"], :name => "index_screen_shots_on_uuid", :unique => true
+
+  create_table "statistics", :force => true do |t|
+    t.integer  "domain_id"
+    t.integer  "area_id"
+    t.integer  "path_id"
+    t.integer  "page_id"
+    t.integer  "statistic_type_property_id"
+    t.integer  "statistic_scope_property_id"
+    t.datetime "from"
+    t.datetime "until"
+    t.integer  "pages_total"
+    t.integer  "pages_active"
+    t.integer  "pages_inactive"
+    t.integer  "pages_new"
+    t.integer  "pages_maintenance"
+    t.integer  "pages_warning"
+    t.integer  "pages_critical"
+    t.integer  "pages_ok"
+    t.integer  "pages_with_broken_links"
+    t.integer  "pages_with_wrong_language"
+    t.integer  "pages_old"
+    t.integer  "pages_small"
+    t.integer  "pages_huge"
+    t.integer  "pages_slow"
+    t.integer  "page_rank"
+    t.integer  "page_speed"
+    t.integer  "y_slow"
+    t.integer  "links_internal"
+    t.integer  "links_internal_broken"
+    t.integer  "links_external"
+    t.integer  "links_external_broken"
+    t.integer  "links_file"
+    t.integer  "links_file_broken"
+    t.integer  "headlines"
+    t.integer  "paragraphs"
+    t.integer  "words"
+    t.integer  "characters"
+    t.integer  "images"
+  end
+
+  add_index "statistics", ["area_id"], :name => "index_statistics_on_area_id"
+  add_index "statistics", ["domain_id"], :name => "index_statistics_on_domain_id"
+  add_index "statistics", ["from"], :name => "index_statistics_on_from"
+  add_index "statistics", ["page_id"], :name => "index_statistics_on_page_id"
+  add_index "statistics", ["path_id"], :name => "index_statistics_on_path_id"
+  add_index "statistics", ["statistic_scope_property_id"], :name => "index_statistics_on_statistic_scope_property_id"
+  add_index "statistics", ["statistic_type_property_id"], :name => "index_statistics_on_statistic_type_property_id"
+  add_index "statistics", ["until"], :name => "index_statistics_on_until"
 
   create_table "users", :force => true do |t|
     t.string   "uuid",              :null => false

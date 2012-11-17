@@ -5,16 +5,59 @@ require 'digest/md5'
 class WebPageAnalyser
   unloadable
 
-  def self.get_uri_from_page(page)
+  def self.get_uri(page)
     uri = page.domain.scheme + "://" + page.domain.domain + (page.domain.port ? ":" + page.domain.port : "") +
         page.path.value + (page.file_name ? "/" + page.file_name : "") + (page.parameter.empty? ? "" : "?" + page.parameter)
   end
 
-  def self.get_url_from_page(page)
+  def self.get_url(page)
     if page && page.path
       url = page.path.value + (page.file_name ? "/" + page.file_name : "") + (page.parameter.empty? ? "" : "?" + page.parameter)
     else
       url = ""
+    end
+  end
+
+  def self.get_area(page)
+    a = nil
+    @areas = Area.includes(:filter_type_property).where(domain_id: page.domain_id).order(:row_order)
+    if @areas
+      url = get_url(page)
+      found = false
+      @areas.each do |area|
+        case area.filter_type_property.name
+          when "starts_with"
+            if url.start_with?(area.filter)
+              found = true
+            end
+          when "regular_expression"
+            if url.index(Regexp.new(area.filter))
+              found = true
+            end
+          else # Contains
+            if url.include?(area.filter)
+              found = true
+            end
+        end
+        if found
+          a = area
+          break
+        end
+      end
+    end
+    return a
+  end
+
+  def self.recalc_areas(domain_id)
+    pages = Page.where(domain_id: domain_id)
+    pages.each do |page|
+      area = get_area(page)
+      if area
+        page.area_id = area.id
+      else
+        page.area_id = nil
+      end
+      page.save
     end
   end
 
@@ -35,6 +78,8 @@ class WebPageAnalyser
       child = Path.where(domain_id: domain_id, value: value).first_or_create(domain_id: domain_id, value: value, level: level)
       if parent.nil? == false && child.path_id != parent.id
         child.update_column("path_id",parent.id)
+        child.parent = parent
+        child.save
       end
       parent = child
     end
@@ -60,7 +105,7 @@ class WebPageAnalyser
   def self.initialize_page(page)
     doc = nil
     begin
-      uri = get_uri_from_page(page)
+      uri = get_uri(page)
       doc = Nokogiri::HTML(open(uri))
     rescue => e
       page.title = "Error retrieving page"
@@ -140,17 +185,21 @@ class WebPageAnalyser
 
   def self.check_page(id)
     to_check = Check.includes(:page).includes(:page => :domain).find(id)
+    start = DateTime.now
+    to_check.check_start = start
     if to_check.page.domain.active                      # Only check on active domains
       doc = nil
       # Retrieving the page
       begin                                             # don't check pictures, docs...
         unless to_check.page.file_name.index(/\.(jpg|jpeg|gif|png|ico|xls|xlsx|doc|docx|ppt|pptx|pdf|img|zip|rar|tar|gz|flv|mp3|ogg|mkv|mp4|avi|wav|ape|aac|ac3|mpg|mpeg|eps)/)
-          uri = get_uri_from_page(to_check.page)
+          uri = get_uri(to_check.page)
           doc = Nokogiri::HTML(open(uri))               # retrieve url
+          to_check.result_code = 200
         end
       rescue => e
         to_check.page.title = "Error retrieving page"
-        to_check.page.status = 1
+        to_check.page.status = 4
+        to_check.result_code = 404
       end
       # Analysing the result
       unless doc.nil?
@@ -161,9 +210,16 @@ class WebPageAnalyser
           to_check.page.title =  "no title tag"
         end
         if to_check.page.domain.check_publish_time?
-          to_check.page.last_publish = get_publish_time(to_check.page.domain.regx_publish_time,doc)
+            to_check.page.last_publish = get_publish_time(to_check.page.domain.regx_publish_time,doc)
         end
         to_check.page.status = 5
+        # Determine the area the page belongs to
+        area = get_area(to_check.page)
+        if area
+          to_check.page.area_id = nil
+        else
+          to_check.page.area_id = area.id
+        end
         # Analysing the content for changes
         if to_check.page.domain.check_content_for_changes
           @containers = Container.where(domain_id: to_check.page.domain_id)
@@ -190,6 +246,7 @@ class WebPageAnalyser
               content.links_file     = 0
               content.headlines      = container_content.scan(/(<h[1-7].*?>.*?<\/h[1-7]>)/m).size
               content.words          = container_content.gsub(/<[^<]*?>/m," ").gsub(/(\s)\s+/,"\\1").scan(/((^|)[a-zA-Z]\S{3,}($| ))/mi).size
+              content.save
 
               # Analyse the links in the content
               dom = Nokogiri::HTML::DocumentFragment.parse(container_content)
@@ -218,11 +275,12 @@ class WebPageAnalyser
                           path_id   = get_path_id(to_check.page.domain_id,match[:path])
                           file_name = match[:file_name]
                           parameter = match[:parameter].nil? ? "" : match[:parameter].nil
-                          Page.create(domain_id: to_check.page.domain_id,
-                                      path_id:   path_id,
-                                      area_id:   area_id,
-                                      file_name: file_name,
-                                      parameter: parameter)
+                          new_page = Page.create(domain_id: to_check.page.domain_id,
+                                                path_id:   path_id,
+                                                area_id:   area_id,
+                                                file_name: file_name,
+                                                parameter: parameter)
+                          content.refered_pages << new_page
                       else
                         #Error, should never get here
                       end
@@ -247,9 +305,9 @@ class WebPageAnalyser
           end
         end
       end
-      to_check.page.save
       to_check.page.last_check= DateTime.now
-      to_check.result_code= 0
+      to_check.page.save
+      to_check.duration = ((DateTime.now - start) * 24 * 60 * 60).to_i
       to_check.save
     end
   end

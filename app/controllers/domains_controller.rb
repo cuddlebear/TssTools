@@ -158,5 +158,20 @@ class DomainsController < ApplicationController
     end
   end
 
+  def statistic
+    id = params[:id]
+    unless id.nil?
+      if id.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/)
+        @domain = Domain.find_all_by_uuid(id).first
+      else
+        @domain = Domain.find(id)
+      end
+    end
+
+    respond_to do |format|
+      format.html
+      format.json  { render :json => @domain }
+    end
+  end
 
 end

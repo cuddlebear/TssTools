@@ -1,0 +1,33 @@
+<h1>Listing statistics</h1>
+
+<table>
+  <tr>
+    <th>Domain</th>
+    <th>Area</th>
+    <th>Path</th>
+    <th>Page</th>
+    <th>From</th>
+    <th>Until</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @statistics.each do |statistic| %>
+  <tr>
+    <td><%= statistic.domain %></td>
+    <td><%= statistic.area %></td>
+    <td><%= statistic.path %></td>
+    <td><%= statistic.page %></td>
+    <td><%= statistic.from %></td>
+    <td><%= statistic.until %></td>
+    <td><%= link_to 'Show', statistic %></td>
+    <td><%= link_to 'Edit', edit_statistic_path(statistic) %></td>
+    <td><%= link_to 'Destroy', statistic, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Statistic', new_statistic_path %>

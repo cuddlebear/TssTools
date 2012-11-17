@@ -8,5 +8,5 @@
   <li<%= raw type=="containers" ? " class=\"active\"": ''%>><%= link_to "Container", containers_path(domain_id:@domain.id) %></li>
   <li<%= raw type=="areas" ? " class=\"active\"": ''%>><%= link_to "Areas", areas_path(domain_id:@domain.id) %></li>
   <li<%= raw type=="checks" ? " class=\"active\"": ''%>><%= link_to "Checks", checks_path(domain_id:@domain.id) %></li>
-  <li<%= raw type=="statistics" ? " class=\"active\"": ''%>><a href="#statistics">Statistics</a></li>
+  <li<%= raw type=="statistics" ? " class=\"active\"": ''%>><%= link_to "Statistics", "#{@domain.uuid}/statistic" %></li>
 </ul>

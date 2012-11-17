@@ -87,6 +87,24 @@ end
 starts_with = Property.joins(:property_group).where(property_groups: {code: "filter_type"}).where(properties: {code: "starts_with"}).first
 contains = Property.joins(:property_group).where(property_groups: {code: "filter_type"}).where(properties: {code: "contains"}).first
 
+print "Statistic type\n"
+unless PropertyGroup.exists?(name: "Statistic type")
+  pg = PropertyGroup.create(name: "Statistic type", description: "Period of time the statistic was made for ", active: true, type:"int")
+  pg.properties.create(name: "Daily",               int_value: 0)
+  pg.properties.create(name: "Weekly",              int_value: 1)
+  pg.properties.create(name: "Monthly",             int_value: 2)
+  pg.properties.create(name: "Yearly",              int_value: 3)
+end
+
+print "Statistic scope\n"
+unless PropertyGroup.exists?(name: "Statistic scope")
+  pg = PropertyGroup.create(name: "Statistic scope", description: "Range of pages, areas the statistic was made for ", active: true, type:"int")
+  pg.properties.create(name: "Page",                int_value: 0)
+  pg.properties.create(name: "Path",                int_value: 1)
+  pg.properties.create(name: "Area",                int_value: 2)
+  pg.properties.create(name: "Domain",              int_value: 3)
+end
+
 print "Content types\n"
 unless PropertyGroup.exists?(name: "Content type")
   pg = PropertyGroup.create(name: "Content type", description: "Type of content which is assigned to the container", active: true, type:"int")

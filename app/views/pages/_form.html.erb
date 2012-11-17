@@ -21,7 +21,7 @@
 
     <div class="control-group">
       <%=  label_tag "url", "Url", class: "control-label" %>
-      <div class="controls"><%= text_field_tag "url", WebPageAnalyser.get_url_from_page(@page), class: "input-xxlarge" , placeholder: "Path" %></div>
+      <div class="controls"><%= text_field_tag "url", WebPageAnalyser.get_url(@page), class: "input-xxlarge" , placeholder: "Path" %></div>
     </div>
 
 
