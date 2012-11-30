@@ -26,6 +26,9 @@ class Browser
     unless File.directory?(File.expand_path("public\\screenshots\\originals\\#{directory}"))
       Rails.logger.info "Creating new directory for screenshots #{directory}"
       Dir.mkdir(File.expand_path("public\\screenshots\\originals\\#{directory}"),0700)
+    end
+    unless File.directory?(File.expand_path("public\\screenshots\\thumbs\\#{directory}"))
+      Rails.logger.info "Creating new directory for screenshot thumbs #{directory}"
       Dir.mkdir(File.expand_path("public\\screenshots\\thumbs\\#{directory}"),0700)
     end
 

@@ -10,14 +10,16 @@ class CreatePaths < ActiveRecord::Migration
       t.integer     :level
       t.integer     :status
       t.boolean     :dirty
-
-      t.timestamps
+      t.datetime    :from
+      t.datetime    :until
     end
 
     add_index :paths, :uuid, :unique => true
     add_index :paths, :ancestry
     add_index :paths, [:domain_id, :value]
     add_index :paths, [:domain_id, :path_id]
+    add_index :paths, :from
+    add_index :paths, :until
 
     add_foreign_key(:paths, :domains)
     add_foreign_key(:paths, :paths)

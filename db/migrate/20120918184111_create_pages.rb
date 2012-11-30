@@ -21,11 +21,12 @@ class CreatePages < ActiveRecord::Migration
       t.datetime    :last_change
       t.datetime    :last_check
       t.datetime    :last_publish
+      t.datetime    :from
+      t.datetime    :until
       t.boolean     :area_is_dirty
       t.boolean     :screen_shot
       t.integer     :max_screen_shots_per_page
       t.string      :actual_content
-      t.timestamps
     end
 
     add_index :pages, :uuid, :unique => true
@@ -36,6 +37,8 @@ class CreatePages < ActiveRecord::Migration
     add_index :pages, :last_change
     add_index :pages, :last_check
     add_index :pages, :last_publish
+    add_index :pages, :from
+    add_index :pages, :until
 
     add_foreign_key(:pages, :domains)
     add_foreign_key(:pages, :areas)

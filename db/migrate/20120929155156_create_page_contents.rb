@@ -5,12 +5,13 @@ class CreatePageContents < ActiveRecord::Migration
       t.references  :content
       t.datetime    :from
       t.datetime    :until
-
-      t.timestamps
     end
+
     add_index :page_contents, :page_id
     add_index :page_contents, :content_id
     add_index :page_contents, [:page_id, :content_id]
+    add_index :page_contents, :from
+    add_index :page_contents, :until
 
     add_foreign_key(:page_contents, :pages)
     add_foreign_key(:page_contents, :contents)

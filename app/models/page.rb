@@ -3,7 +3,7 @@ class Page < ActiveRecord::Base
                   :level, :file_name, :parameter, :title, :status,
                   :page_rank, :page_speed, :y_slow,
                   :check_counter,
-                  :last_change, :last_check, :last_publish,
+                  :last_change, :last_check, :last_publish, :from, :until,
                   :area_is_dirty, :actual_content,
                   :screen_shot, :max_screen_shots_per_page
 
@@ -43,6 +43,8 @@ class Page < ActiveRecord::Base
   before_save do |record|
     #record.level = Path.find_last_by_path_id(record.path_id).level
     record.parameter = "" if record.parameter.nil?
+    record.from = DateTime.now if record.from.nil?
+    record.until = DateTime.new(3000,1,1,0,0,0) if record.until.nil?
   end
 
 

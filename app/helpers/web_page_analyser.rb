@@ -1,5 +1,4 @@
 require 'nokogiri'
-require 'open-uri'
 require 'digest/md5'
 
 class WebPageAnalyser
@@ -87,10 +86,14 @@ class WebPageAnalyser
     return child.id
   end
 
-  def self.page_exists(domain_id,url)
+  def self.uri_parse(uri)
+    #split uri in parts
+    return  /^(((?<scheme>.*):\/\/)|)(?<domain>([^\/:]+\.[^\/:]+)|)(:(?<port>[0-9]*)|)((?<path>.*?)|)(\/(?<file_name>[^\/]*?)|)(\?(?<parameter>[^#]*?)|)(#(?<ancor>.*?)|)$/.match(uri)
+  end
+
+  def self.page_in_database?(domain_id,uri)
     result = false
-    #split url in parts
-    match = /^(((?<scheme>.*):\/\/)|)(?<domain>([^\/:]+\.[^\/:]+)|)(:(?<port>[0-9]*)|)((?<path>.*?)|)(\/(?<file_name>[^\/]*?)|)(\?(?<parameter>[^#]*?)|)(#(?<ancor>.*?)|)$/.match(url)
+    match = uri_parse(uri)
     if match
       #check if page with this url exists
       parameter = match[:parameter].nil? ? "" : match[:parameter].null
@@ -140,6 +143,38 @@ class WebPageAnalyser
     end
   end
 
+  def self.page_request_header(domain_id, uri, limit=5)
+    # You should choose better exception.
+    raise ArgumentError, 'HTTP redirect too deep' if limit == 0
+
+    url = URI.parse(URI.encode(uri.strip))
+
+    #get path
+    headers = {}
+    req = Net::HTTP::Get.new(url.path,headers)
+    #start TCP/IP
+    response = Net::HTTP.start(url.host,url.port) { |http|
+      http.request(req)
+    }
+
+    case response
+      when Net::HTTPSuccess
+      then #print final redirect to a file
+        puts "this is location" + uri_str
+        puts "this is the host #{url.host}"
+        puts "this is the path #{url.path}"
+
+        return response
+      # if you get a 302 response
+      when Net::HTTPRedirection
+      then
+        puts "this is redirect" + response['location']
+        return fetch(response['location'], limit-1)
+      else
+        response.error!
+    end
+  end
+
   def self.normalize_html(html)
     html = html.gsub(/\t/,"").gsub(/\r/,"").gsub(/  +/," ").gsub(/^ +/,"").
         gsub(/<script.*?<\/script>/m,"").
@@ -183,7 +218,7 @@ class WebPageAnalyser
     return result
   end
 
-  def self.check_page(id)
+  def self.check_page(id,browser_instance)
     to_check = Check.includes(:page).includes(:page => :domain).find(id)
     start = DateTime.now
     to_check.check_start = start
@@ -191,11 +226,15 @@ class WebPageAnalyser
       doc = nil
       # Retrieving the page
       begin                                             # don't check pictures, docs...
-        unless to_check.page.file_name.index(/\.(jpg|jpeg|gif|png|ico|xls|xlsx|doc|docx|ppt|pptx|pdf|img|zip|rar|tar|gz|flv|mp3|ogg|mkv|mp4|avi|wav|ape|aac|ac3|mpg|mpeg|eps)/)
+        logger.debug "Los gehts"
+        if not to_check.page.file_name.nil? && to_check.page.file_name.index(/\.(jpg|jpeg|gif|png|ico|xls|xlsx|doc|docx|ppt|pptx|pdf|img|zip|rar|tar|gz|flv|mp3|ogg|mkv|mp4|avi|wav|ape|aac|ac3|mpg|mpeg|eps)/) == nil
           uri = get_uri(to_check.page)
-          doc = Nokogiri::HTML(open(uri))               # retrieve url
-          to_check.result_code = 200
+          #result = open(uri)                      # retrieve url
+          result = browser_instance.goto uri
+          #to_check.result_code = result.status[0]
+          doc = Nokogiri::HTML(browser_instance.html)
         end
+
       rescue => e
         to_check.page.title = "Error retrieving page"
         to_check.page.status = 4
@@ -257,7 +296,7 @@ class WebPageAnalyser
                   unless link['href'].index(/\.(jpg|jpeg|gif|png|ico|xls|xlsx|doc|docx|ppt|pptx|pdf|img|zip|rar|tar|gz|flv|mp3|ogg|mkv|mp4|avi|wav|ape|aac|ac3|mpg|mpeg|eps)/)
                     content.links_internal += 1
                     # create page for link if it does not exist
-                    unless page_exists(to_check.page.domain_id,link['href'])
+                    unless page_in_database?(to_check.page.domain_id,link['href'])
                       area_id = nil
                       Area.where(:domain_id => to_check.page.domain_id).rank(:row_order).all do |area|
                         regx = area.filter
@@ -270,7 +309,7 @@ class WebPageAnalyser
                         end
                       end
 
-                      match = /^(((?<scheme>.*):\/\/)|)(?<domain>([^\/:]+\.[^\/:]+)|)(:(?<port>[0-9]*)|)((?<path>.*?)|)(\/(?<file_name>[^\/]*?)|)(\?(?<parameter>[^#]*?)|)(#(?<ancor>.*?)|)$/.match(link['href'])
+                      match = uri_parse(link['href'])
                       if match
                           path_id   = get_path_id(to_check.page.domain_id,match[:path])
                           file_name = match[:file_name]

@@ -144,25 +144,27 @@ ActiveRecord::Schema.define(:version => 20121117105725) do
   create_table "links", :force => true do |t|
     t.integer  "content_id"
     t.integer  "page_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "from"
+    t.datetime "until"
   end
 
   add_index "links", ["content_id"], :name => "index_links_on_content_id"
+  add_index "links", ["from"], :name => "index_links_on_from"
   add_index "links", ["page_id"], :name => "index_links_on_page_id"
+  add_index "links", ["until"], :name => "index_links_on_until"
 
   create_table "page_contents", :force => true do |t|
     t.integer  "page_id"
     t.integer  "content_id"
     t.datetime "from"
     t.datetime "until"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
   end
 
   add_index "page_contents", ["content_id"], :name => "index_page_contents_on_content_id"
+  add_index "page_contents", ["from"], :name => "index_page_contents_on_from"
   add_index "page_contents", ["page_id", "content_id"], :name => "index_page_contents_on_page_id_and_content_id"
   add_index "page_contents", ["page_id"], :name => "index_page_contents_on_page_id"
+  add_index "page_contents", ["until"], :name => "index_page_contents_on_until"
 
   create_table "page_properties", :force => true do |t|
     t.integer  "page_id"
@@ -195,22 +197,24 @@ ActiveRecord::Schema.define(:version => 20121117105725) do
     t.datetime "last_change"
     t.datetime "last_check"
     t.datetime "last_publish"
+    t.datetime "from"
+    t.datetime "until"
     t.boolean  "area_is_dirty"
     t.boolean  "screen_shot"
     t.integer  "max_screen_shots_per_page"
     t.string   "actual_content"
-    t.datetime "created_at",                         :null => false
-    t.datetime "updated_at",                         :null => false
   end
 
   add_index "pages", ["area_id"], :name => "index_pages_on_area_id"
   add_index "pages", ["domain_id", "path_id", "file_name"], :name => "index_pages_on_domain_id_and_path_id_and_file_name"
+  add_index "pages", ["from"], :name => "index_pages_on_from"
   add_index "pages", ["last_change"], :name => "index_pages_on_last_change"
   add_index "pages", ["last_check"], :name => "index_pages_on_last_check"
   add_index "pages", ["last_publish"], :name => "index_pages_on_last_publish"
   add_index "pages", ["level"], :name => "index_pages_on_level"
   add_index "pages", ["path_id"], :name => "pages_path_id_fk"
   add_index "pages", ["status"], :name => "index_pages_on_status"
+  add_index "pages", ["until"], :name => "index_pages_on_until"
   add_index "pages", ["uuid"], :name => "index_pages_on_uuid", :unique => true
 
   create_table "paths", :force => true do |t|
@@ -223,14 +227,16 @@ ActiveRecord::Schema.define(:version => 20121117105725) do
     t.integer  "level"
     t.integer  "status"
     t.boolean  "dirty"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "from"
+    t.datetime "until"
   end
 
   add_index "paths", ["ancestry"], :name => "index_paths_on_ancestry"
   add_index "paths", ["domain_id", "path_id"], :name => "index_paths_on_domain_id_and_path_id"
   add_index "paths", ["domain_id", "value"], :name => "index_paths_on_domain_id_and_value"
+  add_index "paths", ["from"], :name => "index_paths_on_from"
   add_index "paths", ["path_id"], :name => "paths_path_id_fk"
+  add_index "paths", ["until"], :name => "index_paths_on_until"
   add_index "paths", ["uuid"], :name => "index_paths_on_uuid", :unique => true
 
   create_table "properties", :force => true do |t|

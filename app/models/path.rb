@@ -1,5 +1,5 @@
 class Path < ActiveRecord::Base
-  attr_accessible :domain_id, :path_id, :level, :value
+  attr_accessible :domain_id, :path_id, :level, :value, :from, :until
 
   belongs_to   :domain
   belongs_to   :path
@@ -16,6 +16,8 @@ class Path < ActiveRecord::Base
 
   before_save do |record|
     record.level = record.value.count("/")
+    record.from = DateTime.now if record.from.nil?
+    record.until = DateTime.new(3000,1,1,0,0,0) if record.until.nil?
   end
 
 end
