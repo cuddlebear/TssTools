@@ -1,23 +1,40 @@
 require 'nokogiri'
 require 'digest/md5'
+require 'open-uri'
 
 class WebPageAnalyser
   unloadable
 
+
+  ######################################################################################################################
+  # get_uri
+  ######################################################################################################################
   def self.get_uri(page)
+    Rails.logger.debug("get_uri start")
     uri = page.domain.scheme + "://" + page.domain.domain + (page.domain.port ? ":" + page.domain.port : "") +
         page.path.value + (page.file_name ? "/" + page.file_name : "") + (page.parameter.empty? ? "" : "?" + page.parameter)
+    Rails.logger.debug("get_uri #{page.id} #{uri}")
+    return uri
   end
 
+  ######################################################################################################################
+  # get_url
+  ######################################################################################################################
   def self.get_url(page)
+    Rails.logger.debug("get_url start")
     if page && page.path
       url = page.path.value + (page.file_name ? "/" + page.file_name : "") + (page.parameter.empty? ? "" : "?" + page.parameter)
-    else
-      url = ""
     end
+    url = "/" if url.nil? || url.empty?
+    Rails.logger.debug("get_url #{page.id} #{url}")
+    return url
   end
 
+  ######################################################################################################################
+  # get_area
+  ######################################################################################################################
   def self.get_area(page)
+    Rails.logger.debug("get_area - start")
     a = nil
     @areas = Area.includes(:filter_type_property).where(domain_id: page.domain_id).order(:row_order)
     if @areas
@@ -44,11 +61,16 @@ class WebPageAnalyser
         end
       end
     end
+    Rails.logger.debug("get_area - area =\"#{a.name}\"") unless a.nil?
     return a
   end
 
+  ######################################################################################################################
+  # recalc_areas
+  ######################################################################################################################
   def self.recalc_areas(domain_id)
     pages = Page.where(domain_id: domain_id)
+    Rails.logger.debug("recalc_areas \"#{domain.name}\"")
     pages.each do |page|
       area = get_area(page)
       if area
@@ -60,6 +82,9 @@ class WebPageAnalyser
     end
   end
 
+  ######################################################################################################################
+  # get_path_id
+  ######################################################################################################################
   def self.get_path_id(domain_id, url)
     level = url=="/" ? 0 :  url.count("/")
     list = Array.new
@@ -86,11 +111,17 @@ class WebPageAnalyser
     return child.id
   end
 
+  ######################################################################################################################
+  # uri_parse
+  ######################################################################################################################
   def self.uri_parse(uri)
     #split uri in parts
     return  /^(((?<scheme>.*):\/\/)|)(?<domain>([^\/:]+\.[^\/:]+)|)(:(?<port>[0-9]*)|)((?<path>.*?)|)(\/(?<file_name>[^\/]*?)|)(\?(?<parameter>[^#]*?)|)(#(?<ancor>.*?)|)$/.match(uri)
   end
 
+  ######################################################################################################################
+  # page_in_database?
+  ######################################################################################################################
   def self.page_in_database?(domain_id,uri)
     result = false
     match = uri_parse(uri)
@@ -105,6 +136,9 @@ class WebPageAnalyser
     return result
   end
 
+  ######################################################################################################################
+  # initialize_page
+  ######################################################################################################################
   def self.initialize_page(page)
     doc = nil
     begin
@@ -122,6 +156,9 @@ class WebPageAnalyser
 
   end
 
+  ######################################################################################################################
+  # analyze_content
+  ######################################################################################################################
   def self.analyze_content(filter, dom, domain_id)
     content = ""
     if filter.nil? == false and filter
@@ -133,16 +170,23 @@ class WebPageAnalyser
     return content
   end
 
+  ######################################################################################################################
+  # get_publish_time
+  ######################################################################################################################
   def self.get_publish_time(filter, dom)
     x = dom.to_html
     r = Regexp.new(filter,"i").match(dom.to_html)
     unless r == nil
-      publish_date = DateTime.new(r[:year],r[:month],r[:day],r[:hour],r[:min],r[:sec])
+      publish_date = DateTime.new(r[:year].to_i,r[:month].to_i,r[:day].to_i,r[:hour].to_i,r[:min].to_i,r[:sec].to_i)
     else
       publish_date = nil
     end
+    return publish_date
   end
 
+  ######################################################################################################################
+  # page_request_header
+  ######################################################################################################################
   def self.page_request_header(domain_id, uri, limit=5)
     # You should choose better exception.
     raise ArgumentError, 'HTTP redirect too deep' if limit == 0
@@ -175,6 +219,9 @@ class WebPageAnalyser
     end
   end
 
+  ######################################################################################################################
+  # normalize_html
+  ######################################################################################################################
   def self.normalize_html(html)
     html = html.gsub(/\t/,"").gsub(/\r/,"").gsub(/  +/," ").gsub(/^ +/,"").
         gsub(/<script.*?<\/script>/m,"").
@@ -198,6 +245,9 @@ class WebPageAnalyser
         gsub(/>\n(<img.*?>)\n</m,">\\1<")
   end
 
+  ######################################################################################################################
+  # beautify_html
+  ######################################################################################################################
   def self.beautify_html(html)
     result = ""
     html = html.gsub(/<img.*?>/m," [image] ").gsub(/(<a.*?<\/a>)/m," \\1 ")
@@ -218,27 +268,36 @@ class WebPageAnalyser
     return result
   end
 
+  ######################################################################################################################
+  # check_page
+  ######################################################################################################################
   def self.check_page(id,browser_instance)
-    to_check = Check.includes(:page).includes(:page => :domain).find(id)
     start = DateTime.now
+    Rails.logger.debug("check_page start \"#{id}\" (g)")
+    ActiveRecord::Base.silence do
+    to_check = Check.includes(:page).includes(:page => :domain).find(id)
     to_check.check_start = start
     if to_check.page.domain.active                      # Only check on active domains
+      Rails.logger.debug("check_page - domain is active")
       doc = nil
       # Retrieving the page
       begin                                             # don't check pictures, docs...
-        logger.debug "Los gehts"
-        if not to_check.page.file_name.nil? && to_check.page.file_name.index(/\.(jpg|jpeg|gif|png|ico|xls|xlsx|doc|docx|ppt|pptx|pdf|img|zip|rar|tar|gz|flv|mp3|ogg|mkv|mp4|avi|wav|ape|aac|ac3|mpg|mpeg|eps)/) == nil
-          uri = get_uri(to_check.page)
-          #result = open(uri)                      # retrieve url
-          result = browser_instance.goto uri
-          #to_check.result_code = result.status[0]
-          doc = Nokogiri::HTML(browser_instance.html)
+        uri = get_uri(to_check.page)
+        if uri.index(/\.(jpg|jpeg|gif|png|ico|xls|xlsx|doc|docx|ppt|pptx|pdf|img|zip|rar|tar|gz|flv|mp3|ogg|mkv|mp4|avi|wav|ape|aac|ac3|mpg|mpeg|eps)/) == nil
+          Rails.logger.debug("check_page - retrieve page")
+          x = open(uri)
+          Rails.logger.debug("check_page - nokogiri")
+          doc = Nokogiri::HTML(x)
+          to_check.page.status = 5
+          to_check.result_code = 200
         end
-
       rescue => e
+        Rails.logger.debug("check_page - error while retrieving (r)")
         to_check.page.title = "Error retrieving page"
-        to_check.page.status = 4
-        to_check.result_code = 404
+        to_check.page.status = 3
+        to_check.result_text = e.message
+        to_check.result_code = e.io.status[0] if e.io.nil? == false
+        Rails.logger.debug("check_page - error message #{e.message}")
       end
       # Analysing the result
       unless doc.nil?
@@ -248,22 +307,24 @@ class WebPageAnalyser
         else
           to_check.page.title =  "no title tag"
         end
+        Rails.logger.debug("check_page - Title=\"#{to_check.page.title}\"")
+        # Getting publish time
         if to_check.page.domain.check_publish_time?
             to_check.page.last_publish = get_publish_time(to_check.page.domain.regx_publish_time,doc)
+            Rails.logger.debug("check_page - last publish time #{to_check.page.last_publish}")
         end
-        to_check.page.status = 5
         # Determine the area the page belongs to
         area = get_area(to_check.page)
-        if area
+        if area.nil?
           to_check.page.area_id = nil
         else
           to_check.page.area_id = area.id
         end
         # Analysing the content for changes
         if to_check.page.domain.check_content_for_changes
+          Rails.logger.debug("check_page - analysing page")
           @containers = Container.where(domain_id: to_check.page.domain_id)
           @containers.each do |container|
-
             container_content = ""
             container.x_path.split(/\r\n/).each do |match|
               match = match.strip
@@ -276,6 +337,7 @@ class WebPageAnalyser
             md5_hash = Digest::MD5.hexdigest(container_content)
             content = Content.where(md5_hash: md5_hash ).first_or_initialize
             if content.new_record?
+              Rails.logger.debug("check_page - new content #{container.id}")
               # fill the new content
               content.container_id   = container.id
               content.md5_hash       = md5_hash
@@ -287,6 +349,7 @@ class WebPageAnalyser
               content.words          = container_content.gsub(/<[^<]*?>/m," ").gsub(/(\s)\s+/,"\\1").scan(/((^|)[a-zA-Z]\S{3,}($| ))/mi).size
               content.save
 
+              Rails.logger.debug("check_page - analyse links")
               # Analyse the links in the content
               dom = Nokogiri::HTML::DocumentFragment.parse(container_content)
               dom.css('a[@href]').each do |link|
@@ -346,8 +409,10 @@ class WebPageAnalyser
       end
       to_check.page.last_check= DateTime.now
       to_check.page.save
-      to_check.duration = ((DateTime.now - start) * 24 * 60 * 60).to_i
+      to_check.duration = ((DateTime.now - start) * 24 * 60 * 60 * 1000).to_i
       to_check.save
+      Rails.logger.debug("check_page - check_duration #{to_check.duration} ms")
+    end
     end
   end
 

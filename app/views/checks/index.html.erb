@@ -18,10 +18,11 @@
 
   <tbody>
   <%
-    browser_instance = Browser::start_browser
+    #browser_instance = Browser::start_browser
+    browser_instance = nil
     @checks.each do |check|
-    WebPageAnalyser.check_page(check.id,browser_instance )
-    Browser::create_screen_shot(check.page)
+    WebPageAnalyser.check_page(check.id, browser_instance )
+    #Browser::create_screen_shot(check.page)
     a=check.id
   %>
       <tr>
@@ -39,7 +40,7 @@
   </tbody>
 </table>
 <%
-   Browser::stop_browser
+   #Browser::stop_browser
 %>
 
 <%= paginate @checks %>

@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  domain: 
+  page: 
+  uuid: MyString
+  directory: MyString
+  from: 2012-11-09 15:39:40
+  until: 2012-11-09 15:39:40
+
+two:
+  domain: 
+  page: 
+  uuid: MyString
+  directory: MyString
+  from: 2012-11-09 15:39:40
+  until: 2012-11-09 15:39:40

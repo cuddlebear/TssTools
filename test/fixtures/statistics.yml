@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  domain: 
+  area: 
+  path: 
+  page: 
+  from: 2012-11-17 11:57:26
+  until: 2012-11-17 11:57:26
+
+two:
+  domain: 
+  area: 
+  path: 
+  page: 
+  from: 2012-11-17 11:57:26
+  until: 2012-11-17 11:57:26

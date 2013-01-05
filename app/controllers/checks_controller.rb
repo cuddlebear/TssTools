@@ -1,6 +1,6 @@
 class ChecksController < ApplicationController
   require "web_page_analyser"
-  @@page_size = 1
+  @@page_size = 20
 
   # GET /checks
   # GET /checks.json
@@ -17,7 +17,7 @@ class ChecksController < ApplicationController
   # GET /checks/1
   # GET /checks/1.json
   def show
-    WebPageAnalyser.check_page(params[:id])
+    WebPageAnalyser.check_page(params[:id],nil)
     @check = Check.find(params[:id])
 
     respond_to do |format|

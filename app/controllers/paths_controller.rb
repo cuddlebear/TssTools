@@ -6,18 +6,18 @@ class PathsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @paths }
+      format.json { render json: @paths}
     end
   end
 
   # GET /paths/1
   # GET /paths/1.json
   def show
-    @path = Path.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @path }
+    depth = params[:depth]
+    if depth.nil?
+      @path = Path.find(params[:id])
+    else
+      @path = Path.find(params[:id]).subtree(:to_depth => depth.to_i)
     end
   end
 

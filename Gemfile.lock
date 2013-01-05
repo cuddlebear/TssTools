@@ -20,6 +20,8 @@ GEM
       rack-cache (~> 1.2)
       rack-test (~> 0.6.1)
       sprockets (~> 2.1.3)
+    active_model_serializers (0.6.0)
+      activemodel (>= 3.0)
     activemodel (3.2.8)
       activesupport (= 3.2.8)
       builder (~> 3.0.0)
@@ -82,8 +84,14 @@ GEM
     nokogiri (1.5.5-x86-mingw32)
     oily_png (1.0.2)
       chunky_png (~> 1.2.1)
+    oj (2.0.0)
     polyglot (0.3.3)
     public_suffix (1.1.3)
+    quiet_assets (1.0.1)
+      railties (~> 3.1)
+    rabl (0.7.9)
+      activesupport (>= 2.3.14)
+      multi_json (~> 1.0)
     rack (1.4.1)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -152,6 +160,7 @@ PLATFORMS
 
 DEPENDENCIES
   PageRankr
+  active_model_serializers
   ancestry
   bootstrap-sass
   chunky_png
@@ -164,6 +173,9 @@ DEPENDENCIES
   mysql2
   nokogiri
   oily_png
+  oj
+  quiet_assets
+  rabl
   rails (= 3.2.8)
   ranked-model
   sass-rails (~> 3.2.3)

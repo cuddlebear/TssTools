@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  domain: 
+  path: 
+  value: MyString
+  level: 1
+
+two:
+  domain: 
+  path: 
+  value: MyString
+  level: 1

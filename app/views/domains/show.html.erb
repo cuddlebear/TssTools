@@ -43,3 +43,22 @@
     <%= render_chart @chart, 'chart' %>
   </div>
 </div>
+
+<%
+#   p = Page.joins(:contents).select("pages.id, contents.id").find(20)
+   p = Path.find(1).subtree(:to_depth =>1)
+%>
+
+
+<code>
+<pre><%=
+    JSON.pretty_unparse(
+       JSON.parse(
+          p.to_json(
+                  :include => { :pages => {:only => [:title]}},
+                  :only => [:id]
+          )
+       )
+    )
+%></pre>
+</code>

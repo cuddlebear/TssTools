@@ -335,7 +335,7 @@ if @domain.new_record?
   @domain.active                    = true
   @domain.check_content_for_changes = true
   @domain.check_publish_time        = true
-  @domain.regx_publish_time         = "<!-- published (?<day>\d{2})\.(?<month>\d{2})\.(?<year>\d{4}) (?<hour>\d{2}):(?<min>\d{2}):(?<sec>\d{2}) -->"
+  @domain.regx_publish_time         = "<!-- published (?<day>\\d{2})\\.(?<month>\\d{2})\\.(?<year>\\d{4}) (?<hour>\\d{2}):(?<min>\\d{2}):(?<sec>\\d{2}) -->"
   @domain.save
 
   print "areas\n"

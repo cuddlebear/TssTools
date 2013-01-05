@@ -7,6 +7,7 @@
 =render("help")
 -img = @page.screen_shots.first
 
+
 %ul{class: "nav nav-tabs", id: "tab_header"}
   %li
     %a{href: "#parameters"} Parameters
@@ -71,5 +72,10 @@
 
 :javascript
   SyntaxHighlighter.all()
+
+:javascript
+  alert("ii");
+  $.getJSON("http://127.0.0.1:3000/paths/13");
+
 
 =link_to "Back", pages_path(domain_id: @page.domain_id),  class: "btn btn-danger"
